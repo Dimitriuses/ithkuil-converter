@@ -1,0 +1,34 @@
+[
+  {
+    "glyphId": "PLACEHOLDER_VBAR",
+    "codepoint": "U+C004E",
+    "offset": "0x4E",
+    "ithkeyClass": "placeholder",
+    "ch12Section": "12.7",
+    "fontGlyphName": "ithkuil.079",
+    "advanceWidth": 765,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V2688H384V384Z",
+    "romanisation": null,
+    "description": null,
+    "validationStatus": "unchecked",
+    "validationNotes": ""
+  },
+  {
+    "glyphId": "PLACEHOLDER_DASH",
+    "codepoint": "U+C004F",
+    "offset": "0x4F",
+    "ithkeyClass": "placeholder",
+    "ch12Section": "12.7",
+    "fontGlyphName": "ithkuil.080",
+    "advanceWidth": 1726,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 2688V3071H1536V2688Z",
+    "romanisation": null,
+    "description": null,
+    "validationStatus": "unchecked",
+    "validationNotes": ""
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "glyphId": "GRID_OVERLAY",
+    "codepoint": "U+C007F",
+    "offset": "0x7F",
+    "ithkeyClass": "grid",
+    "ch12Section": "—",
+    "fontGlyphName": "ithkuil.128",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z",
+    "romanisation": null,
+    "description": null,
+    "validationStatus": "unchecked",
+    "validationNotes": ""
+  }
+]

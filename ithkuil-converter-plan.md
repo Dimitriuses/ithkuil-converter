@@ -46,7 +46,22 @@ This produces the authoritative encoding map: which input codepoint sequences pr
 
 Extract every glyph outline from `ithkuil.ttf` as an SVG path (using `fonttools`'s `ttx` command or `opentype.js`'s `glyph.getPath()`). Assign each a stable, descriptive `GlyphID` (e.g. `PRIMARY_3_EXT_UPPER_TONAL`). These IDs are the shared language between all modules in the project.
 
-### 0.4 — Bidirectional Mapping Table
+### 0.3 — Glyph SVG Inventory (`build_glyph_inventory.py`)
+
+**Input:** `font_analysis/cmap.json`, `font_analysis/glyphs.json`  
+**Output:** `inventory/glyph_inventory.json`, `inventory/glyph_inventory.md`, `inventory/svg/*.svg`, `inventory/class_*.json`
+
+Assigns a stable `GlyphID` to every codepoint in the ithkey range, exports one SVG file per unique glyph (with corrected y-axis flip), and writes a markdown catalog for use during Phase 0.5 validation. GlyphIDs follow the scheme `CLASS_DESCRIPTOR` (e.g. `PRIMARY_Q`, `CONSONANT_T_EJ`, `DIACRITIC_01`, `PLACEHOLDER_VBAR`).
+
+### 0.4 — Bidirectional Mapping Table (`build_mapping_table.py`)
+
+**Input:** `inventory/glyph_inventory.json`, `font_analysis/diacritic_sequences.json`, `font_analysis/cmap.json`  
+**Output:** `mapping/mapping_table.json`, `mapping/forward_index.json`, `mapping/reverse_index.json`, `mapping/composed_glyphs.json`, `mapping/diacritic_slot_analysis.json`, `mapping/mapping_table.md`
+
+Combines the base-glyph inventory with the full enumeration of base+diacritic sequences from the font's GSUB ligature table. Produces:
+- `forward_index.json` — `sequenceKey → GlyphID` (used by the encoder/compositor)
+- `reverse_index.json` — `GlyphID → [sequences]` (used by the decoder)
+- `diacritic_slot_analysis.json` — every `(baseClass, slotIndex, diacriticCodepoint)` triple, mapping to the resolved glyphs it produces. This is the empirical evidence for the slot assignment open question in the encoding audit.
 
 Produce a JSON/YAML file with entries of the form:
 
