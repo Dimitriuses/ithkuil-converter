@@ -1,0 +1,17 @@
+Total mapping entries : 114
+  base entries        : 81
+  diacritic entries   : 33
+GPOS mark classes     : 0
+GPOS base glyphs      : 0
+
+Entries per ithkey class:
+  consonantal       23
+  diacritic         33
+  grid               1
+  number            10
+  placeholder        2
+  primary           24
+  punctuation        4
+  secondary          6
+  tenthPower         4
+  tertiary           7

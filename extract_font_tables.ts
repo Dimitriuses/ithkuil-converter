@@ -164,10 +164,48 @@ function extractGlyphs(font: opentype.Font, cmap: CmapEntry[]): GlyphRecord[] {
 // GSUB helpers
 // ---------------------------------------------------------------------------
 
-/** Resolve a glyph index or name to a glyph name string. */
+/**
+ * Resolve a glyph index or name to a glyph name string.
+ *
+ * opentype.js stores GSUB ligature keys as the results of Object.entries(),
+ * which always produces string keys -- even when the underlying value is a
+ * glyph index integer.  A key like "42" must therefore be treated as an index
+ * and resolved to a glyph name, not returned verbatim.
+ */
 function glyphRef(font: opentype.Font, val: number | string): string {
-  if (typeof val === "string") return val;
-  return font.glyphs.get(val)?.name ?? `glyph${val}`;
+  if (typeof val === "number") {
+    return font.glyphs.get(val)?.name ?? `glyph${val}`;
+  }
+  // Detect a pure integer string ("42") vs an actual glyph name ("uni.C0042")
+  const asIdx = parseInt(val, 10);
+  if (!isNaN(asIdx) && String(asIdx) === val) {
+    return font.glyphs.get(asIdx)?.name ?? `glyph${asIdx}`;
+  }
+  return val;  // already a glyph name
+}
+
+/** Summarise which GSUB lookup types are present in the font. */
+function gsubLookupTypeSummary(font: opentype.Font): Record<number, number> {
+  const gsub = (font.tables as any).GSUB ?? (font.tables as any).gsub;
+  const counts: Record<number, number> = {};
+  if (!gsub?.lookups) return counts;
+  for (const lookup of gsub.lookups as any[]) {
+    const t: number = lookup.lookupType ?? 0;
+    counts[t] = (counts[t] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/** Summarise which GPOS lookup types are present in the font. */
+function gposLookupTypeSummary(font: opentype.Font): Record<number, number> {
+  const gpos = (font.tables as any).GPOS ?? (font.tables as any).gpos;
+  const counts: Record<number, number> = {};
+  if (!gpos?.lookups) return counts;
+  for (const lookup of gpos.lookups as any[]) {
+    const t: number = lookup.lookupType ?? 0;
+    counts[t] = (counts[t] ?? 0) + 1;
+  }
+  return counts;
 }
 
 // ---------------------------------------------------------------------------
@@ -445,38 +483,70 @@ function extractGposAnchors(
 }
 
 // ---------------------------------------------------------------------------
-// Diacritic sequence enumeration
+// Mark info extraction (replaces GSUB-based diacritic sequence enumeration)
+//
+// The ithkey font is a mark-positioning font: diacritics are rendered as
+// separate glyphs positioned by GPOS mark-to-base anchors, not substituted
+// into composed glyphs via GSUB.  diacritic_sequences.json from GSUB is
+// therefore always empty -- the equivalent information lives in GPOS.
+//
+// This function derives mark class assignments from the already-extracted
+// gpos_anchors data, producing diacritic_sequences.json as a mark-class
+// summary instead.
 // ---------------------------------------------------------------------------
 
-interface DiacriticSequence {
-  baseGlyph:     string;
-  baseCp:        string;
-  baseClass:     IthkeyClass;
-  diacritics:    string[];
-  diacriticCps:  string[];
-  resolvedGlyph: string;
-  resolvedCp:    string;
+interface MarkInfo {
+  glyphName:   string;
+  codepoint:   string;
+  ithkeyClass: IthkeyClass;
+  markClass:   number;
+  attachAnchor: { x: number; y: number };
+  attachesToClasses: string[];  // base ithkeyClasses that accept this mark
 }
 
-function enumerateDiacriticSequences(
-  ligatures: LigatureRule[],
-  cmap:      CmapEntry[]
-): DiacriticSequence[] {
-  const diacriticCps = new Set(
-    cmap.filter((e) => e.ithkeyClass === "diacritic").map((e) => e.codepoint)
-  );
+function extractMarkInfo(
+  anchors:  AnchorEntry[],
+  cmap:     CmapEntry[],
+  nameToCp: Map<string, string>,
+): MarkInfo[] {
+  // Build base-class sets per mark class from the GPOS base anchor records
+  const markClassToBaseClasses = new Map<number, Set<string>>();
+  for (const a of anchors) {
+    if (a.role !== "base" && a.role !== "mark2base") continue;
+    const cp = nameToCp.get(a.glyph);
+    if (!cp) continue;
+    const cls = ithkeyClass(parseInt(cp.replace("U+", ""), 16));
+    const set = markClassToBaseClasses.get(a.classIndex) ?? new Set();
+    set.add(cls);
+    markClassToBaseClasses.set(a.classIndex, set);
+  }
 
-  return ligatures
-    .filter((r) => r.sequence.length >= 2 && r.sequenceCps.slice(1).some((c) => diacriticCps.has(c)))
-    .map((r) => ({
-      baseGlyph:     r.sequence[0],
-      baseCp:        r.sequenceCps[0],
-      baseClass:     ithkeyClass(parseInt(r.sequenceCps[0].replace("U+", ""), 16)),
-      diacritics:    r.sequence.slice(1),
-      diacriticCps:  r.sequenceCps.slice(1),
-      resolvedGlyph: r.output,
-      resolvedCp:    r.outputCp,
-    }));
+  const results: MarkInfo[] = [];
+  for (const a of anchors) {
+    if (a.role !== "mark" && a.role !== "mark2") continue;
+    const cp      = a.codepoint;
+    const cpInt   = cp !== "?" ? parseInt(cp.replace("U+", ""), 16) : 0;
+    const cls     = cpInt ? ithkeyClass(cpInt) : "external" as IthkeyClass;
+    const attaches = [...(markClassToBaseClasses.get(a.classIndex) ?? [])];
+
+    results.push({
+      glyphName:         a.glyph,
+      codepoint:         cp,
+      ithkeyClass:       cls,
+      markClass:         a.classIndex,
+      attachAnchor:      { x: a.x, y: a.y },
+      attachesToClasses: attaches.sort(),
+    });
+  }
+
+  // Deduplicate (same glyph may appear across multiple lookups)
+  const seen = new Set<string>();
+  return results.filter((r) => {
+    const key = `${r.glyphName}:${r.markClass}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a, b) => a.markClass - b.markClass || a.codepoint.localeCompare(b.codepoint));
 }
 
 // ---------------------------------------------------------------------------
@@ -591,39 +661,67 @@ async function main(): Promise<void> {
   const font = loadFont(fontPath);
   console.log(`  -> loaded OK  (${font.glyphs.length} total glyphs, UPM=${font.unitsPerEm})`);
 
+  // ── Lookup type introspection (helps diagnose empty GSUB/GPOS outputs) ────
+  const gsubTypes = gsubLookupTypeSummary(font);
+  const gposTypes = gposLookupTypeSummary(font);
+  console.log("GSUB lookup types present:", Object.keys(gsubTypes).length
+    ? Object.entries(gsubTypes).map(([t,n]) => `Type${t}×${n}`).join(", ")
+    : "none");
+  console.log("GPOS lookup types present:", Object.keys(gposTypes).length
+    ? Object.entries(gposTypes).map(([t,n]) => `Type${t}×${n}`).join(", ")
+    : "none");
+  console.log("  (Type4=MarkToBase, Type6=MarkToMark -- expected for a mark-positioning font)");
+  write(outDir, "gsub_type_summary.json", gsubTypes);
+  write(outDir, "gpos_type_summary.json", gposTypes);
+
+  // ── cmap ──────────────────────────────────────────────────────────────────
   console.log("Extracting cmap ...");
   const cmap = extractCmap(font);
   write(outDir, "cmap.json", cmap);
   console.log(`  -> ${cmap.length} ithkey codepoints mapped`);
 
-  // Build name->codepoint lookup for use in GSUB/GPOS parsers
   const nameToCp = new Map<string, string>(cmap.map((e) => [e.glyphName, e.codepoint]));
 
+  // ── Glyph outlines ────────────────────────────────────────────────────────
   console.log("Extracting glyph outlines ...");
   const glyphs = extractGlyphs(font, cmap);
   write(outDir, "glyphs.json", glyphs);
   console.log(`  -> ${glyphs.length} unique glyphs`);
 
+  // ── GSUB ──────────────────────────────────────────────────────────────────
   console.log("Extracting GSUB ligatures ...");
   const ligs = extractGsubLigatures(font, nameToCp);
   write(outDir, "gsub_ligatures.json", ligs);
-  console.log(`  -> ${ligs.length} ligature rules`);
+  if (ligs.length === 0) {
+    console.log("  -> 0 ligature rules (font uses GPOS mark positioning, not GSUB ligatures)");
+  } else {
+    console.log(`  -> ${ligs.length} ligature rules`);
+  }
 
   console.log("Extracting GSUB chained-context rules ...");
   const chained = extractGsubChained(font);
   write(outDir, "gsub_chained.json", chained);
   console.log(`  -> ${chained.length} chained-context rules`);
 
+  // ── GPOS ──────────────────────────────────────────────────────────────────
   console.log("Extracting GPOS anchors ...");
   const anchors = extractGposAnchors(font, nameToCp);
   write(outDir, "gpos_anchors.json", anchors);
-  console.log(`  -> ${anchors.length} anchor entries`);
+  const markCount = anchors.filter(a => a.role === "mark" || a.role === "mark2").length;
+  const baseCount = anchors.filter(a => a.role === "base" || a.role === "mark2base").length;
+  console.log(`  -> ${anchors.length} anchor entries (${markCount} mark, ${baseCount} base)`);
 
-  console.log("Enumerating diacritic sequences ...");
-  const diaSeqs = enumerateDiacriticSequences(ligs, cmap);
-  write(outDir, "diacritic_sequences.json", diaSeqs);
-  console.log(`  -> ${diaSeqs.length} base+diacritic combos`);
+  // ── Diacritic mark info (from GPOS, replaces GSUB-based diacritic_sequences) ──
+  console.log("Extracting diacritic mark info from GPOS ...");
+  const markInfo = extractMarkInfo(anchors, cmap, nameToCp);
+  write(outDir, "diacritic_sequences.json", markInfo);
+  const markClasses = new Set(markInfo.map(m => m.markClass));
+  console.log(`  -> ${markInfo.length} mark glyphs across ${markClasses.size} mark classes`);
+  if (markInfo.length === 0) {
+    console.log("  [!] No mark glyphs found in GPOS. Check gpos_anchors.json for raw data.");
+  }
 
+  // ── Class audit ───────────────────────────────────────────────────────────
   console.log("Running class audit ...");
   const audit = classAudit(cmap);
   write(outDir, "class_audit.json", audit);
