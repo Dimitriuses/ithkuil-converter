@@ -1,0 +1,2050 @@
+[
+  {
+    "glyphIndex": 3,
+    "glyphName": "ithkuil.001",
+    "codepoints": [
+      "U+C0000"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1149,
+    "bbox": {
+      "x1": 191,
+      "y1": 1151,
+      "x2": 575,
+      "y2": 1920
+    },
+    "svgPath": "M384-1151L191-1343L384-1536L575-1343L384-1151M384-1536L191-1727L384-1920L575-1727"
+  },
+  {
+    "glyphIndex": 4,
+    "glyphName": "ithkuil.002",
+    "codepoints": [
+      "U+C0001"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1149,
+    "bbox": {
+      "x1": 191,
+      "y1": 959,
+      "x2": 575,
+      "y2": 2111
+    },
+    "svgPath": "M384-959L191-1151L384-1343L575-1151L384-959M384-1343L191-1536L384-1727L575-1536L384-1343M384-1727L191-1920L384-2111L575-1920"
+  },
+  {
+    "glyphIndex": 5,
+    "glyphName": "ithkuil.003",
+    "codepoints": [
+      "U+C0002"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1726,
+    "bbox": {
+      "x1": 191,
+      "y1": 1056,
+      "x2": 1151,
+      "y2": 2016
+    },
+    "svgPath": "M672-1056L479-1248L672-1440L863-1248L672-1056M384-1343L191-1536L384-1727L575-1536L384-1343M959-1343L768-1536L959-1727L1151-1536L959-1343M672-1631L479-1823L672-2016L863-1823"
+  },
+  {
+    "glyphIndex": 6,
+    "glyphName": "ithkuil.004",
+    "codepoints": [
+      "U+C0003"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 2302,
+    "bbox": {
+      "x1": 191,
+      "y1": 768,
+      "x2": 1727,
+      "y2": 2304
+    },
+    "svgPath": "M959-768L768-959L959-1151L1151-959L959-768M672-1056L479-1248L672-1440L863-1248L672-1056M1248-1056L1056-1248L1248-1440L1440-1248L1248-1056M384-1343L191-1536L384-1727L575-1536L384-1343M959-1343L768-1536L959-1727L1151-1536L959-1343M1536-1343L1343-1536L1536-1727L1727-1536L1536-1343M672-1631L479-1823L672-2016L863-1823L672-1631M1248-1631L1056-1823L1248-2016L1440-1823L1248-1631M959-1920L768-2111L959-2304L1151-2111"
+  },
+  {
+    "glyphIndex": 7,
+    "glyphName": "ithkuil.005",
+    "codepoints": [
+      "U+C0004"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-1343L768-2111L1920-2111L1920-3071L2304-3071L2304-1727L959-1727L384-1151"
+  },
+  {
+    "glyphIndex": 8,
+    "glyphName": "ithkuil.006",
+    "codepoints": [
+      "U+C0005"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-1343L768-2111L1343-2111L1343-2688L1727-3071L2304-3071L2304-2688L1920-2688L1727-2496L1727-2304L1920-2111L2304-2111L2304-1727L959-1727L384-1151"
+  },
+  {
+    "glyphIndex": 9,
+    "glyphName": "ithkuil.007",
+    "codepoints": [
+      "U+C0006"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-2304L384-2304L959-1727L1343-1727L1920-2304L1920-3071L2304-3071L2304-2111L1536-1343L768-1343L384-1727"
+  },
+  {
+    "glyphIndex": 10,
+    "glyphName": "ithkuil.008",
+    "codepoints": [
+      "U+C0007"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-2496L575-3071L1727-3071L2304-2496L2304-959L1920-959L1920-2304L1536-2688L768-2688L384-2304"
+  },
+  {
+    "glyphIndex": 11,
+    "glyphName": "ithkuil.009",
+    "codepoints": [
+      "U+C0008"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-3071L384-3071L384-959L1536-959L1920-1343L1920-1727L1536-2111L959-2111L959-2496L1727-2496L2304-1920L2304-1151L1727-575L384-575"
+  },
+  {
+    "glyphIndex": 12,
+    "glyphName": "ithkuil.010",
+    "codepoints": [
+      "U+C0009"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-3071L1151-3071L1151-1343L1343-1151L1727-1151L1920-1343L1920-3071L2304-3071L2304-1151L1920-768L1151-768L768-1151L768-2688L384-2688"
+  },
+  {
+    "glyphIndex": 13,
+    "glyphName": "ithkuil.011",
+    "codepoints": [
+      "U+C000A"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-1920L384-2304L768-2304L1151-1920L1151-1151L1536-1151L1920-1536L1920-2304L1536-2688L768-2688L768-3071L1727-3071L2304-2496L2304-1343L1727-768L768-768L768-1727L575-1920L384-1727"
+  },
+  {
+    "glyphIndex": 14,
+    "glyphName": "ithkuil.012",
+    "codepoints": [
+      "U+C000B"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-2304L575-2304L768-2496L768-3071L1151-3071L1151-2304L768-1920L384-1920L384-1151L1151-1151L1920-1920L1920-3071L2304-3071L2304-1727L1343-768L384-768"
+  },
+  {
+    "glyphIndex": 15,
+    "glyphName": "ithkuil.013",
+    "codepoints": [
+      "U+C000C"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-1343L384-1343L768-959L1536-959L1920-1343L1920-2496L1727-2304L575-2304L0-2881L0-3071L384-3071L768-2688L1536-2688L1920-3071L2304-3071L2304-1151L1727-575L575-575L384-768"
+  },
+  {
+    "glyphIndex": 16,
+    "glyphName": "ithkuil.014",
+    "codepoints": [
+      "U+C000D"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-959L1536-959L1920-1343L1920-2304L1536-2688L384-2688L384-2496L1343-2496L1727-2111L1727-1536L1343-1151L0-1151L0-1536L1151-1536L1343-1727L1343-1920L1151-2111L0-2111L0-3071L1727-3071L2304-2496L2304-1151L1727-575L384-575"
+  },
+  {
+    "glyphIndex": 17,
+    "glyphName": "ithkuil.015",
+    "codepoints": [
+      "U+C000E"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-768L2304-1920L2304-1536L384-575L384 0M0-959L0-1343L2304-2496L2304-2111L0-959M0-1536L0-1920L2304-3071L2304-2688"
+  },
+  {
+    "glyphIndex": 18,
+    "glyphName": "ithkuil.016",
+    "codepoints": [
+      "U+C000F"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-2496L575-3071L1727-3071L2304-2496L2304-959L1920-575L1151-575L768-959L768-1727L1151-2111L1536-2111L1536-1727L1343-1727L1151-1536L1151-1151L1343-959L1727-959L1920-1151L1920-2304L1536-2688L768-2688L384-2304"
+  },
+  {
+    "glyphIndex": 19,
+    "glyphName": "ithkuil.017",
+    "codepoints": [
+      "U+C0010"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-1151L1727-1151L1727-768L384-768L384 0M2304-384L1920-384L1920-1920L1536-2304L1151-2304L1151-2688L1727-2688L2304-2111L2304-384M959-1343L575-1343L575-3071L959-3071"
+  },
+  {
+    "glyphIndex": 20,
+    "glyphName": "ithkuil.018",
+    "codepoints": [
+      "U+C0011"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384 0L0 0L0-2496L575-3071L1727-3071L2304-2496L2304-959L1920-959L1920-2304L1536-2688L1343-2688L1343-959L959-959L959-2688L768-2688L384-2304"
+  },
+  {
+    "glyphIndex": 21,
+    "glyphName": "ithkuil.019",
+    "codepoints": [
+      "U+C0012"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1727,
+      "y2": 2688
+    },
+    "svgPath": "M1727-384L1151-384L0-1536L1151-2688L1727-2688L575-1536"
+  },
+  {
+    "glyphIndex": 22,
+    "glyphName": "ithkuil.020",
+    "codepoints": [
+      "U+C0013"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M2111-384L1727-384L1727-1536L0-1536L1151-2688L1727-2688L959-1920L2111-1920"
+  },
+  {
+    "glyphIndex": 23,
+    "glyphName": "ithkuil.021",
+    "codepoints": [
+      "U+C0014"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1536-1536L0-1536L1151-2688L1727-2688L959-1920L2496-1920"
+  },
+  {
+    "glyphIndex": 24,
+    "glyphName": "ithkuil.022",
+    "codepoints": [
+      "U+C0015"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3646,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2881,
+      "y2": 2688
+    },
+    "svgPath": "M2881-384L2304-384L1151-1536L0-1536L1151-2688L1727-2688L959-1920L1343-1920"
+  },
+  {
+    "glyphIndex": 25,
+    "glyphName": "ithkuil.023",
+    "codepoints": [
+      "U+C0016"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1536-1536L768-2304L1151-2688L1727-2688L1343-2304L2111-1536"
+  },
+  {
+    "glyphIndex": 26,
+    "glyphName": "ithkuil.024",
+    "codepoints": [
+      "U+C0017"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M2111-384L1536-384L0-1920L575-1920L191-2304L575-2688L1151-2688L768-2304L1536-1536L959-1536"
+  },
+  {
+    "glyphIndex": 27,
+    "glyphName": "ithkuil.025",
+    "codepoints": [
+      "U+C0018"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1726,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1151,
+      "y2": 2688
+    },
+    "svgPath": "M1151-384L768-384L768-1536L0-2304L384-2688L959-2688L575-2304L1151-1727"
+  },
+  {
+    "glyphIndex": 28,
+    "glyphName": "ithkuil.026",
+    "codepoints": [
+      "U+C0019"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2302,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1536,
+      "y2": 2688
+    },
+    "svgPath": "M1536-384L959-384L0-1343L0-2688L384-2688L384-1536"
+  },
+  {
+    "glyphIndex": 29,
+    "glyphName": "ithkuil.027",
+    "codepoints": [
+      "U+C001A"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3069,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2304,
+      "y2": 2688
+    },
+    "svgPath": "M2304-384L1727-384L575-1536L1151-1536L2304-384M575-1536L0-1536L1151-2688L1727-2688"
+  },
+  {
+    "glyphIndex": 30,
+    "glyphName": "ithkuil.028",
+    "codepoints": [
+      "U+C001B"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1727,
+      "y2": 2688
+    },
+    "svgPath": "M1727-384L1151-384L0-1536L575-1536L1727-384M959-1536L575-1536L575-2688L959-2688"
+  },
+  {
+    "glyphIndex": 31,
+    "glyphName": "ithkuil.029",
+    "codepoints": [
+      "U+C001C"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M2111-384L1536-384L384-1536L672-1823L2111-384M0-1151L0-2688L384-2688L384-1536"
+  },
+  {
+    "glyphIndex": 32,
+    "glyphName": "ithkuil.030",
+    "codepoints": [
+      "U+C001D"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1917,
+    "bbox": {
+      "x1": -96,
+      "y1": 384,
+      "x2": 1536,
+      "y2": 2688
+    },
+    "svgPath": "M1536-384L1151-384L1151-1343L575-1343L191-1727L1536-1727L1536-384M191-1727L-96-2016L575-2688L1151-2688"
+  },
+  {
+    "glyphIndex": 33,
+    "glyphName": "ithkuil.031",
+    "codepoints": [
+      "U+C001E"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 2688
+    },
+    "svgPath": "M2496-384L2111-384L2111-1343L2496-959L2496-384M2111-1343L0-1343L1343-2688L1920-2688L959-1727L1727-1727"
+  },
+  {
+    "glyphIndex": 34,
+    "glyphName": "ithkuil.032",
+    "codepoints": [
+      "U+C001F"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2208,
+      "y2": 2688
+    },
+    "svgPath": "M1536-384L959-384L1920-1343L2208-1056L1536-384M1920-1343L0-1343L1343-2688L1920-2688L959-1727L1536-1727"
+  },
+  {
+    "glyphIndex": 35,
+    "glyphName": "ithkuil.033",
+    "codepoints": [
+      "U+C0020"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2111,
+    "bbox": {
+      "x1": -96,
+      "y1": 384,
+      "x2": 1727,
+      "y2": 2688
+    },
+    "svgPath": "M1727-384L1343-384L1343-1343L1727-959L1727-384M1343-1343L575-1343L191-1727L959-1727L1343-1343M191-1727L-96-2016L575-2688L1151-2688"
+  },
+  {
+    "glyphIndex": 36,
+    "glyphName": "ithkuil.034",
+    "codepoints": [
+      "U+C0021"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M1727-384L1343-384L1343-1151L1727-1536L1727-384M1727-1536L0-1536L1151-2688L1727-2688L959-1920L2111-1920"
+  },
+  {
+    "glyphIndex": 37,
+    "glyphName": "ithkuil.035",
+    "codepoints": [
+      "U+C0022"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3646,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 3263,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1727-1727L2304-1727L1727-2304L2111-2688L2688-2688L2304-2304L3263-1343L1920-1343"
+  },
+  {
+    "glyphIndex": 38,
+    "glyphName": "ithkuil.036",
+    "codepoints": [
+      "U+C0023"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3453,
+    "bbox": {
+      "x1": -96,
+      "y1": 384,
+      "x2": 2688,
+      "y2": 2688
+    },
+    "svgPath": "M2688-384L2111-384L1151-1343L575-1343L191-1727L1343-1727L2688-384M191-1727L-96-2016L575-2688L1151-2688"
+  },
+  {
+    "glyphIndex": 39,
+    "glyphName": "ithkuil.037",
+    "codepoints": [
+      "U+C0024"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 2688
+    },
+    "svgPath": "M2496-384L2111-384L2111-1536L2496-1920L2496-384M1727-1151L0-1151L1536-2688L2111-2688L959-1536L2111-1536"
+  },
+  {
+    "glyphIndex": 40,
+    "glyphName": "ithkuil.038",
+    "codepoints": [
+      "U+C0025"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1917,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1536,
+      "y2": 2688
+    },
+    "svgPath": "M1151-384L575-384L959-768L191-1536L768-1536L1536-768L1151-384M1343-1536L768-1536L0-2304L384-2688L959-2688L575-2304"
+  },
+  {
+    "glyphIndex": 41,
+    "glyphName": "ithkuil.039",
+    "codepoints": [
+      "U+C0026"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "bbox": {
+      "x1": 191,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1536-1536L2111-1536L959-384M1536-1536L959-1536L191-2304L575-2688L1151-2688L768-2304"
+  },
+  {
+    "glyphIndex": 42,
+    "glyphName": "ithkuil.040",
+    "codepoints": [
+      "U+C0027"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 2688
+    },
+    "svgPath": "M1920-384L1343-384L191-1536L768-1536L1920-384M1343-1536L768-1536L0-2304L384-2688L959-2688L575-2304"
+  },
+  {
+    "glyphIndex": 43,
+    "glyphName": "ithkuil.041",
+    "codepoints": [
+      "U+C0028"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1726,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1343,
+      "y2": 2688
+    },
+    "svgPath": "M768-384L384-384L384-1536L768-1536L768-384M1343-1536L768-1536L0-2304L384-2688L959-2688L575-2304"
+  },
+  {
+    "glyphIndex": 44,
+    "glyphName": "ithkuil.042",
+    "codepoints": [
+      "U+C0029"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3069,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2688,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1536-1536L2111-1536L959-384M2688-1536L2111-1536L1343-2304L1727-2688L2304-2688L1920-2304"
+  },
+  {
+    "glyphIndex": 45,
+    "glyphName": "ithkuil.043",
+    "codepoints": [
+      "U+C002A"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 4030,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 3263,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L2688-2688L3263-2688"
+  },
+  {
+    "glyphIndex": 46,
+    "glyphName": "ithkuil.044",
+    "codepoints": [
+      "U+C002B"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3453,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2688,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1536-1536L2111-1536L959-384M1536-1536L959-1536L2111-2688L2688-2688"
+  },
+  {
+    "glyphIndex": 47,
+    "glyphName": "ithkuil.045",
+    "codepoints": [
+      "U+C002C"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 2688
+    },
+    "svgPath": "M959-384L384-384L1631-1631L2208-1631L959-384M1248-1440L672-1440L1920-2688L2496-2688"
+  },
+  {
+    "glyphIndex": 48,
+    "glyphName": "ithkuil.046",
+    "codepoints": [
+      "U+C002D"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 4030,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 3263,
+      "y2": 2688
+    },
+    "svgPath": "M3263-384L2688-384L384-2688L959-2688"
+  },
+  {
+    "glyphIndex": 49,
+    "glyphName": "ithkuil.047",
+    "codepoints": [
+      "U+C002E"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3453,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2688,
+      "y2": 2688
+    },
+    "svgPath": "M2688-384L2111-384L959-1536L1536-1536L2688-384M2111-1536L1536-1536L384-2688L959-2688"
+  },
+  {
+    "glyphIndex": 50,
+    "glyphName": "ithkuil.048",
+    "codepoints": [
+      "U+C002F"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 2688
+    },
+    "svgPath": "M2496-384L1920-384L672-1631L1248-1631L2496-384M2208-1440L1631-1440L384-2688L959-2688"
+  },
+  {
+    "glyphIndex": 51,
+    "glyphName": "ithkuil.049",
+    "codepoints": [
+      "U+C0030"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 3837,
+    "bbox": {
+      "x1": 0,
+      "y1": 1343,
+      "x2": 3456,
+      "y2": 1727
+    },
+    "svgPath": "M3071-1343L0-1343L384-1727L3456-1727"
+  },
+  {
+    "glyphIndex": 52,
+    "glyphName": "ithkuil.050",
+    "codepoints": [
+      "U+C0031"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "bbox": {
+      "x1": 0,
+      "y1": 959,
+      "x2": 3840,
+      "y2": 1727
+    },
+    "svgPath": "M3071-959L3263-1343L0-1343L384-1727L3840-1727"
+  },
+  {
+    "glyphIndex": 53,
+    "glyphName": "ithkuil.051",
+    "codepoints": [
+      "U+C0032"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "bbox": {
+      "x1": 0,
+      "y1": 1343,
+      "x2": 3840,
+      "y2": 2111
+    },
+    "svgPath": "M3456-1343L0-1343L768-2111L575-1727L3840-1727"
+  },
+  {
+    "glyphIndex": 54,
+    "glyphName": "ithkuil.052",
+    "codepoints": [
+      "U+C0033"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4606,
+    "bbox": {
+      "x1": 0,
+      "y1": 959,
+      "x2": 4223,
+      "y2": 2111
+    },
+    "svgPath": "M3456-959L3647-1343L0-1343L768-2111L575-1727L4223-1727"
+  },
+  {
+    "glyphIndex": 55,
+    "glyphName": "ithkuil.053",
+    "codepoints": [
+      "U+C0034"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "bbox": {
+      "x1": 0,
+      "y1": 1343,
+      "x2": 3840,
+      "y2": 2111
+    },
+    "svgPath": "M3840-1343L384-1343L0-1727L3263-1727L3071-2111"
+  },
+  {
+    "glyphIndex": 56,
+    "glyphName": "ithkuil.054",
+    "codepoints": [
+      "U+C0035"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "bbox": {
+      "x1": 0,
+      "y1": 959,
+      "x2": 3840,
+      "y2": 1727
+    },
+    "svgPath": "M768-959L0-1727L3456-1727L3840-1343L575-1343"
+  },
+  {
+    "glyphIndex": 57,
+    "glyphName": "ithkuil.055",
+    "codepoints": [
+      "U+C0036"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4606,
+    "bbox": {
+      "x1": 0,
+      "y1": 959,
+      "x2": 4223,
+      "y2": 2111
+    },
+    "svgPath": "M768-959L0-1727L3647-1727L3456-2111L4223-1343L575-1343"
+  },
+  {
+    "glyphIndex": 58,
+    "glyphName": "ithkuil.056",
+    "codepoints": [
+      "U+C0037"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M384-384L0-384L0-3071L1920-3071L1920-2688L384-2688"
+  },
+  {
+    "glyphIndex": 59,
+    "glyphName": "ithkuil.057",
+    "codepoints": [
+      "U+C0038"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 4030,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 3263,
+      "y2": 3071
+    },
+    "svgPath": "M3263-384L2688-384L0-3071L2881-3071L2881-2688L959-2688"
+  },
+  {
+    "glyphIndex": 60,
+    "glyphName": "ithkuil.058",
+    "codepoints": [
+      "U+C0039"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M1727-384L1151-384L0-1536L0-3071L1920-3071L1920-2688L384-2688L384-1727"
+  },
+  {
+    "glyphIndex": 61,
+    "glyphName": "ithkuil.059",
+    "codepoints": [
+      "U+C003A"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M1536-384L1151-384L1151-1920L0-3071L2496-3071L2496-2688L959-2688L1536-2111"
+  },
+  {
+    "glyphIndex": 62,
+    "glyphName": "ithkuil.060",
+    "codepoints": [
+      "U+C003B"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M959-384L384-384L1536-1536L0-3071L2496-3071L2496-2688L959-2688L2111-1536"
+  },
+  {
+    "glyphIndex": 63,
+    "glyphName": "ithkuil.061",
+    "codepoints": [
+      "U+C003C"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M384-384L0-384L0-2304L384-2688L384-384M2304-2688L384-2688L768-3071L2304-3071"
+  },
+  {
+    "glyphIndex": 64,
+    "glyphName": "ithkuil.062",
+    "codepoints": [
+      "U+C003D"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 96,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M1343-384L959-384L959-1536L96-2399L384-2688L1343-1727L1343-384M2496-2688L384-2688L768-3071L2496-3071"
+  },
+  {
+    "glyphIndex": 65,
+    "glyphName": "ithkuil.063",
+    "codepoints": [
+      "U+C003E"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M768-384L384-384L384-2688L768-2304L768-384M1920-2688L384-2688L0-3071L1920-3071"
+  },
+  {
+    "glyphIndex": 66,
+    "glyphName": "ithkuil.064",
+    "codepoints": [
+      "U+C003F"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M1727-384L1151-384L384-1151L384-2688L768-2304L768-1343L1727-384M1920-2688L384-2688L0-3071L1920-3071"
+  },
+  {
+    "glyphIndex": 67,
+    "glyphName": "ithkuil.065",
+    "codepoints": [
+      "U+C0040"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M384-384L0-384L0-2688L384-2688L768-2304L384-2304L384-384M1920-2688L384-2688L0-3071L1920-3071"
+  },
+  {
+    "glyphIndex": 68,
+    "glyphName": "ithkuil.066",
+    "codepoints": [
+      "U+C0041"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M768-384L384-384L384-2304L768-2304L768-384M1343-2304L768-2304L0-3071L2496-3071L2496-2688L959-2688"
+  },
+  {
+    "glyphIndex": 69,
+    "glyphName": "ithkuil.067",
+    "codepoints": [
+      "U+C0042"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M768-384L384-384L384-1536L768-1920L768-384M0-1151L0-3071L1920-3071L1920-2688L384-2688L384-1536"
+  },
+  {
+    "glyphIndex": 70,
+    "glyphName": "ithkuil.068",
+    "codepoints": [
+      "U+C0043"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2878,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2111,
+      "y2": 3071
+    },
+    "svgPath": "M2111-384L1536-384L384-1536L672-1823L2111-384M0-1151L0-3071L1920-3071L1920-2688L384-2688L384-1536"
+  },
+  {
+    "glyphIndex": 71,
+    "glyphName": "ithkuil.069",
+    "codepoints": [
+      "U+C0044"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M2208-384L1823-384L1823-1823L2208-2208L2208-384M1536-1536L0-3071L2496-3071L2496-2688L959-2688L1823-1823"
+  },
+  {
+    "glyphIndex": 72,
+    "glyphName": "ithkuil.070",
+    "codepoints": [
+      "U+C0045"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3837,
+    "bbox": {
+      "x1": 384,
+      "y1": 384,
+      "x2": 3071,
+      "y2": 3071
+    },
+    "svgPath": "M959-384L384-384L1536-1536L2111-1536L959-384M2688-1536L2111-1536L575-3071L3071-3071L3071-2688L1536-2688"
+  },
+  {
+    "glyphIndex": 73,
+    "glyphName": "ithkuil.071",
+    "codepoints": [
+      "U+C0046"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3646,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2881,
+      "y2": 3071
+    },
+    "svgPath": "M1536-384L959-384L2111-1536L2688-1536L1536-384M2111-1536L1536-1536L0-3071L2881-3071L2881-2688L959-2688"
+  },
+  {
+    "glyphIndex": 74,
+    "glyphName": "ithkuil.072",
+    "codepoints": [
+      "U+C0047"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3453,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2688,
+      "y2": 3071
+    },
+    "svgPath": "M2688-384L2111-384L959-1536L1536-1536L2688-384M2111-1536L1536-1536L0-3071L2496-3071L2496-2688L959-2688"
+  },
+  {
+    "glyphIndex": 75,
+    "glyphName": "ithkuil.073",
+    "codepoints": [
+      "U+C0048"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M1536-384L1151-384L1151-1343L0-1343L0-3071L1920-3071L1920-2688L384-2688L384-1727L1536-1727"
+  },
+  {
+    "glyphIndex": 76,
+    "glyphName": "ithkuil.074",
+    "codepoints": [
+      "U+C0049"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M959-384L384-384L1343-1343L0-1343L0-3071L2496-3071L2496-2688L384-2688L384-1727L2304-1727"
+  },
+  {
+    "glyphIndex": 77,
+    "glyphName": "ithkuil.075",
+    "codepoints": [
+      "U+C004A"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2496,
+      "y2": 3071
+    },
+    "svgPath": "M384-384L0-384L0-1920L1151-1920L0-3071L2496-3071L2496-2688L959-2688L2111-1536L384-1536"
+  },
+  {
+    "glyphIndex": 78,
+    "glyphName": "ithkuil.076",
+    "codepoints": [
+      "U+C004B"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M1536-384L1151-384L1151-1343L384-1343L384-2688L768-2304L768-1727L1536-1727L1536-384M2304-2688L384-2688L0-3071L2304-3071"
+  },
+  {
+    "glyphIndex": 79,
+    "glyphName": "ithkuil.077",
+    "codepoints": [
+      "U+C004C"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 1920,
+      "y2": 3071
+    },
+    "svgPath": "M1536-384L1151-384L1151-1536L384-1536L768-1920L1536-1920L1536-384M0-1151L0-3071L1920-3071L1920-2688L384-2688L384-1536"
+  },
+  {
+    "glyphIndex": 80,
+    "glyphName": "ithkuil.078",
+    "codepoints": [
+      "U+C004D"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 2304,
+      "y2": 3071
+    },
+    "svgPath": "M959-384L384-384L1151-1151L384-1151L384-2688L768-2304L768-1536L2111-1536L959-384M2304-2688L384-2688L0-3071L2304-3071"
+  },
+  {
+    "glyphIndex": 81,
+    "glyphName": "ithkuil.079",
+    "codepoints": [
+      "U+C004E"
+    ],
+    "ithkeyClass": "placeholder",
+    "advanceWidth": 765,
+    "bbox": {
+      "x1": 0,
+      "y1": 384,
+      "x2": 384,
+      "y2": 2688
+    },
+    "svgPath": "M384-384L0-384L0-2688L384-2688"
+  },
+  {
+    "glyphIndex": 82,
+    "glyphName": "ithkuil.080",
+    "codepoints": [
+      "U+C004F"
+    ],
+    "ithkeyClass": "placeholder",
+    "advanceWidth": 1726,
+    "bbox": {
+      "x1": 0,
+      "y1": 2688,
+      "x2": 1536,
+      "y2": 3071
+    },
+    "svgPath": "M1536-2688L0-2688L0-3071L1536-3071"
+  },
+  {
+    "glyphIndex": 83,
+    "glyphName": "ithkuil.081",
+    "codepoints": [
+      "U+C0050"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-719L288-719L288-288M1007 0L0 0L0-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 84,
+    "glyphName": "ithkuil.082",
+    "codepoints": [
+      "U+C0051"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L359-288L359-719L0-719L0-1007L647-1007L647-288L1007-288L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 85,
+    "glyphName": "ithkuil.083",
+    "codepoints": [
+      "U+C0052"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007-359L288-359L288-288L1007-288L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 86,
+    "glyphName": "ithkuil.084",
+    "codepoints": [
+      "U+C0053"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 87,
+    "glyphName": "ithkuil.085",
+    "codepoints": [
+      "U+C0054"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-359L0-359L0-1007L288-1007L288-647L719-647L719-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 88,
+    "glyphName": "ithkuil.086",
+    "codepoints": [
+      "U+C0055"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 89,
+    "glyphName": "ithkuil.087",
+    "codepoints": [
+      "U+C0056"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 90,
+    "glyphName": "ithkuil.088",
+    "codepoints": [
+      "U+C0057"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-719L0-719L0-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 91,
+    "glyphName": "ithkuil.089",
+    "codepoints": [
+      "U+C0058"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M1007 0L0 0L0-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 92,
+    "glyphName": "ithkuil.090",
+    "codepoints": [
+      "U+C0059"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M1007 0L719 0L719-359L0-359L0-1007L1007-1007L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 93,
+    "glyphName": "ithkuil.091",
+    "codepoints": [
+      "U+C005A"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M288 0L0 0L0-1007L1007-1007L1007 0L719 0L719-359L288-359L288 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 94,
+    "glyphName": "ithkuil.092",
+    "codepoints": [
+      "U+C005B"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M863 0L0 0L0-1007L863-1007L1007-863L1007-647L863-504L1007-359L1007-144L863 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 95,
+    "glyphName": "ithkuil.093",
+    "codepoints": [
+      "U+C005C"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-288L1007-288L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 96,
+    "glyphName": "ithkuil.094",
+    "codepoints": [
+      "U+C005D"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L575-288L719-432L719-575L575-719L288-719L288-288M719 0L0 0L0-1007L719-1007L1007-719L1007-288L719 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 97,
+    "glyphName": "ithkuil.095",
+    "codepoints": [
+      "U+C005E"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288-288L1007-288L1007 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 98,
+    "glyphName": "ithkuil.096",
+    "codepoints": [
+      "U+C005F"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288 0M288-1584L719-1584L719-2016L288-2016L288-1584M1007-1295L0-1295L0-2304L1007-2304"
+  },
+  {
+    "glyphIndex": 99,
+    "glyphName": "ithkuil.097",
+    "codepoints": [
+      "U+C0060"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-719L288-719L288-288M1007 0L0 0L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 100,
+    "glyphName": "ithkuil.098",
+    "codepoints": [
+      "U+C0061"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L359-288L359-719L0-719L0-1007L647-1007L647-288L1007-288L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 101,
+    "glyphName": "ithkuil.099",
+    "codepoints": [
+      "U+C0062"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007-359L288-359L288-288L1007-288L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 102,
+    "glyphName": "ithkuil.100",
+    "codepoints": [
+      "U+C0063"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 103,
+    "glyphName": "ithkuil.101",
+    "codepoints": [
+      "U+C0064"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-359L0-359L0-1007L288-1007L288-647L719-647L719-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 104,
+    "glyphName": "ithkuil.102",
+    "codepoints": [
+      "U+C0065"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 105,
+    "glyphName": "ithkuil.103",
+    "codepoints": [
+      "U+C0066"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 106,
+    "glyphName": "ithkuil.104",
+    "codepoints": [
+      "U+C0067"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-719L0-719L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 107,
+    "glyphName": "ithkuil.105",
+    "codepoints": [
+      "U+C0068"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M1007 0L0 0L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 108,
+    "glyphName": "ithkuil.106",
+    "codepoints": [
+      "U+C0069"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M1007 0L719 0L719-359L0-359L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 109,
+    "glyphName": "ithkuil.107",
+    "codepoints": [
+      "U+C006A"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M288 0L0 0L0-1007L1007-1007L1007 0L719 0L719-359L288-359L288 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 110,
+    "glyphName": "ithkuil.108",
+    "codepoints": [
+      "U+C006B"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M863 0L0 0L0-1007L863-1007L1007-863L1007-647L863-504L1007-359L1007-144L863 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 111,
+    "glyphName": "ithkuil.109",
+    "codepoints": [
+      "U+C006C"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-288L1007-288L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 112,
+    "glyphName": "ithkuil.110",
+    "codepoints": [
+      "U+C006D"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L575-288L719-432L719-575L575-719L288-719L288-288M719 0L0 0L0-1007L719-1007L1007-719L1007-288L719 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 113,
+    "glyphName": "ithkuil.111",
+    "codepoints": [
+      "U+C006E"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288-288L1007-288L1007 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 114,
+    "glyphName": "ithkuil.112",
+    "codepoints": [
+      "U+C006F"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288 0M1007-1295L0-1295L0-1584L359-1584L359-2016L0-2016L0-2304L647-2304L647-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 115,
+    "glyphName": "ithkuil.113",
+    "codepoints": [
+      "U+C0070"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-719L288-719L288-288M1007 0L0 0L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 116,
+    "glyphName": "ithkuil.114",
+    "codepoints": [
+      "U+C0071"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L359-288L359-719L0-719L0-1007L647-1007L647-288L1007-288L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 117,
+    "glyphName": "ithkuil.115",
+    "codepoints": [
+      "U+C0072"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007-359L288-359L288-288L1007-288L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 118,
+    "glyphName": "ithkuil.116",
+    "codepoints": [
+      "U+C0073"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-647L719-647L719-719L0-719L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 119,
+    "glyphName": "ithkuil.117",
+    "codepoints": [
+      "U+C0074"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-359L0-359L0-1007L288-1007L288-647L719-647L719-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 120,
+    "glyphName": "ithkuil.118",
+    "codepoints": [
+      "U+C0075"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-288L719-288L719-359L0-359L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 121,
+    "glyphName": "ithkuil.119",
+    "codepoints": [
+      "U+C0076"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 122,
+    "glyphName": "ithkuil.120",
+    "codepoints": [
+      "U+C0077"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L719 0L719-719L0-719L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 123,
+    "glyphName": "ithkuil.121",
+    "codepoints": [
+      "U+C0078"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M1007 0L0 0L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 124,
+    "glyphName": "ithkuil.122",
+    "codepoints": [
+      "U+C0079"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M1007 0L719 0L719-359L0-359L0-1007L1007-1007L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 125,
+    "glyphName": "ithkuil.123",
+    "codepoints": [
+      "U+C007A"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-647L719-647L719-719L288-719L288-647M288 0L0 0L0-1007L1007-1007L1007 0L719 0L719-359L288-359L288 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 126,
+    "glyphName": "ithkuil.124",
+    "codepoints": [
+      "U+C007B"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L719-288L719-359L288-359L288-288M288-647L719-647L719-719L288-719L288-647M863 0L0 0L0-1007L863-1007L1007-863L1007-647L863-504L1007-359L1007-144L863 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 127,
+    "glyphName": "ithkuil.125",
+    "codepoints": [
+      "U+C007C"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-288L1007-288L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 128,
+    "glyphName": "ithkuil.126",
+    "codepoints": [
+      "U+C007D"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288-288L575-288L719-432L719-575L575-719L288-719L288-288M719 0L0 0L0-1007L719-1007L1007-719L1007-288L719 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 129,
+    "glyphName": "ithkuil.127",
+    "codepoints": [
+      "U+C007E"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M1007 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288-288L1007-288L1007 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  },
+  {
+    "glyphIndex": 130,
+    "glyphName": "ithkuil.128",
+    "codepoints": [
+      "U+C007F"
+    ],
+    "ithkeyClass": "grid",
+    "advanceWidth": 1293,
+    "bbox": {
+      "x1": 0,
+      "y1": 0,
+      "x2": 1007,
+      "y2": 2304
+    },
+    "svgPath": "M288 0L0 0L0-1007L1007-1007L1007-719L288-719L288-647L1007-647L1007-359L288-359L288 0M1007-1295L0-1295L0-1944L719-1944L719-2016L0-2016L0-2304L1007-2304L1007-1655L288-1655L288-1584L1007-1584"
+  }
+]

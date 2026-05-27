@@ -1,0 +1,21 @@
+============================================================
+Font          : unknown
+Units per em  : 4096
+============================================================
+
+Glyphs mapped    : 128
+GSUB ligatures   : 0 rules
+GSUB chained ctx : 183 rules
+GPOS anchors     : 0 entries
+
+Class audit:
+  [OK] punctuation       expected=  4  actual=  4
+  [OK] number            expected= 10  actual= 10
+  [OK] tenthPower        expected=  4  actual=  4
+  [OK] primary           expected= 24  actual= 24
+  [OK] secondary         expected=  6  actual=  6
+  [OK] tertiary          expected=  7  actual=  7
+  [OK] consonantal       expected= 23  actual= 23
+  [OK] placeholder       expected=  2  actual=  2
+  [OK] diacritic         expected= 33  actual= 33
+  [OK] grid              expected=  1  actual=  1

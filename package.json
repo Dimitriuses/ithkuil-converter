@@ -1,0 +1,31 @@
+{
+  "name": "ithkuil-converter",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dimitriuses/ithkuil-converter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Dimitriuses/ithkuil-converter/issues"
+  },
+  "homepage": "https://github.com/Dimitriuses/ithkuil-converter#readme",
+  "devDependencies": {
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
+  },
+  "dependencies": {
+    "@types/node": "^25.9.1",
+    "@types/opentype.js": "^1.3.9",
+    "fs": "^0.0.1-security",
+    "opentype.js": "^2.0.0"
+  }
+}

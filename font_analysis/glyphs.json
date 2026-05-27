@@ -1,0 +1,1410 @@
+[
+  {
+    "glyphName": "ithkuil.001",
+    "codepoints": [
+      "0xc0000"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1149,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 1151 191 1343 384 1536 575 1343 384 1151ZM384 1536 191 1727 384 1920 575 1727 384 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.002",
+    "codepoints": [
+      "0xc0001"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1149,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 959 191 1151 384 1343 575 1151 384 959ZM384 1343 191 1536 384 1727 575 1536 384 1343ZM384 1727 191 1920 384 2111 575 1920 384 1727Z"
+  },
+  {
+    "glyphName": "ithkuil.003",
+    "codepoints": [
+      "0xc0002"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 1726,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M672 1056 479 1248 672 1440 863 1248 672 1056ZM384 1343 191 1536 384 1727 575 1536 384 1343ZM959 1343 768 1536 959 1727 1151 1536 959 1343ZM672 1631 479 1823 672 2016 863 1823 672 1631Z"
+  },
+  {
+    "glyphName": "ithkuil.004",
+    "codepoints": [
+      "0xc0003"
+    ],
+    "ithkeyClass": "punctuation",
+    "advanceWidth": 2302,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M959 768 768 959 959 1151 1151 959 959 768ZM672 1056 479 1248 672 1440 863 1248 672 1056ZM1248 1056 1056 1248 1248 1440 1440 1248 1248 1056ZM384 1343 191 1536 384 1727 575 1536 384 1343ZM959 1343 768 1536 959 1727 1151 1536 959 1343ZM1536 1343 1343 1536 1536 1727 1727 1536 1536 1343ZM672 1631 479 1823 672 2016 863 1823 672 1631ZM1248 1631 1056 1823 1248 2016 1440 1823 1248 1631ZM959 1920 768 2111 959 2304 1151 2111 959 1920Z"
+  },
+  {
+    "glyphName": "ithkuil.005",
+    "codepoints": [
+      "0xc0004"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1343L768 2111H1920V3071H2304V1727H959L384 1151V0Z"
+  },
+  {
+    "glyphName": "ithkuil.006",
+    "codepoints": [
+      "0xc0005"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1343L768 2111H1343V2688L1727 3071H2304V2688H1920L1727 2496V2304L1920 2111H2304V1727H959L384 1151V0Z"
+  },
+  {
+    "glyphName": "ithkuil.007",
+    "codepoints": [
+      "0xc0006"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V2304H384L959 1727H1343L1920 2304V3071H2304V2111L1536 1343H768L384 1727V0Z"
+  },
+  {
+    "glyphName": "ithkuil.008",
+    "codepoints": [
+      "0xc0007"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V2496L575 3071H1727L2304 2496V959H1920V2304L1536 2688H768L384 2304V0Z"
+  },
+  {
+    "glyphName": "ithkuil.009",
+    "codepoints": [
+      "0xc0008"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V3071H384V959H1536L1920 1343V1727L1536 2111H959V2496H1727L2304 1920V1151L1727 575H384V0Z"
+  },
+  {
+    "glyphName": "ithkuil.010",
+    "codepoints": [
+      "0xc0009"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V3071H1151V1343L1343 1151H1727L1920 1343V3071H2304V1151L1920 768H1151L768 1151V2688H384V0Z"
+  },
+  {
+    "glyphName": "ithkuil.011",
+    "codepoints": [
+      "0xc000a"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1920L384 2304H768L1151 1920V1151H1536L1920 1536V2304L1536 2688H768V3071H1727L2304 2496V1343L1727 768H768V1727L575 1920L384 1727V0Z"
+  },
+  {
+    "glyphName": "ithkuil.012",
+    "codepoints": [
+      "0xc000b"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V2304H575L768 2496V3071H1151V2304L768 1920H384V1151H1151L1920 1920V3071H2304V1727L1343 768H384V0Z"
+  },
+  {
+    "glyphName": "ithkuil.013",
+    "codepoints": [
+      "0xc000c"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1343H384L768 959H1536L1920 1343V2496L1727 2304H575L0 2881V3071H384L768 2688H1536L1920 3071H2304V1151L1727 575H575L384 768V0Z"
+  },
+  {
+    "glyphName": "ithkuil.014",
+    "codepoints": [
+      "0xc000d"
+    ],
+    "ithkeyClass": "number",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V959H1536L1920 1343V2304L1536 2688H384V2496H1343L1727 2111V1536L1343 1151H0V1536H1151L1343 1727V1920L1151 2111H0V3071H1727L2304 2496V1151L1727 575H384V0Z"
+  },
+  {
+    "glyphName": "ithkuil.015",
+    "codepoints": [
+      "0xc000e"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V768L2304 1920V1536L384 575V0ZM0 959V1343L2304 2496V2111L0 959ZM0 1536V1920L2304 3071V2688L0 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.016",
+    "codepoints": [
+      "0xc000f"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V2496L575 3071H1727L2304 2496V959L1920 575H1151L768 959V1727L1151 2111H1536V1727H1343L1151 1536V1151L1343 959H1727L1920 1151V2304L1536 2688H768L384 2304V0Z"
+  },
+  {
+    "glyphName": "ithkuil.017",
+    "codepoints": [
+      "0xc0010"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1151H1727V768H384V0ZM1920 384V1920L1536 2304H1151V2688H1727L2304 2111V384ZM575 1343V3071H959V1343Z"
+  },
+  {
+    "glyphName": "ithkuil.018",
+    "codepoints": [
+      "0xc0011"
+    ],
+    "ithkeyClass": "tenthPower",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V2496L575 3071H1727L2304 2496V959H1920V2304L1536 2688H1343V959H959V2688H768L384 2304V0Z"
+  },
+  {
+    "glyphName": "ithkuil.019",
+    "codepoints": [
+      "0xc0012"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384 0 1536 1151 2688H1727L575 1536L1727 384Z"
+  },
+  {
+    "glyphName": "ithkuil.020",
+    "codepoints": [
+      "0xc0013"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1727 384V1536H0L1151 2688H1727L959 1920H2111V384Z"
+  },
+  {
+    "glyphName": "ithkuil.021",
+    "codepoints": [
+      "0xc0014"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536H0L1151 2688H1727L959 1920H2496L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.022",
+    "codepoints": [
+      "0xc0015"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3646,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2304 384 1151 1536H0L1151 2688H1727L959 1920H1343L2881 384Z"
+  },
+  {
+    "glyphName": "ithkuil.023",
+    "codepoints": [
+      "0xc0016"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536 768 2304 1151 2688H1727L1343 2304L2111 1536L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.024",
+    "codepoints": [
+      "0xc0017"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1536 384 0 1920H575L191 2304L575 2688H1151L768 2304L1536 1536H959L2111 384Z"
+  },
+  {
+    "glyphName": "ithkuil.025",
+    "codepoints": [
+      "0xc0018"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1726,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M768 384V1536L0 2304L384 2688H959L575 2304L1151 1727V384Z"
+  },
+  {
+    "glyphName": "ithkuil.026",
+    "codepoints": [
+      "0xc0019"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2302,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M959 384 0 1343V2688H384V1536L1536 384Z"
+  },
+  {
+    "glyphName": "ithkuil.027",
+    "codepoints": [
+      "0xc001a"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3069,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1727 384 575 1536H1151L2304 384ZM0 1536 1151 2688H1727L575 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.028",
+    "codepoints": [
+      "0xc001b"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384 0 1536H575L1727 384ZM575 1536V2688H959V1536Z"
+  },
+  {
+    "glyphName": "ithkuil.029",
+    "codepoints": [
+      "0xc001c"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1536 384 384 1536 672 1823 2111 384ZM0 1151V2688H384V1536L0 1151Z"
+  },
+  {
+    "glyphName": "ithkuil.030",
+    "codepoints": [
+      "0xc001d"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1917,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384V1343H575L191 1727H1536V384ZM191 1727 -96 2016 575 2688H1151L191 1727Z"
+  },
+  {
+    "glyphName": "ithkuil.031",
+    "codepoints": [
+      "0xc001e"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2111 384V1343L2496 959V384ZM0 1343 1343 2688H1920L959 1727H1727L2111 1343Z"
+  },
+  {
+    "glyphName": "ithkuil.032",
+    "codepoints": [
+      "0xc001f"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M959 384 1920 1343 2208 1056 1536 384ZM0 1343 1343 2688H1920L959 1727H1536L1920 1343Z"
+  },
+  {
+    "glyphName": "ithkuil.033",
+    "codepoints": [
+      "0xc0020"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2111,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1343 384V1343L1727 959V384ZM575 1343 191 1727H959L1343 1343ZM191 1727 -96 2016 575 2688H1151L191 1727Z"
+  },
+  {
+    "glyphName": "ithkuil.034",
+    "codepoints": [
+      "0xc0021"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1343 384V1151L1727 1536V384ZM0 1536 1151 2688H1727L959 1920H2111L1727 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.035",
+    "codepoints": [
+      "0xc0022"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3646,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1727 1727H2304L1727 2304L2111 2688H2688L2304 2304L3263 1343H1920L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.036",
+    "codepoints": [
+      "0xc0023"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3453,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2111 384 1151 1343H575L191 1727H1343L2688 384ZM191 1727 -96 2016 575 2688H1151L191 1727Z"
+  },
+  {
+    "glyphName": "ithkuil.037",
+    "codepoints": [
+      "0xc0024"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2111 384V1536L2496 1920V384ZM0 1151 1536 2688H2111L959 1536H2111L1727 1151Z"
+  },
+  {
+    "glyphName": "ithkuil.038",
+    "codepoints": [
+      "0xc0025"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1917,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M575 384 959 768 191 1536H768L1536 768L1151 384ZM768 1536 0 2304 384 2688H959L575 2304L1343 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.039",
+    "codepoints": [
+      "0xc0026"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2495,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536H2111L959 384ZM959 1536 191 2304 575 2688H1151L768 2304L1536 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.040",
+    "codepoints": [
+      "0xc0027"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1343 384 191 1536H768L1920 384ZM768 1536 0 2304 384 2688H959L575 2304L1343 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.041",
+    "codepoints": [
+      "0xc0028"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 1726,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384V1536H768V384ZM768 1536 0 2304 384 2688H959L575 2304L1343 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.042",
+    "codepoints": [
+      "0xc0029"
+    ],
+    "ithkeyClass": "primary",
+    "advanceWidth": 3069,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536H2111L959 384ZM2111 1536 1343 2304 1727 2688H2304L1920 2304L2688 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.043",
+    "codepoints": [
+      "0xc002a"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 4030,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 2688 2688H3263L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.044",
+    "codepoints": [
+      "0xc002b"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3453,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536H2111L959 384ZM959 1536 2111 2688H2688L1536 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.045",
+    "codepoints": [
+      "0xc002c"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1631 1631H2208L959 384ZM672 1440 1920 2688H2496L1248 1440Z"
+  },
+  {
+    "glyphName": "ithkuil.046",
+    "codepoints": [
+      "0xc002d"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 4030,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2688 384 384 2688H959L3263 384Z"
+  },
+  {
+    "glyphName": "ithkuil.047",
+    "codepoints": [
+      "0xc002e"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3453,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2111 384 959 1536H1536L2688 384ZM1536 1536 384 2688H959L2111 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.048",
+    "codepoints": [
+      "0xc002f"
+    ],
+    "ithkeyClass": "secondary",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1920 384 672 1631H1248L2496 384ZM1631 1440 384 2688H959L2208 1440Z"
+  },
+  {
+    "glyphName": "ithkuil.049",
+    "codepoints": [
+      "0xc0030"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 3837,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 1343 384 1727H3456L3071 1343Z"
+  },
+  {
+    "glyphName": "ithkuil.050",
+    "codepoints": [
+      "0xc0031"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M3071 959 3263 1343H0L384 1727H3840L3071 959Z"
+  },
+  {
+    "glyphName": "ithkuil.051",
+    "codepoints": [
+      "0xc0032"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 1343 768 2111 575 1727H3840L3456 1343Z"
+  },
+  {
+    "glyphName": "ithkuil.052",
+    "codepoints": [
+      "0xc0033"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4606,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M3456 959 3647 1343H0L768 2111L575 1727H4223L3456 959Z"
+  },
+  {
+    "glyphName": "ithkuil.053",
+    "codepoints": [
+      "0xc0034"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 1343 0 1727H3263L3071 2111L3840 1343Z"
+  },
+  {
+    "glyphName": "ithkuil.054",
+    "codepoints": [
+      "0xc0035"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4222,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M768 959 0 1727H3456L3840 1343H575L768 959Z"
+  },
+  {
+    "glyphName": "ithkuil.055",
+    "codepoints": [
+      "0xc0036"
+    ],
+    "ithkeyClass": "tertiary",
+    "advanceWidth": 4606,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M768 959 0 1727H3647L3456 2111L4223 1343H575L768 959Z"
+  },
+  {
+    "glyphName": "ithkuil.056",
+    "codepoints": [
+      "0xc0037"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V3071H1920V2688H384V384Z"
+  },
+  {
+    "glyphName": "ithkuil.057",
+    "codepoints": [
+      "0xc0038"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 4030,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2688 384 0 3071H2881V2688H959L3263 384Z"
+  },
+  {
+    "glyphName": "ithkuil.058",
+    "codepoints": [
+      "0xc0039"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384 0 1536V3071H1920V2688H384V1727L1727 384Z"
+  },
+  {
+    "glyphName": "ithkuil.059",
+    "codepoints": [
+      "0xc003a"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384V1920L0 3071H2496V2688H959L1536 2111V384Z"
+  },
+  {
+    "glyphName": "ithkuil.060",
+    "codepoints": [
+      "0xc003b"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536 0 3071H2496V2688H959L2111 1536L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.061",
+    "codepoints": [
+      "0xc003c"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V2304L384 2688V384ZM384 2688 768 3071H2304V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.062",
+    "codepoints": [
+      "0xc003d"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M959 384V1536L96 2399L384 2688L1343 1727V384ZM384 2688 768 3071H2496V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.063",
+    "codepoints": [
+      "0xc003e"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384V2688L768 2304V384ZM384 2688 0 3071H1920V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.064",
+    "codepoints": [
+      "0xc003f"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384 384 1151V2688L768 2304V1343L1727 384ZM384 2688 0 3071H1920V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.065",
+    "codepoints": [
+      "0xc0040"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V2688H384L768 2304H384V384ZM384 2688 0 3071H1920V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.066",
+    "codepoints": [
+      "0xc0041"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384V2304H768V384ZM768 2304 0 3071H2496V2688H959L1343 2304Z"
+  },
+  {
+    "glyphName": "ithkuil.067",
+    "codepoints": [
+      "0xc0042"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384V1536L768 1920V384ZM0 1151V3071H1920V2688H384V1536L0 1151Z"
+  },
+  {
+    "glyphName": "ithkuil.068",
+    "codepoints": [
+      "0xc0043"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2878,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1536 384 384 1536 672 1823 2111 384ZM0 1151V3071H1920V2688H384V1536L0 1151Z"
+  },
+  {
+    "glyphName": "ithkuil.069",
+    "codepoints": [
+      "0xc0044"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1823 384V1823L2208 2208V384ZM1536 1536 0 3071H2496V2688H959L1823 1823L1536 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.070",
+    "codepoints": [
+      "0xc0045"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3837,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1536 1536H2111L959 384ZM2111 1536 575 3071H3071V2688H1536L2688 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.071",
+    "codepoints": [
+      "0xc0046"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3646,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M959 384 2111 1536H2688L1536 384ZM1536 1536 0 3071H2881V2688H959L2111 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.072",
+    "codepoints": [
+      "0xc0047"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3453,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M2111 384 959 1536H1536L2688 384ZM1536 1536 0 3071H2496V2688H959L2111 1536Z"
+  },
+  {
+    "glyphName": "ithkuil.073",
+    "codepoints": [
+      "0xc0048"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384V1343H0V3071H1920V2688H384V1727H1536V384Z"
+  },
+  {
+    "glyphName": "ithkuil.074",
+    "codepoints": [
+      "0xc0049"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1343 1343H0V3071H2496V2688H384V1727H2304L959 384Z"
+  },
+  {
+    "glyphName": "ithkuil.075",
+    "codepoints": [
+      "0xc004a"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3262,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V1920H1151L0 3071H2496V2688H959L2111 1536H384V384Z"
+  },
+  {
+    "glyphName": "ithkuil.076",
+    "codepoints": [
+      "0xc004b"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384V1343H384V2688L768 2304V1727H1536V384ZM384 2688 0 3071H2304V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.077",
+    "codepoints": [
+      "0xc004c"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 2686,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M1151 384V1536H384L768 1920H1536V384ZM0 1151V3071H1920V2688H384V1536L0 1151Z"
+  },
+  {
+    "glyphName": "ithkuil.078",
+    "codepoints": [
+      "0xc004d"
+    ],
+    "ithkeyClass": "consonantal",
+    "advanceWidth": 3069,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M384 384 1151 1151H384V2688L768 2304V1536H2111L959 384ZM384 2688 0 3071H2304V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.079",
+    "codepoints": [
+      "0xc004e"
+    ],
+    "ithkeyClass": "placeholder",
+    "advanceWidth": 765,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 384V2688H384V384Z"
+  },
+  {
+    "glyphName": "ithkuil.080",
+    "codepoints": [
+      "0xc004f"
+    ],
+    "ithkeyClass": "placeholder",
+    "advanceWidth": 1726,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 2688V3071H1536V2688Z"
+  },
+  {
+    "glyphName": "ithkuil.081",
+    "codepoints": [
+      "0xc0050"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V719H288V288ZM0 0V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.082",
+    "codepoints": [
+      "0xc0051"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H359V719H0V1007H647V288H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.083",
+    "codepoints": [
+      "0xc0052"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V647H719V719H0V1007H1007V359H288V288H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.084",
+    "codepoints": [
+      "0xc0053"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V647H719V719H0V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.085",
+    "codepoints": [
+      "0xc0054"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V359H0V1007H288V647H719V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.086",
+    "codepoints": [
+      "0xc0055"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V1007H1007V719H288V647H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.087",
+    "codepoints": [
+      "0xc0056"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM0 0V1007H1007V719H288V647H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.088",
+    "codepoints": [
+      "0xc0057"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V719H0V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.089",
+    "codepoints": [
+      "0xc0058"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.090",
+    "codepoints": [
+      "0xc0059"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM719 0V359H0V1007H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.091",
+    "codepoints": [
+      "0xc005a"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM0 0V1007H1007V0H719V359H288V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.092",
+    "codepoints": [
+      "0xc005b"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H863L1007 863V647L863 504L1007 359V144L863 0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.093",
+    "codepoints": [
+      "0xc005c"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V288H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.094",
+    "codepoints": [
+      "0xc005d"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M575 288 719 432V575L575 719H288V288ZM0 0V1007H719L1007 719V288L719 0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.095",
+    "codepoints": [
+      "0xc005e"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V288H1007V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.096",
+    "codepoints": [
+      "0xc005f"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V0ZM719 1584V2016H288V1584ZM0 1295V2304H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.097",
+    "codepoints": [
+      "0xc0060"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V719H288V288ZM0 0V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.098",
+    "codepoints": [
+      "0xc0061"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H359V719H0V1007H647V288H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.099",
+    "codepoints": [
+      "0xc0062"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V647H719V719H0V1007H1007V359H288V288H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.100",
+    "codepoints": [
+      "0xc0063"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V647H719V719H0V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.101",
+    "codepoints": [
+      "0xc0064"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V359H0V1007H288V647H719V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.102",
+    "codepoints": [
+      "0xc0065"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V1007H1007V719H288V647H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.103",
+    "codepoints": [
+      "0xc0066"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM0 0V1007H1007V719H288V647H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.104",
+    "codepoints": [
+      "0xc0067"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V719H0V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.105",
+    "codepoints": [
+      "0xc0068"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.106",
+    "codepoints": [
+      "0xc0069"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM719 0V359H0V1007H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.107",
+    "codepoints": [
+      "0xc006a"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM0 0V1007H1007V0H719V359H288V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.108",
+    "codepoints": [
+      "0xc006b"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H863L1007 863V647L863 504L1007 359V144L863 0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.109",
+    "codepoints": [
+      "0xc006c"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V288H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.110",
+    "codepoints": [
+      "0xc006d"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M575 288 719 432V575L575 719H288V288ZM0 0V1007H719L1007 719V288L719 0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.111",
+    "codepoints": [
+      "0xc006e"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V288H1007V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.112",
+    "codepoints": [
+      "0xc006f"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V0ZM0 1295V1584H359V2016H0V2304H647V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.113",
+    "codepoints": [
+      "0xc0070"
+    ],
+    "ithkeyClass": "diacritic",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V719H288V288ZM0 0V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.114",
+    "codepoints": [
+      "0xc0071"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H359V719H0V1007H647V288H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.115",
+    "codepoints": [
+      "0xc0072"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V647H719V719H0V1007H1007V359H288V288H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.116",
+    "codepoints": [
+      "0xc0073"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V647H719V719H0V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.117",
+    "codepoints": [
+      "0xc0074"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V359H0V1007H288V647H719V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.118",
+    "codepoints": [
+      "0xc0075"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V288H719V359H0V1007H1007V719H288V647H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.119",
+    "codepoints": [
+      "0xc0076"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM0 0V1007H1007V719H288V647H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.120",
+    "codepoints": [
+      "0xc0077"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 0V719H0V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.121",
+    "codepoints": [
+      "0xc0078"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.122",
+    "codepoints": [
+      "0xc0079"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM719 0V359H0V1007H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.123",
+    "codepoints": [
+      "0xc007a"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 647V719H288V647ZM0 0V1007H1007V0H719V359H288V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.124",
+    "codepoints": [
+      "0xc007b"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M719 288V359H288V288ZM719 647V719H288V647ZM0 0V1007H863L1007 863V647L863 504L1007 359V144L863 0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.125",
+    "codepoints": [
+      "0xc007c"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V288H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.126",
+    "codepoints": [
+      "0xc007d"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M575 288 719 432V575L575 719H288V288ZM0 0V1007H719L1007 719V288L719 0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.127",
+    "codepoints": [
+      "0xc007e"
+    ],
+    "ithkeyClass": "unassigned",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V288H1007V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  },
+  {
+    "glyphName": "ithkuil.128",
+    "codepoints": [
+      "0xc007f"
+    ],
+    "ithkeyClass": "grid",
+    "advanceWidth": 1293,
+    "unitsPerEm": 4096,
+    "bbox": null,
+    "svgPath": "M0 0V1007H1007V719H288V647H1007V359H288V0ZM0 1295V1944H719V2016H0V2304H1007V1655H288V1584H1007V1295Z"
+  }
+]

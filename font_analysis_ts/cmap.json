@@ -1,0 +1,898 @@
+[
+  {
+    "codepoint": "U+C0000",
+    "offset": "0x00",
+    "glyphIndex": 3,
+    "glyphName": "ithkuil.001",
+    "ithkeyClass": "punctuation"
+  },
+  {
+    "codepoint": "U+C0001",
+    "offset": "0x01",
+    "glyphIndex": 4,
+    "glyphName": "ithkuil.002",
+    "ithkeyClass": "punctuation"
+  },
+  {
+    "codepoint": "U+C0002",
+    "offset": "0x02",
+    "glyphIndex": 5,
+    "glyphName": "ithkuil.003",
+    "ithkeyClass": "punctuation"
+  },
+  {
+    "codepoint": "U+C0003",
+    "offset": "0x03",
+    "glyphIndex": 6,
+    "glyphName": "ithkuil.004",
+    "ithkeyClass": "punctuation"
+  },
+  {
+    "codepoint": "U+C0004",
+    "offset": "0x04",
+    "glyphIndex": 7,
+    "glyphName": "ithkuil.005",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C0005",
+    "offset": "0x05",
+    "glyphIndex": 8,
+    "glyphName": "ithkuil.006",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C0006",
+    "offset": "0x06",
+    "glyphIndex": 9,
+    "glyphName": "ithkuil.007",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C0007",
+    "offset": "0x07",
+    "glyphIndex": 10,
+    "glyphName": "ithkuil.008",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C0008",
+    "offset": "0x08",
+    "glyphIndex": 11,
+    "glyphName": "ithkuil.009",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C0009",
+    "offset": "0x09",
+    "glyphIndex": 12,
+    "glyphName": "ithkuil.010",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C000A",
+    "offset": "0x0A",
+    "glyphIndex": 13,
+    "glyphName": "ithkuil.011",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C000B",
+    "offset": "0x0B",
+    "glyphIndex": 14,
+    "glyphName": "ithkuil.012",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C000C",
+    "offset": "0x0C",
+    "glyphIndex": 15,
+    "glyphName": "ithkuil.013",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C000D",
+    "offset": "0x0D",
+    "glyphIndex": 16,
+    "glyphName": "ithkuil.014",
+    "ithkeyClass": "number"
+  },
+  {
+    "codepoint": "U+C000E",
+    "offset": "0x0E",
+    "glyphIndex": 17,
+    "glyphName": "ithkuil.015",
+    "ithkeyClass": "tenthPower"
+  },
+  {
+    "codepoint": "U+C000F",
+    "offset": "0x0F",
+    "glyphIndex": 18,
+    "glyphName": "ithkuil.016",
+    "ithkeyClass": "tenthPower"
+  },
+  {
+    "codepoint": "U+C0010",
+    "offset": "0x10",
+    "glyphIndex": 19,
+    "glyphName": "ithkuil.017",
+    "ithkeyClass": "tenthPower"
+  },
+  {
+    "codepoint": "U+C0011",
+    "offset": "0x11",
+    "glyphIndex": 20,
+    "glyphName": "ithkuil.018",
+    "ithkeyClass": "tenthPower"
+  },
+  {
+    "codepoint": "U+C0012",
+    "offset": "0x12",
+    "glyphIndex": 21,
+    "glyphName": "ithkuil.019",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0013",
+    "offset": "0x13",
+    "glyphIndex": 22,
+    "glyphName": "ithkuil.020",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0014",
+    "offset": "0x14",
+    "glyphIndex": 23,
+    "glyphName": "ithkuil.021",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0015",
+    "offset": "0x15",
+    "glyphIndex": 24,
+    "glyphName": "ithkuil.022",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0016",
+    "offset": "0x16",
+    "glyphIndex": 25,
+    "glyphName": "ithkuil.023",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0017",
+    "offset": "0x17",
+    "glyphIndex": 26,
+    "glyphName": "ithkuil.024",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0018",
+    "offset": "0x18",
+    "glyphIndex": 27,
+    "glyphName": "ithkuil.025",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0019",
+    "offset": "0x19",
+    "glyphIndex": 28,
+    "glyphName": "ithkuil.026",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001A",
+    "offset": "0x1A",
+    "glyphIndex": 29,
+    "glyphName": "ithkuil.027",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001B",
+    "offset": "0x1B",
+    "glyphIndex": 30,
+    "glyphName": "ithkuil.028",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001C",
+    "offset": "0x1C",
+    "glyphIndex": 31,
+    "glyphName": "ithkuil.029",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001D",
+    "offset": "0x1D",
+    "glyphIndex": 32,
+    "glyphName": "ithkuil.030",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001E",
+    "offset": "0x1E",
+    "glyphIndex": 33,
+    "glyphName": "ithkuil.031",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C001F",
+    "offset": "0x1F",
+    "glyphIndex": 34,
+    "glyphName": "ithkuil.032",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0020",
+    "offset": "0x20",
+    "glyphIndex": 35,
+    "glyphName": "ithkuil.033",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0021",
+    "offset": "0x21",
+    "glyphIndex": 36,
+    "glyphName": "ithkuil.034",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0022",
+    "offset": "0x22",
+    "glyphIndex": 37,
+    "glyphName": "ithkuil.035",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0023",
+    "offset": "0x23",
+    "glyphIndex": 38,
+    "glyphName": "ithkuil.036",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0024",
+    "offset": "0x24",
+    "glyphIndex": 39,
+    "glyphName": "ithkuil.037",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0025",
+    "offset": "0x25",
+    "glyphIndex": 40,
+    "glyphName": "ithkuil.038",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0026",
+    "offset": "0x26",
+    "glyphIndex": 41,
+    "glyphName": "ithkuil.039",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0027",
+    "offset": "0x27",
+    "glyphIndex": 42,
+    "glyphName": "ithkuil.040",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0028",
+    "offset": "0x28",
+    "glyphIndex": 43,
+    "glyphName": "ithkuil.041",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C0029",
+    "offset": "0x29",
+    "glyphIndex": 44,
+    "glyphName": "ithkuil.042",
+    "ithkeyClass": "primary"
+  },
+  {
+    "codepoint": "U+C002A",
+    "offset": "0x2A",
+    "glyphIndex": 45,
+    "glyphName": "ithkuil.043",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C002B",
+    "offset": "0x2B",
+    "glyphIndex": 46,
+    "glyphName": "ithkuil.044",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C002C",
+    "offset": "0x2C",
+    "glyphIndex": 47,
+    "glyphName": "ithkuil.045",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C002D",
+    "offset": "0x2D",
+    "glyphIndex": 48,
+    "glyphName": "ithkuil.046",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C002E",
+    "offset": "0x2E",
+    "glyphIndex": 49,
+    "glyphName": "ithkuil.047",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C002F",
+    "offset": "0x2F",
+    "glyphIndex": 50,
+    "glyphName": "ithkuil.048",
+    "ithkeyClass": "secondary"
+  },
+  {
+    "codepoint": "U+C0030",
+    "offset": "0x30",
+    "glyphIndex": 51,
+    "glyphName": "ithkuil.049",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0031",
+    "offset": "0x31",
+    "glyphIndex": 52,
+    "glyphName": "ithkuil.050",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0032",
+    "offset": "0x32",
+    "glyphIndex": 53,
+    "glyphName": "ithkuil.051",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0033",
+    "offset": "0x33",
+    "glyphIndex": 54,
+    "glyphName": "ithkuil.052",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0034",
+    "offset": "0x34",
+    "glyphIndex": 55,
+    "glyphName": "ithkuil.053",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0035",
+    "offset": "0x35",
+    "glyphIndex": 56,
+    "glyphName": "ithkuil.054",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0036",
+    "offset": "0x36",
+    "glyphIndex": 57,
+    "glyphName": "ithkuil.055",
+    "ithkeyClass": "tertiary"
+  },
+  {
+    "codepoint": "U+C0037",
+    "offset": "0x37",
+    "glyphIndex": 58,
+    "glyphName": "ithkuil.056",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0038",
+    "offset": "0x38",
+    "glyphIndex": 59,
+    "glyphName": "ithkuil.057",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0039",
+    "offset": "0x39",
+    "glyphIndex": 60,
+    "glyphName": "ithkuil.058",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003A",
+    "offset": "0x3A",
+    "glyphIndex": 61,
+    "glyphName": "ithkuil.059",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003B",
+    "offset": "0x3B",
+    "glyphIndex": 62,
+    "glyphName": "ithkuil.060",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003C",
+    "offset": "0x3C",
+    "glyphIndex": 63,
+    "glyphName": "ithkuil.061",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003D",
+    "offset": "0x3D",
+    "glyphIndex": 64,
+    "glyphName": "ithkuil.062",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003E",
+    "offset": "0x3E",
+    "glyphIndex": 65,
+    "glyphName": "ithkuil.063",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C003F",
+    "offset": "0x3F",
+    "glyphIndex": 66,
+    "glyphName": "ithkuil.064",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0040",
+    "offset": "0x40",
+    "glyphIndex": 67,
+    "glyphName": "ithkuil.065",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0041",
+    "offset": "0x41",
+    "glyphIndex": 68,
+    "glyphName": "ithkuil.066",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0042",
+    "offset": "0x42",
+    "glyphIndex": 69,
+    "glyphName": "ithkuil.067",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0043",
+    "offset": "0x43",
+    "glyphIndex": 70,
+    "glyphName": "ithkuil.068",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0044",
+    "offset": "0x44",
+    "glyphIndex": 71,
+    "glyphName": "ithkuil.069",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0045",
+    "offset": "0x45",
+    "glyphIndex": 72,
+    "glyphName": "ithkuil.070",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0046",
+    "offset": "0x46",
+    "glyphIndex": 73,
+    "glyphName": "ithkuil.071",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0047",
+    "offset": "0x47",
+    "glyphIndex": 74,
+    "glyphName": "ithkuil.072",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0048",
+    "offset": "0x48",
+    "glyphIndex": 75,
+    "glyphName": "ithkuil.073",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C0049",
+    "offset": "0x49",
+    "glyphIndex": 76,
+    "glyphName": "ithkuil.074",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C004A",
+    "offset": "0x4A",
+    "glyphIndex": 77,
+    "glyphName": "ithkuil.075",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C004B",
+    "offset": "0x4B",
+    "glyphIndex": 78,
+    "glyphName": "ithkuil.076",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C004C",
+    "offset": "0x4C",
+    "glyphIndex": 79,
+    "glyphName": "ithkuil.077",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C004D",
+    "offset": "0x4D",
+    "glyphIndex": 80,
+    "glyphName": "ithkuil.078",
+    "ithkeyClass": "consonantal"
+  },
+  {
+    "codepoint": "U+C004E",
+    "offset": "0x4E",
+    "glyphIndex": 81,
+    "glyphName": "ithkuil.079",
+    "ithkeyClass": "placeholder"
+  },
+  {
+    "codepoint": "U+C004F",
+    "offset": "0x4F",
+    "glyphIndex": 82,
+    "glyphName": "ithkuil.080",
+    "ithkeyClass": "placeholder"
+  },
+  {
+    "codepoint": "U+C0050",
+    "offset": "0x50",
+    "glyphIndex": 83,
+    "glyphName": "ithkuil.081",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0051",
+    "offset": "0x51",
+    "glyphIndex": 84,
+    "glyphName": "ithkuil.082",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0052",
+    "offset": "0x52",
+    "glyphIndex": 85,
+    "glyphName": "ithkuil.083",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0053",
+    "offset": "0x53",
+    "glyphIndex": 86,
+    "glyphName": "ithkuil.084",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0054",
+    "offset": "0x54",
+    "glyphIndex": 87,
+    "glyphName": "ithkuil.085",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0055",
+    "offset": "0x55",
+    "glyphIndex": 88,
+    "glyphName": "ithkuil.086",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0056",
+    "offset": "0x56",
+    "glyphIndex": 89,
+    "glyphName": "ithkuil.087",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0057",
+    "offset": "0x57",
+    "glyphIndex": 90,
+    "glyphName": "ithkuil.088",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0058",
+    "offset": "0x58",
+    "glyphIndex": 91,
+    "glyphName": "ithkuil.089",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0059",
+    "offset": "0x59",
+    "glyphIndex": 92,
+    "glyphName": "ithkuil.090",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005A",
+    "offset": "0x5A",
+    "glyphIndex": 93,
+    "glyphName": "ithkuil.091",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005B",
+    "offset": "0x5B",
+    "glyphIndex": 94,
+    "glyphName": "ithkuil.092",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005C",
+    "offset": "0x5C",
+    "glyphIndex": 95,
+    "glyphName": "ithkuil.093",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005D",
+    "offset": "0x5D",
+    "glyphIndex": 96,
+    "glyphName": "ithkuil.094",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005E",
+    "offset": "0x5E",
+    "glyphIndex": 97,
+    "glyphName": "ithkuil.095",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C005F",
+    "offset": "0x5F",
+    "glyphIndex": 98,
+    "glyphName": "ithkuil.096",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0060",
+    "offset": "0x60",
+    "glyphIndex": 99,
+    "glyphName": "ithkuil.097",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0061",
+    "offset": "0x61",
+    "glyphIndex": 100,
+    "glyphName": "ithkuil.098",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0062",
+    "offset": "0x62",
+    "glyphIndex": 101,
+    "glyphName": "ithkuil.099",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0063",
+    "offset": "0x63",
+    "glyphIndex": 102,
+    "glyphName": "ithkuil.100",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0064",
+    "offset": "0x64",
+    "glyphIndex": 103,
+    "glyphName": "ithkuil.101",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0065",
+    "offset": "0x65",
+    "glyphIndex": 104,
+    "glyphName": "ithkuil.102",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0066",
+    "offset": "0x66",
+    "glyphIndex": 105,
+    "glyphName": "ithkuil.103",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0067",
+    "offset": "0x67",
+    "glyphIndex": 106,
+    "glyphName": "ithkuil.104",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0068",
+    "offset": "0x68",
+    "glyphIndex": 107,
+    "glyphName": "ithkuil.105",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0069",
+    "offset": "0x69",
+    "glyphIndex": 108,
+    "glyphName": "ithkuil.106",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006A",
+    "offset": "0x6A",
+    "glyphIndex": 109,
+    "glyphName": "ithkuil.107",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006B",
+    "offset": "0x6B",
+    "glyphIndex": 110,
+    "glyphName": "ithkuil.108",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006C",
+    "offset": "0x6C",
+    "glyphIndex": 111,
+    "glyphName": "ithkuil.109",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006D",
+    "offset": "0x6D",
+    "glyphIndex": 112,
+    "glyphName": "ithkuil.110",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006E",
+    "offset": "0x6E",
+    "glyphIndex": 113,
+    "glyphName": "ithkuil.111",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C006F",
+    "offset": "0x6F",
+    "glyphIndex": 114,
+    "glyphName": "ithkuil.112",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0070",
+    "offset": "0x70",
+    "glyphIndex": 115,
+    "glyphName": "ithkuil.113",
+    "ithkeyClass": "diacritic"
+  },
+  {
+    "codepoint": "U+C0071",
+    "offset": "0x71",
+    "glyphIndex": 116,
+    "glyphName": "ithkuil.114",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0072",
+    "offset": "0x72",
+    "glyphIndex": 117,
+    "glyphName": "ithkuil.115",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0073",
+    "offset": "0x73",
+    "glyphIndex": 118,
+    "glyphName": "ithkuil.116",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0074",
+    "offset": "0x74",
+    "glyphIndex": 119,
+    "glyphName": "ithkuil.117",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0075",
+    "offset": "0x75",
+    "glyphIndex": 120,
+    "glyphName": "ithkuil.118",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0076",
+    "offset": "0x76",
+    "glyphIndex": 121,
+    "glyphName": "ithkuil.119",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0077",
+    "offset": "0x77",
+    "glyphIndex": 122,
+    "glyphName": "ithkuil.120",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0078",
+    "offset": "0x78",
+    "glyphIndex": 123,
+    "glyphName": "ithkuil.121",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C0079",
+    "offset": "0x79",
+    "glyphIndex": 124,
+    "glyphName": "ithkuil.122",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007A",
+    "offset": "0x7A",
+    "glyphIndex": 125,
+    "glyphName": "ithkuil.123",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007B",
+    "offset": "0x7B",
+    "glyphIndex": 126,
+    "glyphName": "ithkuil.124",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007C",
+    "offset": "0x7C",
+    "glyphIndex": 127,
+    "glyphName": "ithkuil.125",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007D",
+    "offset": "0x7D",
+    "glyphIndex": 128,
+    "glyphName": "ithkuil.126",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007E",
+    "offset": "0x7E",
+    "glyphIndex": 129,
+    "glyphName": "ithkuil.127",
+    "ithkeyClass": "unassigned"
+  },
+  {
+    "codepoint": "U+C007F",
+    "offset": "0x7F",
+    "glyphIndex": 130,
+    "glyphName": "ithkuil.128",
+    "ithkeyClass": "grid"
+  }
+]

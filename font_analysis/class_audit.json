@@ -1,0 +1,72 @@
+[
+  {
+    "class": "punctuation",
+    "expectedCount": 4,
+    "actualCount": 4,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "number",
+    "expectedCount": 10,
+    "actualCount": 10,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "tenthPower",
+    "expectedCount": 4,
+    "actualCount": 4,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "primary",
+    "expectedCount": 24,
+    "actualCount": 24,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "secondary",
+    "expectedCount": 6,
+    "actualCount": 6,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "tertiary",
+    "expectedCount": 7,
+    "actualCount": 7,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "consonantal",
+    "expectedCount": 23,
+    "actualCount": 23,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "placeholder",
+    "expectedCount": 2,
+    "actualCount": 2,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "diacritic",
+    "expectedCount": 33,
+    "actualCount": 33,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "grid",
+    "expectedCount": 1,
+    "actualCount": 1,
+    "missingCodepoints": [],
+    "status": "OK"
+  }
+]

@@ -1,0 +1,2857 @@
+[
+  {
+    "lookupIndex": 0,
+    "lookupType": 8,
+    "lookupTypeName": "ChainedContextPositioning",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 1,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 2,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 3,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 4,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 5,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 6,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 7,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 8,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 9,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 10,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 11,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 12,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 13,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 14,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 15,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 16,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 17,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 18,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 19,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 20,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 21,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 22,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 23,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 24,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 25,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 26,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 27,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 28,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 29,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 30,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 31,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 32,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 33,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 34,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 35,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 36,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 37,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 38,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 39,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 40,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 41,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 42,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 43,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 44,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 45,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 46,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 47,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 48,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 49,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 50,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 51,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 52,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 53,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 54,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 55,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 56,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 57,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 58,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 59,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 60,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 61,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 62,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 63,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 64,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 65,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 66,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 67,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 68,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 69,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 70,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 71,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 72,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 73,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 74,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 75,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 76,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 77,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 78,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 79,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 80,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 81,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 82,
+    "lookupType": 9,
+    "lookupTypeName": "ExtensionPositioning",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 9,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 83,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 84,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 85,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 86,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 87,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 88,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 89,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 90,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 91,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 92,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 93,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 94,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 95,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 96,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 97,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 98,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 99,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 100,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 101,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 102,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 103,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 104,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 105,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 106,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 107,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 108,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 109,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 110,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 111,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 112,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 113,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 114,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 115,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 116,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 117,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 118,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 119,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 120,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 121,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 122,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 123,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 124,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 125,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 126,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 127,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 128,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 129,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 130,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 131,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 132,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 133,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 134,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 135,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 136,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 137,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 138,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 139,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 140,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 141,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 142,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 143,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 144,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 145,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 146,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 147,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 148,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 149,
+    "lookupType": 8,
+    "lookupTypeName": "ChainedContextPositioning",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      },
+      {
+        "role": "unparsed",
+        "lookupType": 8,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 150,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 151,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 152,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 153,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 154,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 155,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 156,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 157,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 158,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 159,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 160,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 161,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 162,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 163,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 164,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 165,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 166,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 167,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 168,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  },
+  {
+    "lookupIndex": 169,
+    "lookupType": 1,
+    "lookupTypeName": "SingleAdjustment",
+    "anchors": [
+      {
+        "role": "unparsed",
+        "lookupType": 1,
+        "note": "Run `fonttools ttx -t GPOS` for full detail"
+      }
+    ]
+  }
+]

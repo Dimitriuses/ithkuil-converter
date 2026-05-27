@@ -1,0 +1,82 @@
+[
+  {
+    "class": "punctuation",
+    "expectedRange": "U+C0000–U+C0003",
+    "expectedCount": 4,
+    "actualCount": 4,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "number",
+    "expectedRange": "U+C0004–U+C000D",
+    "expectedCount": 10,
+    "actualCount": 10,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "tenthPower",
+    "expectedRange": "U+C000E–U+C0011",
+    "expectedCount": 4,
+    "actualCount": 4,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "primary",
+    "expectedRange": "U+C0012–U+C0029",
+    "expectedCount": 24,
+    "actualCount": 24,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "secondary",
+    "expectedRange": "U+C002A–U+C002F",
+    "expectedCount": 6,
+    "actualCount": 6,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "tertiary",
+    "expectedRange": "U+C0030–U+C0036",
+    "expectedCount": 7,
+    "actualCount": 7,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "consonantal",
+    "expectedRange": "U+C0037–U+C004D",
+    "expectedCount": 23,
+    "actualCount": 23,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "placeholder",
+    "expectedRange": "U+C004E–U+C004F",
+    "expectedCount": 2,
+    "actualCount": 2,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "diacritic",
+    "expectedRange": "U+C0050–U+C0070",
+    "expectedCount": 33,
+    "actualCount": 33,
+    "missingCodepoints": [],
+    "status": "OK"
+  },
+  {
+    "class": "grid",
+    "expectedRange": "U+C007F–U+C007F",
+    "expectedCount": 1,
+    "actualCount": 1,
+    "missingCodepoints": [],
+    "status": "OK"
+  }
+]
