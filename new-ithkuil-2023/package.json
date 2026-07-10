@@ -8,16 +8,19 @@
     "spike": "tsx src/spike-forward.ts",
     "encode": "tsx src/cli.ts",
     "typecheck": "tsc --noEmit",
-    "dataset": "tsx src/generate-dataset.ts"
+    "dataset": "tsx src/generate-dataset.ts",
+    "segment": "tsx src/segment-demo.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",
     "linkedom": "^0.18.13",
+    "pngjs": "^7.0.0",
     "svgdom": "^0.1.23"
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
     "@types/node": "^26.1.1",
+    "@types/pngjs": "^6.0.5",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }

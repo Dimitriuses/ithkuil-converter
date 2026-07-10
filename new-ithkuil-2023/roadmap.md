@@ -69,7 +69,7 @@ characters," a much smaller target.
 | **2** ✅ | **Forward module** — clean `encode(text) → SVG` API + CLI | 1 | DONE — [`src/forward.ts`](src/forward.ts), [`src/dom-shim.ts`](src/dom-shim.ts), [`src/cli.ts`](src/cli.ts). `npm run encode -- "…" -o w.svg --png w.png` |
 | **3** ✅ | **Rasterizer** — SVG → PNG at configurable width (`@resvg/resvg-js`) | 2 | DONE (core) — [`src/raster.ts`](src/raster.ts), wired into the CLI `--png` |
 | **4** ✅ | **Synthetic dataset generator** — per-glyph × augmentations, with labels | 2, 3 | DONE — [`src/generate-dataset.ts`](src/generate-dataset.ts) → labeled PNGs + `manifest.json` |
-| 5 | **Reverse: preprocess + segment** — binarize, deskew, line/char split, diacritic merge | — | `SegmentedRegion[]` from an image |
+| **5** ✅ | **Reverse: preprocess + segment** — binarize, char split, diacritic merge | — | DONE — [`src/segment.ts`](src/segment.ts) → `SegmentedRegion[]`; demo [`src/segment-demo.ts`](src/segment-demo.ts) |
 | 6 | **Reverse: baseline classifier** — template match vs `@zsnout`-rendered reference glyphs | 4, 5 | `ClassifiedGlyph[]` (reuses `ithkuil-2011/build_glyph_similarity.py` approach) |
 | 7 | **Reverse: decoder** — classified glyphs → word JSON → `@zsnout/generate` → text | 6 | `decode(image) → text` |
 | 8 | **CLI + library API** — `encode` / `decode` commands and typed exports | 2, 7 | published-shape package |
@@ -132,14 +132,32 @@ Per-glyph synthetic dataset generator. `npm run dataset -- [--per-class N] [--si
   baseline (M6) works on clean/geometric variation. Note: rendering is ~0.3 s/image (svgdom getBBox);
   fine for one-off generation, optimize if it becomes a bottleneck.
 
+### Milestone 5 — done
+
+Single-line segmentation. `npm run segment -- --text "…"` (or `--image file.png`) prints the
+per-character breakdown and writes a colour-coded overlay.
+
+- **Algorithm** ([`src/segment.ts`](src/segment.ts)): binarize → 8-connected components → merge
+  components whose **x-intervals overlap** into characters → tag each component `base` /
+  `superposed` / `underposed` / `right` by vertical position vs the base. Chosen after inspecting a
+  real word: characters sit in a central band with clear horizontal gaps, and each diacritic's
+  x-range falls within its base — so x-overlap grouping is robust and simple.
+- **Verified:** "Wattunkí ruyün" → 7 characters with correct base + super/under-posed diacritic
+  tagging (overlay confirms boxes); a single-glyph dataset image → 1 region (base only).
+- **I/O** ([`src/image-io.ts`](src/image-io.ts), pngjs): PNG decode/encode + `renderSegmentationOverlay`
+  (magenta = character, green = base, blue = superposed, orange = underposed, cyan = right).
+- **Output** `SegmentedRegion[]`: `{ index, bbox, base, components: [{ bbox, pixels, role }] }` — the
+  base bbox is what the M6 classifier crops; diacritic components feed later vowel/tone recognition.
+- **Scope/deferrals:** single text line (words/phrases). Multi-line paragraph splitting is future
+  (naive y-projection would split a line's diacritics off). Deskew/denoise (for real scans) and the
+  compact-layout Node shim remain deferred until needed.
+
 ### Next up
 
-- **Milestone 5 — preprocess + segment.** Given a rendered line/word image, binarize, split into
-  characters (connected components), and merge diacritics with their base. Output `SegmentedRegion[]`.
-  The synthetic single-glyph images make good unit fixtures; multi-glyph word renders (from the
-  forward module) are the real segmentation targets.
-- Deferred: **compact layout in Node** (shim `isPointInStroke`/`isPointInFill` on svgdom, or a
-  headless browser) — only if tight kerning matters before the reverse work.
+- **Milestone 6 — baseline classifier.** Crop each region's base, normalize, and template-match
+  against the **clean canonical samples** already in `dataset/` (the thickness-invariant Chamfer
+  metric from `ithkuil-2011/build_glyph_similarity.py`, reused). Output `ClassifiedGlyph[]` — the
+  first end-to-end image → labels step.
 
 ---
 
