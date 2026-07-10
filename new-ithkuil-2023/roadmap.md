@@ -66,8 +66,8 @@ characters," a much smaller target.
 | # | Milestone | Depends on | Deliverable |
 |---|---|---|---|
 | **1** ✅ | **Forward spike** — `@zsnout/ithkuil` renders a word to SVG in **Node** | — | DONE — [`src/spike-forward.ts`](src/spike-forward.ts) renders text → SVG → PNG. See findings below. |
-| 2 | **Forward module** — clean `encode(text) → SVG string` API + CLI | 1 | `src/forward.ts`, styling/viewBox options |
-| 3 | **Rasterizer** — SVG → PNG at configurable size/DPI (`resvg-js` or `sharp`) | 2 | `src/raster.ts` |
+| **2** ✅ | **Forward module** — clean `encode(text) → SVG` API + CLI | 1 | DONE — [`src/forward.ts`](src/forward.ts), [`src/dom-shim.ts`](src/dom-shim.ts), [`src/cli.ts`](src/cli.ts). `npm run encode -- "…" -o w.svg --png w.png` |
+| **3** ✅ | **Rasterizer** — SVG → PNG at configurable width (`@resvg/resvg-js`) | 2 | DONE (core) — [`src/raster.ts`](src/raster.ts), wired into the CLI `--png` |
 | 4 | **Synthetic dataset generator** — every character/glyph × augmentations, with labels | 2, 3 | labeled image set + manifest JSON |
 | 5 | **Reverse: preprocess + segment** — binarize, deskew, line/char split, diacritic merge | — | `SegmentedRegion[]` from an image |
 | 6 | **Reverse: baseline classifier** — template match vs `@zsnout`-rendered reference glyphs | 4, 5 | `ClassifiedGlyph[]` (reuses `ithkuil-2011/build_glyph_similarity.py` approach) |
@@ -100,6 +100,26 @@ correct New Ithkuil block script. Key learnings, all baked into the spike:
   a message, not a crash.
 - **Rasterizing:** `@resvg/resvg-js` renders the SVG string → PNG cleanly in Node (feeds
   Milestone 3).
+
+### Milestones 2–3 — done
+
+- **Public API** ([`src/forward.ts`](src/forward.ts)): `encode(text, opts?) → { ok, svg, viewBox, pathCount } | { ok:false, reason }`.
+  Options: `margin`, `fill`, `compact` (rejected gracefully in Node for now). Verified: repeated
+  calls in one process are independent (no getBBox state leakage); parse errors return a reason.
+- **Rasterizer** ([`src/raster.ts`](src/raster.ts)): `svgToPng(svg, { width, background }) → Buffer`.
+- **CLI** ([`src/cli.ts`](src/cli.ts), `npm run encode`): uses Node's built-in `util.parseArgs`
+  (no CLI dependency). SVG to stdout or `-o`, optional `--png`, `-w/--width`, `-m/--margin`.
+- **tsconfig:** `moduleResolution: "Bundler"` (matches the tsx runtime — `@zsnout/ithkuil` ships
+  no `exports` map, so NodeNext can't resolve its subpath types). `svgdom` gets a minimal ambient
+  d.ts. `npm run typecheck` passes.
+
+### Next up
+
+- **Milestone 4 — synthetic dataset generator.** Enumerate characters/glyphs, render each via the
+  forward module + rasterizer, apply augmentations (scale/rotate/noise), emit labeled images + a
+  manifest. This is the data that trains/evaluates the reverse pipeline (5–7).
+- Deferred: **compact layout in Node** (shim `isPointInStroke`/`isPointInFill` on svgdom, or render
+  that step in a headless browser) — only needed if tight kerning matters before the reverse work.
 
 ---
 

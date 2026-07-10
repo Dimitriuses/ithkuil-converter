@@ -5,7 +5,9 @@
   "type": "module",
   "description": "Bidirectional New Ithkuil (2023) script converter",
   "scripts": {
-    "spike": "tsx src/spike-forward.ts"
+    "spike": "tsx src/spike-forward.ts",
+    "encode": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",
