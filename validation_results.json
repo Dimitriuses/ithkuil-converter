@@ -1,11 +1,11 @@
 {
   "summary": {
     "total": 114,
-    "confirmed": 0,
-    "discrepancy": 0,
+    "confirmed": 18,
+    "discrepancy": 96,
     "absent": 0,
     "skipped": 0,
-    "unchecked": 114
+    "unchecked": 0
   },
   "results": [
     {
@@ -14,7 +14,7 @@
       "ithkeyClass": "punctuation",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -23,7 +23,7 @@
       "ithkeyClass": "punctuation",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -32,7 +32,7 @@
       "ithkeyClass": "punctuation",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -41,7 +41,7 @@
       "ithkeyClass": "punctuation",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -50,7 +50,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -59,7 +59,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -68,7 +68,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -77,7 +77,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -86,7 +86,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -95,7 +95,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -104,7 +104,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -113,7 +113,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -122,7 +122,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -131,7 +131,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -140,7 +140,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -149,7 +149,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -158,7 +158,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -167,7 +167,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -176,7 +176,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -185,7 +185,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -194,7 +194,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -203,7 +203,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -212,7 +212,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -221,7 +221,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -230,7 +230,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -239,7 +239,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -248,7 +248,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -257,7 +257,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -266,7 +266,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -275,7 +275,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -284,7 +284,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -293,7 +293,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -302,7 +302,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -311,7 +311,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -320,7 +320,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -329,7 +329,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -338,7 +338,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -347,7 +347,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -356,7 +356,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -365,7 +365,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -374,7 +374,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -383,7 +383,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -392,7 +392,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -401,7 +401,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -410,7 +410,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -419,7 +419,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -428,7 +428,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -437,7 +437,7 @@
       "ithkeyClass": "secondary",
       "ch12Section": "12.2",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -446,7 +446,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -455,7 +455,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -464,7 +464,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -473,7 +473,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -482,7 +482,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -491,7 +491,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -500,7 +500,7 @@
       "ithkeyClass": "tertiary",
       "ch12Section": "12.3",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -509,7 +509,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "t'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -518,7 +518,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "k'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -527,7 +527,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "y",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -536,7 +536,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "p'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -545,7 +545,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "m",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -554,7 +554,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "w",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -563,7 +563,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "h",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -572,7 +572,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "t",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -581,7 +581,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "ň",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -590,7 +590,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "k",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -599,7 +599,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "f",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -608,7 +608,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "ţ",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -617,7 +617,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "c",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -626,7 +626,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "p",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -635,7 +635,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "q'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -644,7 +644,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "x",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -653,7 +653,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "q",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -662,7 +662,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "c'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -671,7 +671,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "ch'",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -680,7 +680,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "r",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -689,7 +689,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "š",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -698,7 +698,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "s",
-      "validationStatus": "unchecked",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -707,7 +707,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "č",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -716,7 +716,7 @@
       "ithkeyClass": "placeholder",
       "ch12Section": "12.7",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -725,7 +725,7 @@
       "ithkeyClass": "placeholder",
       "ch12Section": "12.7",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -734,7 +734,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -743,7 +743,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -752,7 +752,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -761,7 +761,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -770,7 +770,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -779,7 +779,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -788,7 +788,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -797,7 +797,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -806,7 +806,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -815,7 +815,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -824,7 +824,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -833,7 +833,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -842,7 +842,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -851,7 +851,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -860,7 +860,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -869,7 +869,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -878,7 +878,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -887,7 +887,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -896,7 +896,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -905,7 +905,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -914,7 +914,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -923,7 +923,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -932,7 +932,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -941,7 +941,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -950,7 +950,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -959,7 +959,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -968,7 +968,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -977,7 +977,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -986,7 +986,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -995,7 +995,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -1004,7 +1004,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -1013,7 +1013,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -1022,7 +1022,7 @@
       "ithkeyClass": "diacritic",
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     },
     {
@@ -1031,7 +1031,7 @@
       "ithkeyClass": "grid",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "unchecked",
+      "validationStatus": "discrepancy",
       "validationNotes": ""
     }
   ]

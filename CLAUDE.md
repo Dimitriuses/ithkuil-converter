@@ -20,7 +20,8 @@ The full design lives in [ithkuil-converter-plan.md](ithkuil-converter-plan.md).
   `punctuation 0x00–0x03 · number 0x04–0x0D · tenthPower 0x0E–0x11 · primary 0x12–0x29 · secondary 0x2A–0x2F · tertiary 0x30–0x36 · consonantal 0x37–0x4D · placeholder 0x4E–0x4F · diacritic 0x50–0x70 · grid 0x7F`.
 - **The font is a mark-positioning (GPOS) font, not a ligature (GSUB) font.** Diacritics are separate glyphs placed by GPOS mark-to-base anchors. `diacritic_sequences.json` is expected to be empty — that is correct, not a bug. Diacritic slot info is derived from GPOS mark-class assignments, not from GSUB ligatures. (The plan text describing a GSUB ligature table is aspirational/wrong for this font; trust the code.)
 - **GlyphIDs** (`CLASS_DESCRIPTOR`, e.g. `CONSONANT_T_EJ`, `DIACRITIC_01`, `PRIMARY_Q`) are the stable shared key across every artifact and every future module. They are assigned in [build_glyph_inventory.py](build_glyph_inventory.py) via hardcoded ID tables per class.
-- The font (`ithkuil.ttf`, by Ykulvaarlck) predates New Ithkuil (2023). Glyph *shapes* may diverge from the Chapter 12 spec; Phase 0.5 validation exists specifically to catch this.
+- **The font (`ithkuil.ttf`, by Ykulvaarlck) is the 2004–2011 Ithkuil script, NOT New Ithkuil (ch12).** Confirmed: the ithkey readme references `ithkuil.net/11_script.htm` + `01_phonology.html`, and every font glyph matches its `11-cons-*.jpg` figure exactly (including the plain/ejective/aspirated consonant series that New Ithkuil lacks). The font's `primary`/`secondary`/`tertiary`/`consonantal` classes are the **2011** character model (§11.3.1–11.3.4), which reuses those names for entirely different glyphs than New Ithkuil ch12. The extraction, SVGs, and consonant romanisations are all verified correct.
+- **Consequence:** Phase 0.5 validation must compare against the 2011 script (`ithkuil.net/11_script.htm`, images under `ithkuil.net/images/11-*.jpg`), which `build_validator.py` now does. The project *plan* targets New Ithkuil — that goal requires a different (New-Ithkuil) glyph source, since this font can't produce ch12-compliant output. Treat that as an open strategic question, not a bug.
 
 ## Phase 0 pipeline
 
@@ -30,7 +31,7 @@ Each stage consumes the previous stage's output directory. Run in order:
 extract_font_tables.py / .ts   →  font_analysis/  or  font_analysis_ts/
 build_glyph_inventory.py        →  inventory/  (glyph_inventory.json, svg/*.svg, class_*.json)
 build_mapping_table.py          →  mapping/  (forward_index, reverse_index, mapping_table, anchors)
-build_validator.py              →  validator.html  (self-contained review tool)
+build_validator.py              →  validator.html  (review tool; refs 2011 ch11 images)
      ↓ human reviews in browser, exports validation_results.json ↓
 apply_validation.py             →  updates inventory/glyph_inventory.json in place
 ```

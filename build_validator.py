@@ -13,7 +13,8 @@ Run:
                       (default: ./validator.html)
 
 The HTML tool:
-  - Shows each glyph's SVG alongside the relevant Chapter 12 reference image
+  - Shows each glyph's SVG alongside the relevant 2011-script (Chapter 11) reference
+    image (the ithkey font encodes the 2004-2011 script, NOT New Ithkuil ch12)
   - Lets you mark each glyph as: confirmed / discrepancy / absent / skip
   - Has a freeform notes field per glyph
   - Tracks progress across sessions via localStorage
@@ -25,45 +26,91 @@ import sys
 import base64
 from pathlib import Path
 
-BASE_URL = "https://ithkuil.net/newithkuil_12_script_files/"
+BASE_URL = "https://ithkuil.net/images/"
 
-# Chapter 12 reference images per ithkey class
-# Each entry is a list of (filename, caption) tuples
-CH12_IMAGES: dict[str, list[tuple[str, str]]] = {
+# ---------------------------------------------------------------------------
+# Reference images: 2011 Ithkuil script (Chapter 11), NOT New Ithkuil (ch12).
+#
+# The ithkey font (by Ykulvaarlck) encodes the 2004-2011 script per
+# ithkuil.net/11_script.htm -- confirmed by its readme (references 11_script.html
+# + 01_phonology.html) and by exact glyph-shape matches against the 11-cons-*.jpg
+# figures, including the plain/ejective/aspirated consonant series that New Ithkuil
+# does not have. The font's primary/secondary/tertiary/consonantal classes are the
+# 2011 character model, which reuses those names for entirely different glyphs than
+# New Ithkuil ch12 -- which is why validating against ch12 made everything "mismatch".
+# ---------------------------------------------------------------------------
+
+# Human-readable 2011-script section per ithkey class (shown as the reference label).
+CH11_SECTION: dict[str, str] = {
+    "primary":     "§11.3.1 — Primary (Case/Aspect) Characters",
+    "secondary":   "§11.3.2 — Secondary (Case/Aspect) Characters",
+    "tertiary":    "§11.3.3 — Tertiary Characters",
+    "consonantal": "§11.3.4 — Consonantal Characters",
+    "placeholder": "§11.4.1 — Alphabetic writing / placeholder",
+    "diacritic":   "§11.3 — Diacritics (superposed / underposed / lateral)",
+    "punctuation": "§11.4 — Punctuation & quotation",
+    "number":      "numerals (separate chapter — no script figure)",
+    "tenthPower":  "numerals (separate chapter — no script figure)",
+    "grid":        "font debug grid — no reference",
+}
+
+# Chapter 11 reference images per ithkey class. (filename, caption); BASE_URL prefixed.
+CH11_IMAGES: dict[str, list[tuple[str, str]]] = {
     "primary": [
-        ("image002.jpg", "Fig 1 — Specification, Context, Relation, Concatenation"),
-        ("image004.jpg", "Fig 2 — Perspective and Extension"),
-        ("image006.jpg", "Fig 3 — Configuration, Affiliation, Essence"),
-        ("image008.jpg", "Fig 4 — Stem, Function, Version, Plexity"),
-        ("image010.jpg", "Fig 5 — Complete Primary Character example"),
-    ],
-    "consonantal": [
-        ("image012.jpg", "§12.2 — 28 core Secondary Character (consonant) forms"),
-        ("image025.jpg", "§12.2.3 — Rotated Secondary Characters (Slot VII)"),
+        ("11-character-example.jpg", "§11.3.1 — Neutral Primary Character (default shape)"),
     ],
     "secondary": [
-        ("image012.jpg", "§12.2 — 28 core Secondary Character forms"),
-        ("image014.jpg", "§12.2.1 — Consonant extensions (intro)"),
-        ("image015.jpg", "§12.2.1 — Extensions set 1"),
-        ("image017.jpg", "§12.2.1 — Extensions set 2"),
+        ("11-character-example2.jpg", "§11.3.2 — Neutral Secondary Character (default shape)"),
     ],
     "tertiary": [
-        ("image027.jpg", "§12.3 — Tertiary Character forms"),
+        ("11-tertiary_character-explanation.jpg", "§11.3.3 — Tertiary Character structure"),
+    ],
+    "consonantal": [
+        # The exact per-consonant 11-cons-*.jpg is prepended in ref_images_html().
+        ("11-character-example2.jpg", "§11.3.4 — Consonantal chars use the Secondary-character frame"),
     ],
     "placeholder": [
-        ("image046.jpg", "§12.7 — Alphabetic writing, vowel placement"),
-        ("image049.jpg", "§12.7 — Stress marking on plain vertical bar"),
+        ("11-alphabetic.jpg", "§11.4.1 — Alphabetic transliteration & placeholder marks"),
     ],
     "diacritic": [
-        ("image023.jpg", "§12.2.2 — VXCS Degree diacritics (9 underposed forms)"),
-        ("image032.jpg", "§12.4.1 — Quaternary Mood diacritics"),
-        ("image033.jpg", "§12.4.1 — Case-Accessor Affix forms"),
-        ("image045.jpg", "§12.7 — Alphabetic vowel diacritics"),
+        ("11-diacritic01-sup.jpg", "§11.3 — Superposed diacritic (example)"),
+        ("11-diacritic01-sub.jpg", "§11.3 — Underposed diacritic (example)"),
+        ("11-diacritic01-lat.jpg", "§11.3 — Lateral diacritic (example)"),
     ],
-    "punctuation": [],
+    "punctuation": [
+        ("11-quotemarks.jpg", "§11.4 — Quotation marks"),
+    ],
     "number": [],
     "tenthPower": [],
     "grid": [],
+}
+
+# Per-consonant 1:1 reference: GlyphID -> (2011 consonant image, caption).
+# Verified: every font consonant glyph matches its 11-cons-*.jpg exactly in shape.
+CONSONANT_REF: dict[str, tuple[str, str]] = {
+    "CONSONANT_T_EJ":   ("11-cons-t-ejct.jpg",        "§11.3.4 — t’ (ejective)"),
+    "CONSONANT_K_EJ":   ("11-cons-k-ejct.jpg",        "§11.3.4 — k’ (ejective)"),
+    "CONSONANT_Y":      ("11-cons-y.jpg",             "§11.3.4 — y"),
+    "CONSONANT_P_EJ":   ("11-cons-p-ejct.jpg",        "§11.3.4 — p’ (ejective)"),
+    "CONSONANT_M":      ("11-cons-m.jpg",             "§11.3.4 — m"),
+    "CONSONANT_W":      ("11-cons-w.jpg",             "§11.3.4 — w"),
+    "CONSONANT_H":      ("11-cons-h.jpg",             "§11.3.4 — h"),
+    "CONSONANT_T":      ("11-cons-t.jpg",             "§11.3.4 — t"),
+    "CONSONANT_N_PAL":  ("11-cons-n-hacek.jpg",       "§11.3.4 — ň"),
+    "CONSONANT_K":      ("11-cons-k.jpg",             "§11.3.4 — k"),
+    "CONSONANT_F":      ("11-cons-f.jpg",             "§11.3.4 — f"),
+    "CONSONANT_T_DENT": ("11-cons-t-cedilla.jpg",     "§11.3.4 — ţ"),
+    "CONSONANT_C":      ("11-cons-c.jpg",             "§11.3.4 — c"),
+    "CONSONANT_P":      ("11-cons-p.jpg",             "§11.3.4 — p"),
+    "CONSONANT_Q_EJ":   ("11-cons-q-ejct.jpg",        "§11.3.4 — q’ (ejective)"),
+    "CONSONANT_X":      ("11-cons-x.jpg",             "§11.3.4 — x"),
+    "CONSONANT_Q":      ("11-cons-q.jpg",             "§11.3.4 — q"),
+    "CONSONANT_C_EJ":   ("11-cons-c-ejct.jpg",        "§11.3.4 — c’ (ejective)"),
+    "CONSONANT_CH_EJ":  ("11-cons-c-hacek-ejct.jpg",  "§11.3.4 — č’ (ejective)"),
+    "CONSONANT_R":      ("11-cons-r.jpg",             "§11.3.4 — r"),
+    "CONSONANT_SH":     ("11-cons-s-hacek.jpg",       "§11.3.4 — š"),
+    "CONSONANT_S":      ("11-cons-s.jpg",             "§11.3.4 — s"),
+    "CONSONANT_CH":     ("11-cons-c-hacek.jpg",       "§11.3.4 — č"),
 }
 
 
@@ -74,10 +121,16 @@ def load_svg(svg_path: Path) -> str:
     return ""
 
 
-def ref_images_html(cls: str) -> str:
-    images = CH12_IMAGES.get(cls, [])
+def ref_images_html(entry: dict) -> str:
+    cls = entry.get("ithkeyClass", "")
+    gid = entry.get("glyphId", "")
+    # Consonantal glyphs get their exact 2011 reference image first, then the class frame.
+    images: list[tuple[str, str]] = []
+    if gid in CONSONANT_REF:
+        images.append(CONSONANT_REF[gid])
+    images.extend(CH11_IMAGES.get(cls, []))
     if not images:
-        return '<p class="no-ref">No Chapter 12 reference images for this class.</p>'
+        return '<p class="no-ref">No 2011-script (Ch. 11) reference image for this class.</p>'
     parts = []
     for fname, caption in images:
         url = BASE_URL + fname
@@ -103,11 +156,12 @@ def build_glyph_data(inventory: list, svg_dir: Path) -> list[dict]:
             "offset":         entry.get("offset", "?"),
             "ithkeyClass":    entry.get("ithkeyClass", "?"),
             "ch12Section":    entry.get("ch12Section", "—"),
+            "refSection":     CH11_SECTION.get(entry.get("ithkeyClass", ""), "—"),
             "romanisation":   entry.get("romanisation") or "",
             "description":    entry.get("description") or "",
             "advanceWidth":   entry.get("advanceWidth", 0),
             "fontGlyphName":  entry.get("fontGlyphName", ""),
-            "refImagesHtml":  ref_images_html(entry.get("ithkeyClass", "")),
+            "refImagesHtml":  ref_images_html(entry),
             "svgContent":     svg,
             "validationStatus": entry.get("validationStatus", "unchecked"),
             "validationNotes":  entry.get("validationNotes", ""),
@@ -471,9 +525,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
   <!-- Right: reference images -->
   <div class="ref-panel">
     <div class="ref-header">
-      Chapter 12 reference — <strong id="refSecLabel"></strong>
+      2011 script (Ch. 11) reference — <strong id="refSecLabel"></strong>
       &nbsp;·&nbsp;
-      <a href="https://ithkuil.net/newithkuil_12_script.htm" target="_blank"
+      <a href="https://ithkuil.net/11_script.htm" target="_blank"
          style="color:var(--accent2);text-decoration:none;font-size:.72rem;">
         open full chapter ↗
       </a>
@@ -533,7 +587,7 @@ function render() {
   document.getElementById('metaId').textContent  = g.glyphId;
   document.getElementById('metaCp').textContent  = g.codepoint;
   document.getElementById('metaCls').textContent = g.ithkeyClass;
-  document.getElementById('metaSec').textContent = g.ch12Section;
+  document.getElementById('metaSec').textContent = g.refSection;
   document.getElementById('metaRom').textContent = g.romanisation || '—';
   document.getElementById('metaAdv').textContent = g.advanceWidth;
   document.getElementById('metaFnt').textContent = g.fontGlyphName;
@@ -574,7 +628,7 @@ function render() {
   document.getElementById('notesArea').value = g.validationNotes || '';
 
   // Reference panel
-  document.getElementById('refSecLabel').textContent = g.ch12Section;
+  document.getElementById('refSecLabel').textContent = g.refSection;
   document.getElementById('refScroll').innerHTML = g.refImagesHtml;
 
   // Nav
