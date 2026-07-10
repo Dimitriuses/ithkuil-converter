@@ -1,0 +1,6 @@
+# generated spike/render output
+out/
+
+# build + deps (also covered by the repo-root .gitignore)
+node_modules/
+dist/

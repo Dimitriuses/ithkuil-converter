@@ -65,7 +65,7 @@ characters," a much smaller target.
 
 | # | Milestone | Depends on | Deliverable |
 |---|---|---|---|
-| **1** | **Forward spike** — `@zsnout/ithkuil` renders a word to SVG in **Node** | — | throwaway script proving the `linkedom` shim works; a valid SVG string |
+| **1** ✅ | **Forward spike** — `@zsnout/ithkuil` renders a word to SVG in **Node** | — | DONE — [`src/spike-forward.ts`](src/spike-forward.ts) renders text → SVG → PNG. See findings below. |
 | 2 | **Forward module** — clean `encode(text) → SVG string` API + CLI | 1 | `src/forward.ts`, styling/viewBox options |
 | 3 | **Rasterizer** — SVG → PNG at configurable size/DPI (`resvg-js` or `sharp`) | 2 | `src/raster.ts` |
 | 4 | **Synthetic dataset generator** — every character/glyph × augmentations, with labels | 2, 3 | labeled image set + manifest JSON |
@@ -77,6 +77,29 @@ characters," a much smaller target.
 | 10 | **Round-trip test corpus + metrics** | 8 | `text → image → text ≈ original` |
 
 Milestones 1–4 are integration/plumbing and unlock everything. The genuine research is 5–7 (and 9).
+
+### Milestone 1 — findings (2026-07-10)
+
+Forward rendering in Node **works**. Proven by [`src/spike-forward.ts`](src/spike-forward.ts)
+(`npm run spike -- "Wattunkí ruyün"`): text → SVG (16 paths, fitted viewBox) → PNG shows
+correct New Ithkuil block script. Key learnings, all baked into the spike:
+
+- **The DOM shim must be `svgdom`, NOT `linkedom`.** The library's composition (`Anchor`,
+  `Row`, `fitViewBox`) depends on a real SVG `getBBox()` computed from path data — linkedom
+  doesn't do geometry; `svgdom` does. Use `createHTMLWindow()` (its `document` has a `body`,
+  which `getBBox`/`fitViewBox` require; the SVG-only window has no `body`).
+- **Globals to install before importing `@zsnout/ithkuil/script`:** `window`, `document`, and
+  the classes `SVGElement`, `SVGGraphicsElement`, `SVGSVGElement`, `SVGPathElement`,
+  `SVGTextContentElement`, and `SVGGElement` → map to svgdom's `SVGGraphicsElement` (svgdom has
+  no distinct `<g>` class; this makes `Translate` bake offsets into path coords, its intended path).
+- **`compact: false` for now.** Compact row layout uses collision kerning via SVG
+  `isPointInStroke`/`isPointInFill` hit-testing, which svgdom lacks. Non-compact uses bbox
+  spacing (looser but correct). Compact-in-Node is a follow-up: shim those two methods
+  (point-in-path geometry) on svgdom, or run that step in a headless browser.
+- **Errors are graceful:** `textToScript` returns a `{ ok, reason }` Result — bad input yields
+  a message, not a crash.
+- **Rasterizing:** `@resvg/resvg-js` renders the SVG string → PNG cleanly in Node (feeds
+  Milestone 3).
 
 ---
 

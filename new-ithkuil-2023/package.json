@@ -1,0 +1,21 @@
+{
+  "name": "new-ithkuil-2023",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Bidirectional New Ithkuil (2023) script converter",
+  "scripts": {
+    "spike": "tsx src/spike-forward.ts"
+  },
+  "dependencies": {
+    "@zsnout/ithkuil": "^0.1.122",
+    "linkedom": "^0.18.13",
+    "svgdom": "^0.1.23"
+  },
+  "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.1.1",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2"
+  }
+}
