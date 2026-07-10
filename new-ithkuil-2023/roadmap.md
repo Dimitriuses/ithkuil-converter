@@ -70,7 +70,7 @@ characters," a much smaller target.
 | **3** ✅ | **Rasterizer** — SVG → PNG at configurable width (`@resvg/resvg-js`) | 2 | DONE (core) — [`src/raster.ts`](src/raster.ts), wired into the CLI `--png` |
 | **4** ✅ | **Synthetic dataset generator** — per-glyph × augmentations, with labels | 2, 3 | DONE — [`src/generate-dataset.ts`](src/generate-dataset.ts) → labeled PNGs + `manifest.json` |
 | **5** ✅ | **Reverse: preprocess + segment** — binarize, char split, diacritic merge | — | DONE — [`src/segment.ts`](src/segment.ts) → `SegmentedRegion[]`; demo [`src/segment-demo.ts`](src/segment-demo.ts) |
-| 6 | **Reverse: baseline classifier** — template match vs `@zsnout`-rendered reference glyphs | 4, 5 | `ClassifiedGlyph[]` (reuses `ithkuil-2011/build_glyph_similarity.py` approach) |
+| **6** ✅ | **Reverse: baseline classifier** — template match vs clean dataset samples | 4, 5 | DONE — [`src/classify.ts`](src/classify.ts); **90.3% top-1 / 99.7% top-3** on augmented consonants |
 | 7 | **Reverse: decoder** — classified glyphs → word JSON → `@zsnout/generate` → text | 6 | `decode(image) → text` |
 | 8 | **CLI + library API** — `encode` / `decode` commands and typed exports | 2, 7 | published-shape package |
 | 9 | **CNN classifier** (robustness for noisy/photo input), trained on synthetic data | 4, 6 | ONNX/TF.js model + integration |
@@ -152,12 +152,31 @@ per-character breakdown and writes a colour-coded overlay.
   (naive y-projection would split a line's diacritics off). Deskew/denoise (for real scans) and the
   compact-layout Node shim remain deferred until needed.
 
+### Milestone 6 — done
+
+Baseline template-match classifier + the first end-to-end image → labels pipeline.
+
+- **Pipeline** ([`src/normalize.ts`](src/normalize.ts) → [`src/chamfer.ts`](src/chamfer.ts) →
+  [`src/classify.ts`](src/classify.ts)): crop a region's base → normalize (bbox-crop, pad square,
+  resize 64×64) → thickness-invariant **symmetric Chamfer** similarity vs one template per class
+  (the clean canonical dataset samples). Ported from `ithkuil-2011/build_glyph_similarity.py`.
+- **Eval** (`npm run eval`): train on clean templates, test on augmented samples →
+  **90.3% top-1, 99.7% top-3** across the 28 consonants. Errors concentrate in **voiceless/voiced
+  pairs** (p↔b, f↔v, t↔d, g↔k) and cedilla pairs (ḑ↔ţ) — near-identical base shapes distinguished
+  only by a small mark, which a coarse Chamfer misses under rotation. The near-perfect top-3 shows
+  the shape is right; the fix is finer features (the M9 CNN, or a mark-focused second stage).
+- **End-to-end demo** (`npm run recognize -- --text "…"`): image → `segment` → `classifyRegions` →
+  per-character label + confidence. Honest scores: bare consonants match at ~0.98 (correctly picked
+  out the `r` and `n` in "ru**y**ü**n**"), non-consonant character types score low and are flagged.
+
 ### Next up
 
-- **Milestone 6 — baseline classifier.** Crop each region's base, normalize, and template-match
-  against the **clean canonical samples** already in `dataset/` (the thickness-invariant Chamfer
-  metric from `ithkuil-2011/build_glyph_similarity.py`, reused). Output `ClassifiedGlyph[]` — the
-  first end-to-end image → labels step.
+- **Milestone 7 — decoder.** Turn the classified character sequence into `@zsnout` word JSON, then
+  `@zsnout/ithkuil/generate` → romanized text, closing the round-trip (`text → image → text`).
+- **Coverage gap to close first:** templates currently cover only the **28 bare consonant cores**.
+  Full recognition needs template families for the other character types (primary, tertiary,
+  quaternary) and for consonants **with extensions/diacritics** — i.e. extend `glyph-classes.ts`
+  and regenerate the dataset. This is the main work remaining before M7 can decode real words.
 
 ---
 
