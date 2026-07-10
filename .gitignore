@@ -1,5 +1,5 @@
 # Project: cached external reference images (regenerable by build_glyph_similarity.py)
-inventory/.ref_cache/
+.ref_cache/
 
 # Node.js
 node_modules/
