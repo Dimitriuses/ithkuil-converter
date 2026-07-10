@@ -7,7 +7,8 @@
   "scripts": {
     "spike": "tsx src/spike-forward.ts",
     "encode": "tsx src/cli.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dataset": "tsx src/generate-dataset.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",

@@ -4,3 +4,6 @@ out/
 # build + deps (also covered by the repo-root .gitignore)
 node_modules/
 dist/
+
+# generated dataset
+dataset/

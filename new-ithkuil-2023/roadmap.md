@@ -68,7 +68,7 @@ characters," a much smaller target.
 | **1** ✅ | **Forward spike** — `@zsnout/ithkuil` renders a word to SVG in **Node** | — | DONE — [`src/spike-forward.ts`](src/spike-forward.ts) renders text → SVG → PNG. See findings below. |
 | **2** ✅ | **Forward module** — clean `encode(text) → SVG` API + CLI | 1 | DONE — [`src/forward.ts`](src/forward.ts), [`src/dom-shim.ts`](src/dom-shim.ts), [`src/cli.ts`](src/cli.ts). `npm run encode -- "…" -o w.svg --png w.png` |
 | **3** ✅ | **Rasterizer** — SVG → PNG at configurable width (`@resvg/resvg-js`) | 2 | DONE (core) — [`src/raster.ts`](src/raster.ts), wired into the CLI `--png` |
-| 4 | **Synthetic dataset generator** — every character/glyph × augmentations, with labels | 2, 3 | labeled image set + manifest JSON |
+| **4** ✅ | **Synthetic dataset generator** — per-glyph × augmentations, with labels | 2, 3 | DONE — [`src/generate-dataset.ts`](src/generate-dataset.ts) → labeled PNGs + `manifest.json` |
 | 5 | **Reverse: preprocess + segment** — binarize, deskew, line/char split, diacritic merge | — | `SegmentedRegion[]` from an image |
 | 6 | **Reverse: baseline classifier** — template match vs `@zsnout`-rendered reference glyphs | 4, 5 | `ClassifiedGlyph[]` (reuses `ithkuil-2011/build_glyph_similarity.py` approach) |
 | 7 | **Reverse: decoder** — classified glyphs → word JSON → `@zsnout/generate` → text | 6 | `decode(image) → text` |
@@ -113,13 +113,33 @@ correct New Ithkuil block script. Key learnings, all baked into the spike:
   no `exports` map, so NodeNext can't resolve its subpath types). `svgdom` gets a minimal ambient
   d.ts. `npm run typecheck` passes.
 
+### Milestone 4 — done
+
+Per-glyph synthetic dataset generator. `npm run dataset -- [--per-class N] [--size px] [--seed n] [--clean]`.
+
+- **Class taxonomy** ([`src/glyph-classes.ts`](src/glyph-classes.ts)): the **28 New Ithkuil consonant
+  cores** (from `@zsnout`'s `CORES`), each rendered as a standalone `Secondary` character — the clean,
+  finite atomic set. Designed to extend (add extensions/diacritics/other character families later).
+- **Fixed-canvas renderer** ([`src/glyph-render.ts`](src/glyph-render.ts)): centres a glyph on a
+  square canvas by its own bbox, applies a scale/rotate/jitter transform, emits a same-size SVG so
+  every sample rasterizes to identical dimensions (what a classifier wants).
+- **Generator** ([`src/generate-dataset.ts`](src/generate-dataset.ts)): per class, 1 clean canonical
+  sample (also the template reference for M6) + N seeded-random augmented samples; writes
+  `dataset/<class>/<class>_NNN.png` + a `manifest.json` (per-sample label/class/family/aug params).
+  Reproducible via `--seed`. `dataset/` is gitignored.
+- **Augmentation:** geometric (scale 0.85–1.15, rotate ±10°, jitter ±8px), applied as SVG transforms
+  (rasterizer honours them). Pixel noise/blur deferred to when the CNN (M9) needs it — the template
+  baseline (M6) works on clean/geometric variation. Note: rendering is ~0.3 s/image (svgdom getBBox);
+  fine for one-off generation, optimize if it becomes a bottleneck.
+
 ### Next up
 
-- **Milestone 4 — synthetic dataset generator.** Enumerate characters/glyphs, render each via the
-  forward module + rasterizer, apply augmentations (scale/rotate/noise), emit labeled images + a
-  manifest. This is the data that trains/evaluates the reverse pipeline (5–7).
-- Deferred: **compact layout in Node** (shim `isPointInStroke`/`isPointInFill` on svgdom, or render
-  that step in a headless browser) — only needed if tight kerning matters before the reverse work.
+- **Milestone 5 — preprocess + segment.** Given a rendered line/word image, binarize, split into
+  characters (connected components), and merge diacritics with their base. Output `SegmentedRegion[]`.
+  The synthetic single-glyph images make good unit fixtures; multi-glyph word renders (from the
+  forward module) are the real segmentation targets.
+- Deferred: **compact layout in Node** (shim `isPointInStroke`/`isPointInFill` on svgdom, or a
+  headless browser) — only if tight kerning matters before the reverse work.
 
 ---
 
