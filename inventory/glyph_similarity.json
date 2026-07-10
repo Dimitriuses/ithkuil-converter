@@ -1,0 +1,903 @@
+{
+ "PRIMARY_Q": [
+  {
+   "file": "11-case01.jpg",
+   "label": "case 1",
+   "score": 0.9171
+  },
+  {
+   "file": "11-case22.jpg",
+   "label": "case 22",
+   "score": 0.5044
+  },
+  {
+   "file": "11-case09.jpg",
+   "label": "case 9",
+   "score": 0.4692
+  }
+ ],
+ "PRIMARY_W": [
+  {
+   "file": "11-case02.jpg",
+   "label": "case 2",
+   "score": 0.9009
+  },
+  {
+   "file": "11-case13.jpg",
+   "label": "case 13",
+   "score": 0.5519
+  },
+  {
+   "file": "11-case12.jpg",
+   "label": "case 12",
+   "score": 0.5336
+  }
+ ],
+ "PRIMARY_E": [
+  {
+   "file": "11-case03.jpg",
+   "label": "case 3",
+   "score": 0.918
+  },
+  {
+   "file": "11-case21.jpg",
+   "label": "case 21",
+   "score": 0.5174
+  },
+  {
+   "file": "11-case05.jpg",
+   "label": "case 5",
+   "score": 0.4348
+  }
+ ],
+ "PRIMARY_R": [
+  {
+   "file": "11-case04.jpg",
+   "label": "case 4",
+   "score": 0.6102
+  },
+  {
+   "file": "11-case18.jpg",
+   "label": "case 18",
+   "score": 0.604
+  },
+  {
+   "file": "11-case09.jpg",
+   "label": "case 9",
+   "score": 0.548
+  }
+ ],
+ "PRIMARY_T": [
+  {
+   "file": "11-case05.jpg",
+   "label": "case 5",
+   "score": 0.7845
+  },
+  {
+   "file": "11-case24.jpg",
+   "label": "case 24",
+   "score": 0.4666
+  },
+  {
+   "file": "11-case21.jpg",
+   "label": "case 21",
+   "score": 0.4572
+  }
+ ],
+ "PRIMARY_Y": [
+  {
+   "file": "11-case04.jpg",
+   "label": "case 4",
+   "score": 0.6032
+  },
+  {
+   "file": "11-case06.jpg",
+   "label": "case 6",
+   "score": 0.5838
+  },
+  {
+   "file": "11-case18.jpg",
+   "label": "case 18",
+   "score": 0.5627
+  }
+ ],
+ "PRIMARY_U": [
+  {
+   "file": "11-case07.jpg",
+   "label": "case 7",
+   "score": 0.9013
+  },
+  {
+   "file": "11-case16.jpg",
+   "label": "case 16",
+   "score": 0.488
+  },
+  {
+   "file": "11-case20.jpg",
+   "label": "case 20",
+   "score": 0.4291
+  }
+ ],
+ "PRIMARY_I": [
+  {
+   "file": "11-case08.jpg",
+   "label": "case 8",
+   "score": 0.7729
+  },
+  {
+   "file": "11-case11.jpg",
+   "label": "case 11",
+   "score": 0.5832
+  },
+  {
+   "file": "11-case22.jpg",
+   "label": "case 22",
+   "score": 0.2767
+  }
+ ],
+ "PRIMARY_O": [
+  {
+   "file": "11-case09.jpg",
+   "label": "case 9",
+   "score": 0.9025
+  },
+  {
+   "file": "11-case06.jpg",
+   "label": "case 6",
+   "score": 0.5845
+  },
+  {
+   "file": "11-case04.jpg",
+   "label": "case 4",
+   "score": 0.5598
+  }
+ ],
+ "PRIMARY_A": [
+  {
+   "file": "11-case10.jpg",
+   "label": "case 10",
+   "score": 0.7795
+  },
+  {
+   "file": "11-case22.jpg",
+   "label": "case 22",
+   "score": 0.5183
+  },
+  {
+   "file": "11-case06.jpg",
+   "label": "case 6",
+   "score": 0.4402
+  }
+ ],
+ "PRIMARY_S": [
+  {
+   "file": "11-case08.jpg",
+   "label": "case 8",
+   "score": 0.572
+  },
+  {
+   "file": "11-case11.jpg",
+   "label": "case 11",
+   "score": 0.4972
+  },
+  {
+   "file": "11-case18.jpg",
+   "label": "case 18",
+   "score": 0.2846
+  }
+ ],
+ "PRIMARY_D": [
+  {
+   "file": "11-case12.jpg",
+   "label": "case 12",
+   "score": 0.926
+  },
+  {
+   "file": "11-case15.jpg",
+   "label": "case 15",
+   "score": 0.7298
+  },
+  {
+   "file": "11-case02.jpg",
+   "label": "case 2",
+   "score": 0.5072
+  }
+ ],
+ "PRIMARY_F": [
+  {
+   "file": "11-case13.jpg",
+   "label": "case 13",
+   "score": 0.8291
+  },
+  {
+   "file": "11-case19.jpg",
+   "label": "case 19",
+   "score": 0.5036
+  },
+  {
+   "file": "11-case02.jpg",
+   "label": "case 2",
+   "score": 0.4925
+  }
+ ],
+ "PRIMARY_G": [
+  {
+   "file": "11-case14.jpg",
+   "label": "case 14",
+   "score": 0.9145
+  },
+  {
+   "file": "11-case20.jpg",
+   "label": "case 20",
+   "score": 0.4889
+  },
+  {
+   "file": "11-case16.jpg",
+   "label": "case 16",
+   "score": 0.4519
+  }
+ ],
+ "PRIMARY_H": [
+  {
+   "file": "11-case15.jpg",
+   "label": "case 15",
+   "score": 0.8923
+  },
+  {
+   "file": "11-case12.jpg",
+   "label": "case 12",
+   "score": 0.7262
+  },
+  {
+   "file": "11-case04.jpg",
+   "label": "case 4",
+   "score": 0.4131
+  }
+ ],
+ "PRIMARY_J": [
+  {
+   "file": "11-case16.jpg",
+   "label": "case 16",
+   "score": 0.8057
+  },
+  {
+   "file": "11-case02.jpg",
+   "label": "case 2",
+   "score": 0.5517
+  },
+  {
+   "file": "11-case12.jpg",
+   "label": "case 12",
+   "score": 0.5382
+  }
+ ],
+ "PRIMARY_K": [
+  {
+   "file": "11-case17.jpg",
+   "label": "case 17",
+   "score": 0.6204
+  },
+  {
+   "file": "11-case24.jpg",
+   "label": "case 24",
+   "score": 0.4456
+  },
+  {
+   "file": "11-case05.jpg",
+   "label": "case 5",
+   "score": 0.3044
+  }
+ ],
+ "PRIMARY_L": [
+  {
+   "file": "11-case18.jpg",
+   "label": "case 18",
+   "score": 0.6731
+  },
+  {
+   "file": "11-case04.jpg",
+   "label": "case 4",
+   "score": 0.4366
+  },
+  {
+   "file": "11-case09.jpg",
+   "label": "case 9",
+   "score": 0.3354
+  }
+ ],
+ "PRIMARY_X": [
+  {
+   "file": "11-case19.jpg",
+   "label": "case 19",
+   "score": 0.7878
+  },
+  {
+   "file": "11-case13.jpg",
+   "label": "case 13",
+   "score": 0.5463
+  },
+  {
+   "file": "11-case02.jpg",
+   "label": "case 2",
+   "score": 0.4239
+  }
+ ],
+ "PRIMARY_C": [
+  {
+   "file": "11-case20.jpg",
+   "label": "case 20",
+   "score": 0.6566
+  },
+  {
+   "file": "11-case07.jpg",
+   "label": "case 7",
+   "score": 0.5381
+  },
+  {
+   "file": "11-case21.jpg",
+   "label": "case 21",
+   "score": 0.4718
+  }
+ ],
+ "PRIMARY_V": [
+  {
+   "file": "11-case21.jpg",
+   "label": "case 21",
+   "score": 0.7406
+  },
+  {
+   "file": "11-case20.jpg",
+   "label": "case 20",
+   "score": 0.4954
+  },
+  {
+   "file": "11-case05.jpg",
+   "label": "case 5",
+   "score": 0.422
+  }
+ ],
+ "PRIMARY_B": [
+  {
+   "file": "11-case11.jpg",
+   "label": "case 11",
+   "score": 0.5352
+  },
+  {
+   "file": "11-case22.jpg",
+   "label": "case 22",
+   "score": 0.5211
+  },
+  {
+   "file": "11-case06.jpg",
+   "label": "case 6",
+   "score": 0.5137
+  }
+ ],
+ "PRIMARY_N": [
+  {
+   "file": "11-case20.jpg",
+   "label": "case 20",
+   "score": 0.5071
+  },
+  {
+   "file": "11-case23.jpg",
+   "label": "case 23",
+   "score": 0.4807
+  },
+  {
+   "file": "11-case07.jpg",
+   "label": "case 7",
+   "score": 0.4329
+  }
+ ],
+ "PRIMARY_M": [
+  {
+   "file": "11-case24.jpg",
+   "label": "case 24",
+   "score": 0.5593
+  },
+  {
+   "file": "11-case05.jpg",
+   "label": "case 5",
+   "score": 0.469
+  },
+  {
+   "file": "11-case17.jpg",
+   "label": "case 17",
+   "score": 0.4084
+  }
+ ],
+ "SECONDARY_01": [
+  {
+   "file": "11-altcase12.jpg",
+   "label": "altcase 12",
+   "score": 0.3174
+  },
+  {
+   "file": "11-altcase22.jpg",
+   "label": "altcase 22",
+   "score": 0.3114
+  },
+  {
+   "file": "11-altcase20.jpg",
+   "label": "altcase 20",
+   "score": 0.3068
+  }
+ ],
+ "SECONDARY_02": [
+  {
+   "file": "11-altcase17.jpg",
+   "label": "altcase 17",
+   "score": 0.3926
+  },
+  {
+   "file": "11-altcase09.jpg",
+   "label": "altcase 9",
+   "score": 0.3806
+  },
+  {
+   "file": "11-altcase20.jpg",
+   "label": "altcase 20",
+   "score": 0.3793
+  }
+ ],
+ "SECONDARY_03": [
+  {
+   "file": "11-altcase17.jpg",
+   "label": "altcase 17",
+   "score": 0.4073
+  },
+  {
+   "file": "11-altcase09.jpg",
+   "label": "altcase 9",
+   "score": 0.3993
+  },
+  {
+   "file": "11-altcase20.jpg",
+   "label": "altcase 20",
+   "score": 0.3784
+  }
+ ],
+ "SECONDARY_04": [
+  {
+   "file": "11-altcase06.jpg",
+   "label": "altcase 6",
+   "score": 0.1005
+  },
+  {
+   "file": "11-altcase08.jpg",
+   "label": "altcase 8",
+   "score": 0.1001
+  },
+  {
+   "file": "11-altcase13.jpg",
+   "label": "altcase 13",
+   "score": 0.0998
+  }
+ ],
+ "SECONDARY_05": [
+  {
+   "file": "11-altcase06.jpg",
+   "label": "altcase 6",
+   "score": 0.1325
+  },
+  {
+   "file": "11-altcase08.jpg",
+   "label": "altcase 8",
+   "score": 0.1318
+  },
+  {
+   "file": "11-altcase13.jpg",
+   "label": "altcase 13",
+   "score": 0.1285
+  }
+ ],
+ "SECONDARY_06": [
+  {
+   "file": "11-altcase06.jpg",
+   "label": "altcase 6",
+   "score": 0.1492
+  },
+  {
+   "file": "11-altcase08.jpg",
+   "label": "altcase 8",
+   "score": 0.1485
+  },
+  {
+   "file": "11-altcase13.jpg",
+   "label": "altcase 13",
+   "score": 0.1458
+  }
+ ],
+ "CONSONANT_T_EJ": [
+  {
+   "file": "11-cons-t.jpg",
+   "label": "t",
+   "score": 0.7844
+  },
+  {
+   "file": "11-cons-k-ejct.jpg",
+   "label": "k’ (ejective)",
+   "score": 0.681
+  },
+  {
+   "file": "11-cons-w.jpg",
+   "label": "w",
+   "score": 0.6469
+  }
+ ],
+ "CONSONANT_K_EJ": [
+  {
+   "file": "11-cons-p-ejct.jpg",
+   "label": "p’ (ejective)",
+   "score": 0.3671
+  },
+  {
+   "file": "11-cons-k.jpg",
+   "label": "k",
+   "score": 0.3375
+  },
+  {
+   "file": "11-cons-c-ejct.jpg",
+   "label": "c’ (ejective)",
+   "score": 0.2908
+  }
+ ],
+ "CONSONANT_Y": [
+  {
+   "file": "11-cons-c-ejct.jpg",
+   "label": "c’ (ejective)",
+   "score": 0.5822
+  },
+  {
+   "file": "11-cons-n-hacek.jpg",
+   "label": "ň",
+   "score": 0.5453
+  },
+  {
+   "file": "11-cons-k.jpg",
+   "label": "k",
+   "score": 0.457
+  }
+ ],
+ "CONSONANT_P_EJ": [
+  {
+   "file": "11-cons-q-ejct.jpg",
+   "label": "q’ (ejective)",
+   "score": 0.5732
+  },
+  {
+   "file": "11-cons-h.jpg",
+   "label": "h",
+   "score": 0.5301
+  },
+  {
+   "file": "11-cons-p.jpg",
+   "label": "p",
+   "score": 0.5263
+  }
+ ],
+ "CONSONANT_M": [
+  {
+   "file": "11-cons-m.jpg",
+   "label": "m",
+   "score": 0.7693
+  },
+  {
+   "file": "11-cons-q.jpg",
+   "label": "q",
+   "score": 0.748
+  },
+  {
+   "file": "11-cons-x.jpg",
+   "label": "x",
+   "score": 0.5409
+  }
+ ],
+ "CONSONANT_W": [
+  {
+   "file": "11-cons-t.jpg",
+   "label": "t",
+   "score": 0.6863
+  },
+  {
+   "file": "11-cons-w.jpg",
+   "label": "w",
+   "score": 0.6858
+  },
+  {
+   "file": "11-cons-k-ejct.jpg",
+   "label": "k’ (ejective)",
+   "score": 0.5923
+  }
+ ],
+ "CONSONANT_H": [
+  {
+   "file": "11-cons-x.jpg",
+   "label": "x",
+   "score": 0.5435
+  },
+  {
+   "file": "11-cons-t-ejct.jpg",
+   "label": "t’ (ejective)",
+   "score": 0.5265
+  },
+  {
+   "file": "11-cons-h.jpg",
+   "label": "h",
+   "score": 0.5129
+  }
+ ],
+ "CONSONANT_T": [
+  {
+   "file": "11-cons-t-ejct.jpg",
+   "label": "t’ (ejective)",
+   "score": 0.8018
+  },
+  {
+   "file": "11-cons-f.jpg",
+   "label": "f",
+   "score": 0.6802
+  },
+  {
+   "file": "11-cons-t-cedilla.jpg",
+   "label": "ţ",
+   "score": 0.4918
+  }
+ ],
+ "CONSONANT_N_PAL": [
+  {
+   "file": "11-cons-n-hacek.jpg",
+   "label": "ň",
+   "score": 0.8389
+  },
+  {
+   "file": "11-cons-q-ejct.jpg",
+   "label": "q’ (ejective)",
+   "score": 0.5482
+  },
+  {
+   "file": "11-cons-k.jpg",
+   "label": "k",
+   "score": 0.5457
+  }
+ ],
+ "CONSONANT_K": [
+  {
+   "file": "11-cons-k-ejct.jpg",
+   "label": "k’ (ejective)",
+   "score": 0.7621
+  },
+  {
+   "file": "11-cons-t.jpg",
+   "label": "t",
+   "score": 0.7612
+  },
+  {
+   "file": "11-cons-w.jpg",
+   "label": "w",
+   "score": 0.6804
+  }
+ ],
+ "CONSONANT_F": [
+  {
+   "file": "11-cons-t.jpg",
+   "label": "t",
+   "score": 0.6908
+  },
+  {
+   "file": "11-cons-k-ejct.jpg",
+   "label": "k’ (ejective)",
+   "score": 0.6814
+  },
+  {
+   "file": "11-cons-w.jpg",
+   "label": "w",
+   "score": 0.5824
+  }
+ ],
+ "CONSONANT_T_DENT": [
+  {
+   "file": "11-cons-t-cedilla.jpg",
+   "label": "ţ",
+   "score": 0.795
+  },
+  {
+   "file": "11-cons-t-ejct.jpg",
+   "label": "t’ (ejective)",
+   "score": 0.5668
+  },
+  {
+   "file": "11-cons-f.jpg",
+   "label": "f",
+   "score": 0.5569
+  }
+ ],
+ "CONSONANT_C": [
+  {
+   "file": "11-cons-c-ejct.jpg",
+   "label": "c’ (ejective)",
+   "score": 0.669
+  },
+  {
+   "file": "11-cons-k.jpg",
+   "label": "k",
+   "score": 0.4532
+  },
+  {
+   "file": "11-cons-n-hacek.jpg",
+   "label": "ň",
+   "score": 0.4192
+  }
+ ],
+ "CONSONANT_P": [
+  {
+   "file": "11-cons-p-ejct.jpg",
+   "label": "p’ (ejective)",
+   "score": 0.6627
+  },
+  {
+   "file": "11-cons-p.jpg",
+   "label": "p",
+   "score": 0.434
+  },
+  {
+   "file": "11-cons-y.jpg",
+   "label": "y",
+   "score": 0.3035
+  }
+ ],
+ "CONSONANT_Q_EJ": [
+  {
+   "file": "11-cons-q.jpg",
+   "label": "q",
+   "score": 0.6087
+  },
+  {
+   "file": "11-cons-m.jpg",
+   "label": "m",
+   "score": 0.4127
+  },
+  {
+   "file": "11-cons-c-hacek-ejct.jpg",
+   "label": "č’ (ejective)",
+   "score": 0.3505
+  }
+ ],
+ "CONSONANT_X": [
+  {
+   "file": "11-cons-m.jpg",
+   "label": "m",
+   "score": 0.7652
+  },
+  {
+   "file": "11-cons-x.jpg",
+   "label": "x",
+   "score": 0.5586
+  },
+  {
+   "file": "11-cons-c-hacek-ejct.jpg",
+   "label": "č’ (ejective)",
+   "score": 0.5099
+  }
+ ],
+ "CONSONANT_Q": [
+  {
+   "file": "11-cons-p-ejct.jpg",
+   "label": "p’ (ejective)",
+   "score": 0.4873
+  },
+  {
+   "file": "11-cons-k.jpg",
+   "label": "k",
+   "score": 0.4631
+  },
+  {
+   "file": "11-cons-c-ejct.jpg",
+   "label": "c’ (ejective)",
+   "score": 0.3652
+  }
+ ],
+ "CONSONANT_C_EJ": [
+  {
+   "file": "11-cons-s.jpg",
+   "label": "s",
+   "score": 0.7581
+  },
+  {
+   "file": "11-cons-c.jpg",
+   "label": "c",
+   "score": 0.5934
+  },
+  {
+   "file": "11-cons-c-ejct.jpg",
+   "label": "c’ (ejective)",
+   "score": 0.5696
+  }
+ ],
+ "CONSONANT_CH_EJ": [
+  {
+   "file": "11-cons-c-hacek.jpg",
+   "label": "č",
+   "score": 0.807
+  },
+  {
+   "file": "11-cons-x.jpg",
+   "label": "x",
+   "score": 0.4544
+  },
+  {
+   "file": "11-cons-t-cedilla.jpg",
+   "label": "ţ",
+   "score": 0.3976
+  }
+ ],
+ "CONSONANT_R": [
+  {
+   "file": "11-cons-r.jpg",
+   "label": "r",
+   "score": 0.838
+  },
+  {
+   "file": "11-cons-k-ejct.jpg",
+   "label": "k’ (ejective)",
+   "score": 0.3979
+  },
+  {
+   "file": "11-cons-t.jpg",
+   "label": "t",
+   "score": 0.3522
+  }
+ ],
+ "CONSONANT_SH": [
+  {
+   "file": "11-cons-h.jpg",
+   "label": "h",
+   "score": 0.6685
+  },
+  {
+   "file": "11-cons-c.jpg",
+   "label": "c",
+   "score": 0.6091
+  },
+  {
+   "file": "11-cons-s-hacek.jpg",
+   "label": "š",
+   "score": 0.6058
+  }
+ ],
+ "CONSONANT_S": [
+  {
+   "file": "11-cons-s.jpg",
+   "label": "s",
+   "score": 0.8048
+  },
+  {
+   "file": "11-cons-c.jpg",
+   "label": "c",
+   "score": 0.5777
+  },
+  {
+   "file": "11-cons-h.jpg",
+   "label": "h",
+   "score": 0.545
+  }
+ ],
+ "CONSONANT_CH": [
+  {
+   "file": "11-cons-c-hacek-ejct.jpg",
+   "label": "č’ (ejective)",
+   "score": 0.7083
+  },
+  {
+   "file": "11-cons-x.jpg",
+   "label": "x",
+   "score": 0.6511
+  },
+  {
+   "file": "11-cons-c-hacek.jpg",
+   "label": "č",
+   "score": 0.5327
+  }
+ ]
+}

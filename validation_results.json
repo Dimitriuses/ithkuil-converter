@@ -1,9 +1,9 @@
 {
   "summary": {
     "total": 114,
-    "confirmed": 39,
-    "discrepancy": 74,
-    "absent": 1,
+    "confirmed": 43,
+    "discrepancy": 56,
+    "absent": 15,
     "skipped": 0,
     "unchecked": 0
   },
@@ -24,7 +24,7 @@
       "ch12Section": "—",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The SVG actually shows three vertical dots that are used in a comparison somewhere toward the end. There are two vertical dots on the right."
     },
     {
       "glyphId": "PUNCT_03",
@@ -33,7 +33,7 @@
       "ch12Section": "—",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "There are two vertical dots on the right."
     },
     {
       "glyphId": "PUNCT_04",
@@ -42,7 +42,7 @@
       "ch12Section": "—",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "There are two vertical dots on the right."
     },
     {
       "glyphId": "DIGIT_1",
@@ -50,7 +50,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -59,7 +59,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -68,7 +68,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -77,7 +77,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -86,7 +86,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -95,7 +95,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -104,7 +104,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -113,7 +113,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -122,7 +122,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -131,7 +131,7 @@
       "ithkeyClass": "number",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -140,7 +140,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -149,7 +149,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -158,7 +158,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -167,7 +167,7 @@
       "ithkeyClass": "tenthPower",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     },
     {
@@ -347,7 +347,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -356,7 +356,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -365,7 +365,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -393,7 +393,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "confirmed",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "SECONDARY_02",
@@ -402,7 +402,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "SECONDARY_03",
@@ -411,7 +411,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "SECONDARY_04",
@@ -420,7 +420,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "SECONDARY_05",
@@ -429,7 +429,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "SECONDARY_06",
@@ -438,7 +438,7 @@
       "ch12Section": "12.2",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set. On the right, it appears to be the endings, and the SVG is a full-fledged symbol (perhaps a case where no equivalent can be found on the wiki)"
     },
     {
       "glyphId": "TERTIARY_01",
@@ -510,7 +510,7 @@
       "ch12Section": "12.2",
       "romanisation": "t'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"t - 0.78\""
     },
     {
       "glyphId": "CONSONANT_K_EJ",
@@ -519,7 +519,7 @@
       "ch12Section": "12.2",
       "romanisation": "k'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"k - 0.34\""
     },
     {
       "glyphId": "CONSONANT_Y",
@@ -528,7 +528,7 @@
       "ch12Section": "12.2",
       "romanisation": "y",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "not among the options provided"
     },
     {
       "glyphId": "CONSONANT_P_EJ",
@@ -537,7 +537,7 @@
       "ch12Section": "12.2",
       "romanisation": "p'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"p - 0.53\""
     },
     {
       "glyphId": "CONSONANT_M",
@@ -573,7 +573,7 @@
       "ch12Section": "12.2",
       "romanisation": "t",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"t' - 0.80\""
     },
     {
       "glyphId": "CONSONANT_N_PAL",
@@ -581,7 +581,7 @@
       "ithkeyClass": "consonantal",
       "ch12Section": "12.2",
       "romanisation": "ň",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -591,7 +591,7 @@
       "ch12Section": "12.2",
       "romanisation": "k",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"k' - 0.76\""
     },
     {
       "glyphId": "CONSONANT_F",
@@ -618,7 +618,7 @@
       "ch12Section": "12.2",
       "romanisation": "c",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"c' - 0.67\""
     },
     {
       "glyphId": "CONSONANT_P",
@@ -627,7 +627,7 @@
       "ch12Section": "12.2",
       "romanisation": "p",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"p' - 0.66\""
     },
     {
       "glyphId": "CONSONANT_Q_EJ",
@@ -636,7 +636,7 @@
       "ch12Section": "12.2",
       "romanisation": "q'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"q - 0.61\""
     },
     {
       "glyphId": "CONSONANT_X",
@@ -654,7 +654,7 @@
       "ch12Section": "12.2",
       "romanisation": "q",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "It's not among the options listed, but it's more like \"q\""
     },
     {
       "glyphId": "CONSONANT_C_EJ",
@@ -663,7 +663,7 @@
       "ch12Section": "12.2",
       "romanisation": "c'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"с - 0.59\""
     },
     {
       "glyphId": "CONSONANT_CH_EJ",
@@ -672,7 +672,7 @@
       "ch12Section": "12.2",
       "romanisation": "ch'",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"č · 0.81\""
     },
     {
       "glyphId": "CONSONANT_R",
@@ -708,7 +708,7 @@
       "ch12Section": "12.2",
       "romanisation": "č",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "more like \"č’ (ejective) · 0.71\""
     },
     {
       "glyphId": "PLACEHOLDER_VBAR",
@@ -717,7 +717,7 @@
       "ch12Section": "12.7",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "On the right, there are simply three vertical dots"
     },
     {
       "glyphId": "PLACEHOLDER_DASH",
@@ -726,7 +726,7 @@
       "ch12Section": "12.7",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "On the right, there are simply three vertical dots"
     },
     {
       "glyphId": "DIACRITIC_NULL",
@@ -735,7 +735,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_01",
@@ -744,7 +744,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_02",
@@ -753,7 +753,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_03",
@@ -762,7 +762,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_04",
@@ -771,7 +771,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_05",
@@ -780,7 +780,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_06",
@@ -789,7 +789,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_07",
@@ -798,7 +798,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_08",
@@ -807,7 +807,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_09",
@@ -816,7 +816,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_10",
@@ -825,7 +825,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_11",
@@ -834,7 +834,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_12",
@@ -843,7 +843,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_13",
@@ -852,7 +852,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_14",
@@ -861,7 +861,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_15",
@@ -870,7 +870,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_16",
@@ -879,7 +879,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_17",
@@ -888,7 +888,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_18",
@@ -897,7 +897,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_19",
@@ -906,7 +906,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_20",
@@ -915,7 +915,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_21",
@@ -924,7 +924,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_22",
@@ -933,7 +933,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_23",
@@ -942,7 +942,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_24",
@@ -951,7 +951,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_25",
@@ -960,7 +960,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_26",
@@ -969,7 +969,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_27",
@@ -978,7 +978,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_28",
@@ -987,7 +987,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_29",
@@ -996,7 +996,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_30",
@@ -1005,7 +1005,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_31",
@@ -1014,7 +1014,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "DIACRITIC_32",
@@ -1023,7 +1023,7 @@
       "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
       "romanisation": "",
       "validationStatus": "discrepancy",
-      "validationNotes": ""
+      "validationNotes": "The symbol actually has no equivalents in the entire set."
     },
     {
       "glyphId": "GRID_OVERLAY",

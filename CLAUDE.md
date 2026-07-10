@@ -31,7 +31,8 @@ Each stage consumes the previous stage's output directory. Run in order:
 extract_font_tables.py / .ts   →  font_analysis/  or  font_analysis_ts/
 build_glyph_inventory.py        →  inventory/  (glyph_inventory.json, svg/*.svg, class_*.json)
 build_mapping_table.py          →  mapping/  (forward_index, reverse_index, mapping_table, anchors)
-build_validator.py              →  validator.html  (review tool; refs 2011 ch11 images)
+build_glyph_similarity.py       →  inventory/glyph_similarity.json  (optional: font↔ref shape scores)
+build_validator.py              →  validator.html  (review tool; refs 2011 ch11 images + cross-match panel)
      ↓ human reviews in browser, exports validation_results.json ↓
 apply_validation.py             →  updates inventory/glyph_inventory.json in place
 ```
@@ -49,6 +50,7 @@ Downstream scripts auto-detect either format, so you may pass either dir (or a m
 .venv/Scripts/python.exe extract_font_tables.py ./ithkuil.ttf ./font_analysis/
 .venv/Scripts/python.exe build_glyph_inventory.py ./font_analysis ./inventory
 .venv/Scripts/python.exe build_mapping_table.py ./inventory ./font_analysis ./mapping
+.venv/Scripts/python.exe build_glyph_similarity.py ./inventory   # optional; needs numpy+scipy; writes glyph_similarity.json
 .venv/Scripts/python.exe build_validator.py ./inventory ./validator.html
 .venv/Scripts/python.exe apply_validation.py ./validation_results.json ./inventory/glyph_inventory.json
 

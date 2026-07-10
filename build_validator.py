@@ -9,12 +9,16 @@ Run:
 
   <inventory_dir>  -- output of build_glyph_inventory.py
                       must contain glyph_inventory.json and svg/*.svg
+                      optional: glyph_similarity.json (from build_glyph_similarity.py)
+                      enables the "closest auto-matches" cross-match panel
   <output_html>    -- path to write the generated HTML file
                       (default: ./validator.html)
 
 The HTML tool:
   - Shows each glyph's SVG alongside the relevant 2011-script (Chapter 11) reference
     image (the ithkey font encodes the 2004-2011 script, NOT New Ithkuil ch12)
+  - When glyph_similarity.json is present, also shows the closest-matching
+    reference images by shape, so you can spot mapping errors vs real differences
   - Lets you mark each glyph as: confirmed / discrepancy / absent / skip
   - Has a freeform notes field per glyph
   - Tracks progress across sessions via localStorage
@@ -160,30 +164,53 @@ def load_svg(svg_path: Path) -> str:
     return ""
 
 
-def ref_images_html(entry: dict) -> str:
+def _fig_html(fname: str, caption: str, extra_class: str = "") -> str:
+    url = BASE_URL + fname
+    cls_attr = f"ref-fig {extra_class}".strip()
+    return (
+        f'<figure class="{cls_attr}">'
+        f'<a href="{url}" target="_blank">'
+        f'<img src="{url}" alt="{caption}" loading="lazy" '
+        f'onerror="this.parentElement.parentElement.classList.add(\'img-error\')">'
+        f'</a>'
+        f'<figcaption>{caption}</figcaption>'
+        f'</figure>'
+    )
+
+
+def ref_images_html(entry: dict, candidates: list | None = None) -> str:
     cls = entry.get("ithkeyClass", "")
     # Prefer an exact 1:1 reference; only fall back to the (shared) class reference
     # when no per-glyph figure exists. This avoids showing the same generic image
     # on every glyph of a class.
     images: list[tuple[str, str]] = per_glyph_ref(entry) or CH11_IMAGES.get(cls, [])
-    if not images:
-        return ('<p class="no-ref">No 2011-script (Ch. 11) reference figure exists for '
-                'this glyph — validate its shape by eye against the character type.</p>')
+    assigned_files = {fname for fname, _ in images}
+
     parts = []
-    for fname, caption in images:
-        url = BASE_URL + fname
-        parts.append(
-            f'<figure class="ref-fig">'
-            f'<a href="{url}" target="_blank">'
-            f'<img src="{url}" alt="{caption}" loading="lazy" onerror="this.parentElement.parentElement.classList.add(\'img-error\')">'
-            f'</a>'
-            f'<figcaption>{caption}</figcaption>'
-            f'</figure>'
-        )
+    if images:
+        parts.append('<div class="ref-group-label">Assigned reference</div>')
+        parts.extend(_fig_html(fn, cap) for fn, cap in images)
+    else:
+        parts.append('<p class="no-ref">No 2011-script (Ch. 11) reference figure exists '
+                     'for this glyph — validate its shape by eye against the character type.</p>')
+
+    # Cross-match: closest reference images by shape (precomputed by
+    # build_glyph_similarity.py). Helps spot when a glyph actually matches a
+    # DIFFERENT reference (mapping error) or none (genuine font-vs-figure difference).
+    cand = [c for c in (candidates or []) if c.get("file")]
+    if cand:
+        parts.append('<div class="ref-group-label">Closest auto-matches '
+                     '<span class="hint">(by shape · higher = closer)</span></div>')
+        for c in cand:
+            tag = " ✓assigned" if c["file"] in assigned_files else ""
+            cap = f'{c.get("label", c["file"])} · {c.get("score", 0):.2f}{tag}'
+            extra = "cand-fig" + (" cand-assigned" if tag else "")
+            parts.append(_fig_html(c["file"], cap, extra))
+
     return "\n".join(parts)
 
 
-def build_glyph_data(inventory: list, svg_dir: Path) -> list[dict]:
+def build_glyph_data(inventory: list, svg_dir: Path, similarity: dict) -> list[dict]:
     glyphs = []
     for entry in inventory:
         gid  = entry["glyphId"]
@@ -199,7 +226,7 @@ def build_glyph_data(inventory: list, svg_dir: Path) -> list[dict]:
             "description":    entry.get("description") or "",
             "advanceWidth":   entry.get("advanceWidth", 0),
             "fontGlyphName":  entry.get("fontGlyphName", ""),
-            "refImagesHtml":  ref_images_html(entry),
+            "refImagesHtml":  ref_images_html(entry, similarity.get(gid, [])),
             "svgContent":     svg,
             "validationStatus": entry.get("validationStatus", "unchecked"),
             "validationNotes":  entry.get("validationNotes", ""),
@@ -445,6 +472,32 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     font-family: var(--mono);
     padding: 12px 0;
   }
+  .ref-group-label {
+    font-family: var(--mono);
+    font-size: .68rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin: 4px 0 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .ref-group-label:first-child { border-top: none; padding-top: 0; }
+  .ref-group-label .hint { text-transform: none; color: var(--muted); letter-spacing: 0; }
+  /* candidate (auto-match) figures: compact, three-up */
+  .cand-fig {
+    display: inline-block;
+    width: 31.5%;
+    margin: 0 1% 14px 0;
+    vertical-align: top;
+  }
+  .cand-fig img { min-height: 48px; }
+  .cand-fig figcaption { font-size: .66rem; }
+  .cand-assigned img {
+    border-color: var(--ok);
+    box-shadow: 0 0 0 1px var(--ok);
+  }
+  .cand-assigned figcaption { color: var(--ok); }
 
   /* ── Footer: controls ── */
   footer {
@@ -801,7 +854,15 @@ def main():
     if not svg_dir.exists():
         print(f"  [!] SVG directory not found at {svg_dir} — glyphs will show placeholder text")
 
-    glyph_data = build_glyph_data(inventory, svg_dir)
+    # Optional cross-match data (build_glyph_similarity.py). Absent → no candidates.
+    sim_path = inv_dir / "glyph_similarity.json"
+    similarity = json.loads(sim_path.read_text("utf-8")) if sim_path.exists() else {}
+    if similarity:
+        print(f"Cross-match candidates loaded for {len(similarity)} glyphs")
+    else:
+        print("  [i] No glyph_similarity.json — run build_glyph_similarity.py for cross-match panel")
+
+    glyph_data = build_glyph_data(inventory, svg_dir, similarity)
 
     present    = sum(1 for g in glyph_data if g["svgContent"])
     print(f"SVGs embedded: {present} / {len(glyph_data)}")
