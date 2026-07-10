@@ -71,7 +71,7 @@ characters," a much smaller target.
 | **4** ✅ | **Synthetic dataset generator** — per-glyph × augmentations, with labels | 2, 3 | DONE — [`src/generate-dataset.ts`](src/generate-dataset.ts) → labeled PNGs + `manifest.json` |
 | **5** ✅ | **Reverse: preprocess + segment** — binarize, char split, diacritic merge | — | DONE — [`src/segment.ts`](src/segment.ts) → `SegmentedRegion[]`; demo [`src/segment-demo.ts`](src/segment-demo.ts) |
 | **6** ✅ | **Reverse: baseline classifier** — template match vs clean dataset samples | 4, 5 | DONE — [`src/classify.ts`](src/classify.ts); **90.3% top-1 / 99.7% top-3** on augmented consonants |
-| 7 | **Reverse: decoder** — classified glyphs → word JSON → `@zsnout/generate` → text | 6 | `decode(image) → text` |
+| **7** ✅ | **Reverse: decoder** (scoped) — classified glyphs → romanized text | 6 | DONE — [`src/decode.ts`](src/decode.ts); **100%** round-trip on consonant+vowel |
 | 8 | **CLI + library API** — `encode` / `decode` commands and typed exports | 2, 7 | published-shape package |
 | 9 | **CNN classifier** (robustness for noisy/photo input), trained on synthetic data | 4, 6 | ONNX/TF.js model + integration |
 | 10 | **Round-trip test corpus + metrics** | 8 | `text → image → text ≈ original` |
@@ -189,12 +189,32 @@ Extended the taxonomy in [`src/glyph-classes.ts`](src/glyph-classes.ts) from 28 
   enumerated as classes — recognizing them needs a structural decomposition step. That's the main
   remaining gap, and a natural companion to M7's decoder.
 
+### Milestone 7 — done (scoped)
+
+Decoder for the modeled domain: **secondary consonant + vowel diacritics → romanized text**. The
+full `text → image → text` round-trip is now closed for that domain.
+
+- **Shape → letter mapping** ([`src/decode.ts`](src/decode.ts)): consonant cores are already
+  romanized (base label is "k"/"t"/…); vowel diacritics map via `buildVowelMap()`, derived from
+  `@zsnout`'s `CORE_DIACRITICS` (its vowel names alias the structural shapes). Reading rule (§12.7):
+  superposed vowel precedes the consonant, underposed follows it.
+- **Round-trip** (`npm run decode-test`): render `Secondary(core, {super|under}posed: vowel)` →
+  segment → classify → decode → compare. **100% (120/120)** across 12 consonants × 5 vowels × 2
+  positions (clean renders; the 96.1% classifier figure is the harder augmented case).
+- **Integrated** into `npm run recognize`: prints a `decoded:` line; characters whose base isn't a
+  modeled consonant show `·`. On "Wattunkí ruyün" it correctly reads the two secondary consonants
+  with their vowels (`är`, `än`) and marks the rest.
+
 ### Next up
 
-- **Milestone 7 — decoder.** Turn the classified character sequence (base + diacritics) into
-  `@zsnout` word JSON, then `@zsnout/ithkuil/generate` → romanized text, closing the round-trip
-  (`text → image → text`). Pairs naturally with tackling primary/tertiary/quaternary structural
-  decomposition so full words — not just consonants + diacritics — can be decoded.
+- **Structural decomposition of primary / tertiary / quaternary characters** — the main remaining
+  gap. These aren't flat classes; recognizing them means detecting the character type, then reading
+  its component features. Once a character can be turned into the `@zsnout` word-JSON shape, the
+  decoder can route through `@zsnout/ithkuil/generate` for full-formative romanization (vs the
+  current direct alphabetic-style reading).
+- **Milestone 9 — CNN classifier** to resolve the near-identical pairs (voiced/voiceless, cedilla)
+  under noise/rotation, using the synthetic dataset (add pixel noise/blur augmentation for this).
+- Deferred: multi-line segmentation; deskew/denoise for real scans; compact-layout Node shim.
 
 ---
 

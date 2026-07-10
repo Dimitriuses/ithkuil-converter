@@ -15,6 +15,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng, loadPng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { classifyRegionsDetailed, loadTemplates } from "./classify.js"
+import { decodeGlyphs } from "./decode.js"
 
 const { values } = parseArgs({
   options: {
@@ -54,3 +55,7 @@ for (let i = 0; i < results.length; i++) {
     .join(" ")
   console.log(`  #${i}${conf}  base ${base.label.padEnd(4)} ${base.score.toFixed(2)}${markStr ? "   " + markStr : ""}`)
 }
+
+// Decode the recognized parts (secondary consonants + vowel diacritics). "·"
+// marks characters whose base isn't a modelled consonant (primary/tertiary/etc.).
+console.log(`\ndecoded: ${decodeGlyphs(results).text}`)
