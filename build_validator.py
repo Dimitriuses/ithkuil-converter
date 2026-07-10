@@ -54,32 +54,35 @@ CH11_SECTION: dict[str, str] = {
     "grid":        "font debug grid — no reference",
 }
 
-# Chapter 11 reference images per ithkey class. (filename, caption); BASE_URL prefixed.
+# Class-level fallback reference images. Used ONLY for glyphs that have no exact
+# per-glyph figure in the 2011 source (see per_glyph_ref for the 1:1 cases:
+# primary -> 11-caseNN, secondary -> 11-altcaseNN, consonantal -> 11-cons-*).
+# (filename, caption); BASE_URL is prefixed at render time.
 CH11_IMAGES: dict[str, list[tuple[str, str]]] = {
-    "primary": [
-        ("11-character-example.jpg", "§11.3.1 — Neutral Primary Character (default shape)"),
-    ],
-    "secondary": [
-        ("11-character-example2.jpg", "§11.3.2 — Neutral Secondary Character (default shape)"),
-    ],
+    # primary / secondary / consonantal resolve 1:1 via per_glyph_ref; the neutral
+    # examples are kept only as a defensive fallback and normally never shown.
+    "primary":     [("11-character-example.jpg",  "§11.3.1 — Neutral Primary Character (fallback)")],
+    "secondary":   [("11-character-example2.jpg", "§11.3.2 — Neutral Secondary Character (fallback)")],
+    # Tertiary characters are not enumerated per-form in the 2011 source; the reviewer
+    # checks the shape against the structural explanation (horizontal mid-line bar).
     "tertiary": [
-        ("11-tertiary_character-explanation.jpg", "§11.3.3 — Tertiary Character structure"),
+        ("11-tertiary_character-explanation.jpg", "§11.3.3 — Tertiary Character structure (type reference — no per-glyph figure)"),
     ],
-    "consonantal": [
-        # The exact per-consonant 11-cons-*.jpg is prepended in ref_images_html().
-        ("11-character-example2.jpg", "§11.3.4 — Consonantal chars use the Secondary-character frame"),
+    # Diacritics are combining marks (they render near-empty in isolation) and the
+    # 2011 diacritic figures are semantic, not the font's positional building blocks,
+    # so there is no 1:1 mapping. Shown as type references only.
+    "diacritic": [
+        ("11-diacritic01-sup.jpg", "§11.3 — superposed diacritic (type reference)"),
+        ("11-diacritic01-sub.jpg", "§11.3 — underposed diacritic (type reference)"),
+        ("11-diacritic01-lat.jpg", "§11.3 — lateral diacritic (type reference)"),
     ],
     "placeholder": [
         ("11-alphabetic.jpg", "§11.4.1 — Alphabetic transliteration & placeholder marks"),
     ],
-    "diacritic": [
-        ("11-diacritic01-sup.jpg", "§11.3 — Superposed diacritic (example)"),
-        ("11-diacritic01-sub.jpg", "§11.3 — Underposed diacritic (example)"),
-        ("11-diacritic01-lat.jpg", "§11.3 — Lateral diacritic (example)"),
-    ],
     "punctuation": [
         ("11-quotemarks.jpg", "§11.4 — Quotation marks"),
     ],
+    # Numbers / tenth-powers are numerals, not part of the script chapter — no figure.
     "number": [],
     "tenthPower": [],
     "grid": [],
@@ -113,6 +116,42 @@ CONSONANT_REF: dict[str, tuple[str, str]] = {
     "CONSONANT_CH":     ("11-cons-c-hacek.jpg",       "§11.3.4 — č"),
 }
 
+# Primary character keyboard order == the order of the first 24 cases in Chapter 11.
+# Spec (§11.3.1): "there are 24 basic forms corresponding to the first 24 cases."
+# So PRIMARY_<key> (in this order) validates 1:1 against 11-case01..24.jpg.
+# Verified: every font primary glyph matches its 11-caseNN figure.
+PRIMARY_KEYS_ORDER = [
+    "Q", "W", "E", "R", "T", "Y", "U", "I", "O",
+    "A", "S", "D", "F", "G", "H", "J", "K", "L",
+    "X", "C", "V", "B", "N", "M",
+]
+
+
+def per_glyph_ref(entry: dict) -> list[tuple[str, str]]:
+    """Exact 1:1 reference image(s) for this specific glyph, or [] if none exists.
+
+    A 1:1 reference is available for consonantal, primary and secondary glyphs;
+    tertiary/diacritic/number glyphs have no per-glyph figure in the 2011 source
+    (they fall back to the class-level CH11_IMAGES reference).
+    """
+    gid = entry.get("glyphId", "")
+    cls = entry.get("ithkeyClass", "")
+    if gid in CONSONANT_REF:
+        return [CONSONANT_REF[gid]]
+    if cls == "primary" and gid.startswith("PRIMARY_"):
+        key = gid[len("PRIMARY_"):]
+        if key in PRIMARY_KEYS_ORDER:
+            n = PRIMARY_KEYS_ORDER.index(key) + 1
+            return [(f"11-case{n:02d}.jpg", f"§11.3.1 — Primary case form #{n} (basic form {n} of 24)")]
+    if cls == "secondary" and gid.startswith("SECONDARY_"):
+        try:
+            n = int(gid.rsplit("_", 1)[-1])
+        except ValueError:
+            n = 0
+        if 1 <= n <= 6:
+            return [(f"11-altcase{n:02d}.jpg", f"§11.3.2 — Secondary case form #{n}")]
+    return []
+
 
 def load_svg(svg_path: Path) -> str:
     """Return SVG file content, or empty string if missing."""
@@ -123,14 +162,13 @@ def load_svg(svg_path: Path) -> str:
 
 def ref_images_html(entry: dict) -> str:
     cls = entry.get("ithkeyClass", "")
-    gid = entry.get("glyphId", "")
-    # Consonantal glyphs get their exact 2011 reference image first, then the class frame.
-    images: list[tuple[str, str]] = []
-    if gid in CONSONANT_REF:
-        images.append(CONSONANT_REF[gid])
-    images.extend(CH11_IMAGES.get(cls, []))
+    # Prefer an exact 1:1 reference; only fall back to the (shared) class reference
+    # when no per-glyph figure exists. This avoids showing the same generic image
+    # on every glyph of a class.
+    images: list[tuple[str, str]] = per_glyph_ref(entry) or CH11_IMAGES.get(cls, [])
     if not images:
-        return '<p class="no-ref">No 2011-script (Ch. 11) reference image for this class.</p>'
+        return ('<p class="no-ref">No 2011-script (Ch. 11) reference figure exists for '
+                'this glyph — validate its shape by eye against the character type.</p>')
     parts = []
     for fname, caption in images:
         url = BASE_URL + fname

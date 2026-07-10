@@ -1,9 +1,9 @@
 {
   "summary": {
     "total": 114,
-    "confirmed": 18,
-    "discrepancy": 96,
-    "absent": 0,
+    "confirmed": 39,
+    "discrepancy": 74,
+    "absent": 1,
     "skipped": 0,
     "unchecked": 0
   },
@@ -176,7 +176,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -185,7 +185,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -194,7 +194,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -203,7 +203,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -212,7 +212,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -221,7 +221,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -230,7 +230,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -239,7 +239,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -248,7 +248,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -257,7 +257,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -266,7 +266,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -275,7 +275,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -284,7 +284,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -293,7 +293,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -302,7 +302,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -311,7 +311,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -320,7 +320,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -329,7 +329,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -338,7 +338,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -374,7 +374,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -383,7 +383,7 @@
       "ithkeyClass": "primary",
       "ch12Section": "12.1",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "confirmed",
       "validationNotes": ""
     },
     {
@@ -1031,7 +1031,7 @@
       "ithkeyClass": "grid",
       "ch12Section": "—",
       "romanisation": "",
-      "validationStatus": "discrepancy",
+      "validationStatus": "absent",
       "validationNotes": ""
     }
   ]
