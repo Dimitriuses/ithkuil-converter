@@ -14,7 +14,7 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng, loadPng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
-import { classifyRegions, loadTemplates } from "./classify.js"
+import { classifyRegionsDetailed, loadTemplates } from "./classify.js"
 
 const { values } = parseArgs({
   options: {
@@ -43,14 +43,14 @@ const img = values.image
 const bmp = binarize(img.data, img.width, img.height)
 const regions = segment(bmp)
 const templates = loadTemplates(values.dataset ?? "dataset", size)
-const results = classifyRegions(bmp, regions, templates, size)
+const results = classifyRegionsDetailed(bmp, regions, templates, size)
 
-console.log(`${img.width}×${img.height} → ${regions.length} characters (templates: ${templates.length} consonants)\n`)
+console.log(`${img.width}×${img.height} → ${regions.length} characters (templates: ${templates.length} classes)\n`)
 for (let i = 0; i < results.length; i++) {
-  const g = results[i]
-  const conf = g.score >= 0.6 ? "  " : g.score >= 0.45 ? " ?" : " ??"
-  const alts = g.candidates.map((c) => `${c.label}:${c.score.toFixed(2)}`).join("  ")
-  console.log(`  #${i}${conf}  ${g.label.padEnd(3)} ${g.score.toFixed(2)}   [${alts}]`)
+  const { base, marks } = results[i]
+  const conf = base.score >= 0.6 ? "  " : base.score >= 0.45 ? " ?" : " ??"
+  const markStr = marks
+    .map((m) => `${m.role}:${m.glyph.label}(${m.glyph.score.toFixed(2)})`)
+    .join(" ")
+  console.log(`  #${i}${conf}  base ${base.label.padEnd(4)} ${base.score.toFixed(2)}${markStr ? "   " + markStr : ""}`)
 }
-const line = results.map((g) => (g.score >= 0.45 ? g.label : "·")).join("")
-console.log(`\npredicted (conf ≥ 0.45): ${line}`)

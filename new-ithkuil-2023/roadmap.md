@@ -169,14 +169,32 @@ Baseline template-match classifier + the first end-to-end image → labels pipel
   per-character label + confidence. Honest scores: bare consonants match at ~0.98 (correctly picked
   out the `r` and `n` in "ru**y**ü**n**"), non-consonant character types score low and are flagged.
 
+### Coverage expansion — done
+
+Extended the taxonomy in [`src/glyph-classes.ts`](src/glyph-classes.ts) from 28 consonants to
+**88 classes across 4 families**, and made the pipeline use them:
+
+- **Families:** secondary-consonant (28) · secondary-placeholder (5) · diacritic (16 unique shapes,
+  deduped — the vowel names alias the structural ones) · extension (39, `vert` variant, deduped).
+- **Eval** (`npm run eval`): **96.1% top-1, 99.8% top-3** across all 88 classes (up from 90.3% on
+  consonants alone — the extra families are mostly distinct). Remaining errors are the genuinely
+  near-identical pairs: voiceless/voiced consonants (p↔b, f↔v, t↔d, g↔k) and cedilla pairs (ḑ↔ţ).
+- **Detailed recognition** ([`classifyRegionsDetailed`](src/classify.ts)): base components classify
+  against consonant/placeholder/extension templates; each diacritic component classifies against the
+  diacritic family. `npm run recognize` now reports base **and** marks — diacritics come back at
+  **0.97–1.00** confidence (DOT, HORIZ_BAR, CURVE_TO_LEFT correctly identified) even where the base
+  is an as-yet-unmodelled character type.
+- **Still out of scope (needs structure, not flat templates):** whole **primary / tertiary /
+  quaternary** characters are combinatorial (they encode many categories at once), so they can't be
+  enumerated as classes — recognizing them needs a structural decomposition step. That's the main
+  remaining gap, and a natural companion to M7's decoder.
+
 ### Next up
 
-- **Milestone 7 — decoder.** Turn the classified character sequence into `@zsnout` word JSON, then
-  `@zsnout/ithkuil/generate` → romanized text, closing the round-trip (`text → image → text`).
-- **Coverage gap to close first:** templates currently cover only the **28 bare consonant cores**.
-  Full recognition needs template families for the other character types (primary, tertiary,
-  quaternary) and for consonants **with extensions/diacritics** — i.e. extend `glyph-classes.ts`
-  and regenerate the dataset. This is the main work remaining before M7 can decode real words.
+- **Milestone 7 — decoder.** Turn the classified character sequence (base + diacritics) into
+  `@zsnout` word JSON, then `@zsnout/ithkuil/generate` → romanized text, closing the round-trip
+  (`text → image → text`). Pairs naturally with tackling primary/tertiary/quaternary structural
+  decomposition so full words — not just consonants + diacritics — can be decoded.
 
 ---
 

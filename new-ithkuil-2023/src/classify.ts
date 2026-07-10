@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { decodePng } from "./image-io.js"
-import { binarize, type Bitmap, type SegmentedRegion } from "./segment.js"
+import { binarize, type Bitmap, type Role, type SegmentedRegion } from "./segment.js"
 import { cropInk, maskFromBitmap, normalizeMask, type Mask } from "./normalize.js"
 import { chamferSimilarity } from "./chamfer.js"
 
@@ -73,4 +73,43 @@ export function classifyRegions(
     const mask = normalizeMask(crop.ink, crop.width, crop.height, size)
     return classifyMask(mask, templates)
   })
+}
+
+/** A character's base plus its classified diacritic marks. */
+export interface DetailedGlyph {
+  base: ClassifiedGlyph
+  marks: { role: Role; glyph: ClassifiedGlyph }[]
+}
+
+/** Split a template set into diacritic vs everything-else (base) pools. */
+export function partitionTemplates(templates: Template[]): { base: Template[]; diacritic: Template[] } {
+  return {
+    base: templates.filter((t) => t.class.split("-")[0] !== "diacritic"),
+    diacritic: templates.filter((t) => t.class.split("-")[0] === "diacritic"),
+  }
+}
+
+/**
+ * Classify a whole character: the base against non-diacritic templates, and each
+ * superposed/underposed/right component against the diacritic templates. This
+ * uses the expanded taxonomy (consonants/placeholders/extensions for the base,
+ * the diacritic family for the marks).
+ */
+export function classifyRegionsDetailed(
+  bmp: Bitmap,
+  regions: readonly SegmentedRegion[],
+  templates: Template[],
+  size = 64,
+): DetailedGlyph[] {
+  const { base: baseTpl, diacritic: diaTpl } = partitionTemplates(templates)
+  const maskOf = (box: SegmentedRegion["base"]) => {
+    const crop = cropInk(bmp, box)
+    return normalizeMask(crop.ink, crop.width, crop.height, size)
+  }
+  return regions.map((r) => ({
+    base: classifyMask(maskOf(r.base), baseTpl),
+    marks: r.components
+      .filter((c) => c.role !== "base")
+      .map((c) => ({ role: c.role, glyph: classifyMask(maskOf(c.bbox), diaTpl) })),
+  }))
 }

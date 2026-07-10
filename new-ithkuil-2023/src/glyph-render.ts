@@ -36,7 +36,7 @@ export interface RenderOptions {
  *   (re-parented) by this function — build a new one per render.
  */
 export function renderGlyphToSvg(
-  el: SVGGElement,
+  el: SVGGraphicsElement,
   aug: Augment = {},
   opts: RenderOptions = {},
 ): string {
