@@ -2,5 +2,5 @@
      width="4196.0" height="4196.0"
      viewBox="-50.0 -4146.0 4196.0 4196.0">
   <!-- Font bbox: no bbox data | UPM: 4096 -->
-  <path fill="black" d="M1151 384V1343H0V3071H1920V2688H384V1727H1536V384Z"/>
+  <path transform="scale(1,-1)" fill="black" d="M1151 384V1343H0V3071H1920V2688H384V1727H1536V384Z"/>
 </svg>

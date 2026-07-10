@@ -1,0 +1,1038 @@
+{
+  "summary": {
+    "total": 114,
+    "confirmed": 0,
+    "discrepancy": 0,
+    "absent": 0,
+    "skipped": 0,
+    "unchecked": 114
+  },
+  "results": [
+    {
+      "glyphId": "PUNCT_01",
+      "codepoint": "U+C0000",
+      "ithkeyClass": "punctuation",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PUNCT_02",
+      "codepoint": "U+C0001",
+      "ithkeyClass": "punctuation",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PUNCT_03",
+      "codepoint": "U+C0002",
+      "ithkeyClass": "punctuation",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PUNCT_04",
+      "codepoint": "U+C0003",
+      "ithkeyClass": "punctuation",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_1",
+      "codepoint": "U+C0004",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_2",
+      "codepoint": "U+C0005",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_3",
+      "codepoint": "U+C0006",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_4",
+      "codepoint": "U+C0007",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_5",
+      "codepoint": "U+C0008",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_6",
+      "codepoint": "U+C0009",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_7",
+      "codepoint": "U+C000A",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_8",
+      "codepoint": "U+C000B",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_9",
+      "codepoint": "U+C000C",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIGIT_0",
+      "codepoint": "U+C000D",
+      "ithkeyClass": "number",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TENTHPOWER_10",
+      "codepoint": "U+C000E",
+      "ithkeyClass": "tenthPower",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TENTHPOWER_100",
+      "codepoint": "U+C000F",
+      "ithkeyClass": "tenthPower",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TENTHPOWER_E4",
+      "codepoint": "U+C0010",
+      "ithkeyClass": "tenthPower",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TENTHPOWER_E8",
+      "codepoint": "U+C0011",
+      "ithkeyClass": "tenthPower",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_Q",
+      "codepoint": "U+C0012",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_W",
+      "codepoint": "U+C0013",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_E",
+      "codepoint": "U+C0014",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_R",
+      "codepoint": "U+C0015",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_T",
+      "codepoint": "U+C0016",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_Y",
+      "codepoint": "U+C0017",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_U",
+      "codepoint": "U+C0018",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_I",
+      "codepoint": "U+C0019",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_O",
+      "codepoint": "U+C001A",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_A",
+      "codepoint": "U+C001B",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_S",
+      "codepoint": "U+C001C",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_D",
+      "codepoint": "U+C001D",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_F",
+      "codepoint": "U+C001E",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_G",
+      "codepoint": "U+C001F",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_H",
+      "codepoint": "U+C0020",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_J",
+      "codepoint": "U+C0021",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_K",
+      "codepoint": "U+C0022",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_L",
+      "codepoint": "U+C0023",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_X",
+      "codepoint": "U+C0024",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_C",
+      "codepoint": "U+C0025",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_V",
+      "codepoint": "U+C0026",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_B",
+      "codepoint": "U+C0027",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_N",
+      "codepoint": "U+C0028",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PRIMARY_M",
+      "codepoint": "U+C0029",
+      "ithkeyClass": "primary",
+      "ch12Section": "12.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_01",
+      "codepoint": "U+C002A",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_02",
+      "codepoint": "U+C002B",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_03",
+      "codepoint": "U+C002C",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_04",
+      "codepoint": "U+C002D",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_05",
+      "codepoint": "U+C002E",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "SECONDARY_06",
+      "codepoint": "U+C002F",
+      "ithkeyClass": "secondary",
+      "ch12Section": "12.2",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_01",
+      "codepoint": "U+C0030",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_02",
+      "codepoint": "U+C0031",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_03",
+      "codepoint": "U+C0032",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_04",
+      "codepoint": "U+C0033",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_05",
+      "codepoint": "U+C0034",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_06",
+      "codepoint": "U+C0035",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "TERTIARY_07",
+      "codepoint": "U+C0036",
+      "ithkeyClass": "tertiary",
+      "ch12Section": "12.3",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_T_EJ",
+      "codepoint": "U+C0037",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "t'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_K_EJ",
+      "codepoint": "U+C0038",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "k'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_Y",
+      "codepoint": "U+C0039",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "y",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_P_EJ",
+      "codepoint": "U+C003A",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "p'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_M",
+      "codepoint": "U+C003B",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "m",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_W",
+      "codepoint": "U+C003C",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "w",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_H",
+      "codepoint": "U+C003D",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "h",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_T",
+      "codepoint": "U+C003E",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "t",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_N_PAL",
+      "codepoint": "U+C003F",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "ň",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_K",
+      "codepoint": "U+C0040",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "k",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_F",
+      "codepoint": "U+C0041",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "f",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_T_DENT",
+      "codepoint": "U+C0042",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "ţ",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_C",
+      "codepoint": "U+C0043",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "c",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_P",
+      "codepoint": "U+C0044",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "p",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_Q_EJ",
+      "codepoint": "U+C0045",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "q'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_X",
+      "codepoint": "U+C0046",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "x",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_Q",
+      "codepoint": "U+C0047",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "q",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_C_EJ",
+      "codepoint": "U+C0048",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "c'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_CH_EJ",
+      "codepoint": "U+C0049",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "ch'",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_R",
+      "codepoint": "U+C004A",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "r",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_SH",
+      "codepoint": "U+C004B",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "š",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_S",
+      "codepoint": "U+C004C",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "s",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "CONSONANT_CH",
+      "codepoint": "U+C004D",
+      "ithkeyClass": "consonantal",
+      "ch12Section": "12.2",
+      "romanisation": "č",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PLACEHOLDER_VBAR",
+      "codepoint": "U+C004E",
+      "ithkeyClass": "placeholder",
+      "ch12Section": "12.7",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "PLACEHOLDER_DASH",
+      "codepoint": "U+C004F",
+      "ithkeyClass": "placeholder",
+      "ch12Section": "12.7",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_NULL",
+      "codepoint": "U+C0050",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_01",
+      "codepoint": "U+C0051",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_02",
+      "codepoint": "U+C0052",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_03",
+      "codepoint": "U+C0053",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_04",
+      "codepoint": "U+C0054",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_05",
+      "codepoint": "U+C0055",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_06",
+      "codepoint": "U+C0056",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_07",
+      "codepoint": "U+C0057",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_08",
+      "codepoint": "U+C0058",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_09",
+      "codepoint": "U+C0059",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_10",
+      "codepoint": "U+C005A",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_11",
+      "codepoint": "U+C005B",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_12",
+      "codepoint": "U+C005C",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_13",
+      "codepoint": "U+C005D",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_14",
+      "codepoint": "U+C005E",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_15",
+      "codepoint": "U+C005F",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_16",
+      "codepoint": "U+C0060",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_17",
+      "codepoint": "U+C0061",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_18",
+      "codepoint": "U+C0062",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_19",
+      "codepoint": "U+C0063",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_20",
+      "codepoint": "U+C0064",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_21",
+      "codepoint": "U+C0065",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_22",
+      "codepoint": "U+C0066",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_23",
+      "codepoint": "U+C0067",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_24",
+      "codepoint": "U+C0068",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_25",
+      "codepoint": "U+C0069",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_26",
+      "codepoint": "U+C006A",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_27",
+      "codepoint": "U+C006B",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_28",
+      "codepoint": "U+C006C",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_29",
+      "codepoint": "U+C006D",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_30",
+      "codepoint": "U+C006E",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_31",
+      "codepoint": "U+C006F",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "DIACRITIC_32",
+      "codepoint": "U+C0070",
+      "ithkeyClass": "diacritic",
+      "ch12Section": "12.2.1 / 12.2.2 / 12.4.1",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    },
+    {
+      "glyphId": "GRID_OVERLAY",
+      "codepoint": "U+C007F",
+      "ithkeyClass": "grid",
+      "ch12Section": "—",
+      "romanisation": "",
+      "validationStatus": "unchecked",
+      "validationNotes": ""
+    }
+  ]
+}

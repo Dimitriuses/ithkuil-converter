@@ -253,7 +253,8 @@ def make_svg(svg_path_data: str, bbox: dict | None, upm: int) -> str:
         f'     width="{width:.1f}" height="{height:.1f}"\n'
         f'     viewBox="{view_x:.1f} {view_y:.1f} {view_w:.1f} {view_h:.1f}">\n'
         f'  <!-- Font bbox: {bbox_comment} | UPM: {upm} -->\n'
-        f'  <path fill="black" d="{svg_path_data}"/>\n'
+        f'  <!-- scale(1,-1): font y-axis (up) -> SVG y-axis (down) -->\n'
+        f'  <path transform="scale(1,-1)" fill="black" d="{svg_path_data}"/>\n'
         f'</svg>'
     )
 
