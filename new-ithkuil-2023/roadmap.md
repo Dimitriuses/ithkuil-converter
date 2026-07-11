@@ -310,32 +310,34 @@ Closes the biggest composed-word gap: multi-consonant roots and vowels.
 - **Integrated:** `decodeWord` now uses the full secondary decoder — the composed formative "aktalo"
   decodes its root as **"kt"** (core k + bottom-extension t) with vowel ë, not just "k".
 
-### Full composed-word → text (done — the headline loop)
+### Full composed-word → text (done — the headline loop, 100%)
 
 `image → segment → type-detect → per-character decode → map to formative slots → formativeToIthkuil`.
 
 - **Orchestration** ([`decodeWordToText`](src/decode-word.js) in `decode-word.ts`, `npm run word-test`):
   maps decoded features to slots — root ← secondaries, specification ← primary, vn ← tertiary,
   case/mood ← quaternary — and routes the whole word through `formativeToIthkuil`. **Elision is
-  automatic:** unread slots are omitted and default identically on both sides (no special handling).
-- **Round-trip:** render formative → image → decode → text. **87.5% (42/48)** exact-string match over
+  automatic:** unread slots are omitted and default identically on both sides.
+- **Round-trip:** render formative → image → decode → text. **100% (48/48)** exact-string match over
   root × specification × vn (single + cluster roots).
-- **Secondary margin:** a with-extension reading is accepted only if it beats the bare core by a
-  margin (`EXTENSION_MARGIN`), which removed spurious extensions on plain roots ("s" → "ss") and
-  lifted the loop from 66.7% → 87.5% (secondary round-trip 97.3%).
-- **Remaining misses:** an **isolated-vs-composed template mismatch** — a few primaries (certain
-  specifications) mis-type as a secondary in composed context, prepending phantom consonants ("gk").
-  Fixed by composed-context templates or the CNN.
+- Three fixes got it there:
+  1. **Extension margin** ([`secondary.ts`](src/secondary.ts)) — accept a with-extension reading only
+     if it beats the bare core by `EXTENSION_MARGIN`; removed spurious extensions ("s" → "ss").
+  2. **Composed-context primary templates** ([`char-type.ts`](src/char-type.ts)) — primary type
+     templates built from actual formative renders (segment, take the leftmost), not isolated renders.
+  3. **Primary-initial prior** ([`decode-word.ts`](src/decode-word.ts)) — a formative is
+     primary-initial, so if the leftmost character doesn't confidently type as another type, treat it
+     as the primary. This resolved the thin **CTE** blade that otherwise mis-types as a secondary.
 
 ### Next up
 
-- **Composed-context templates / robustness:** build type + base templates from characters as they
-  appear *in words* (not just isolated renders) to remove the primary mis-typing — or let the CNN
-  subsume it.
-- **Milestone 9 — CNN** for the near-identical pairs, alignment-sensitive small marks, *and* the
-  isolated-vs-composed gap (add pixel noise/blur augmentation first).
+- **Multi-formative phrases:** the primary-initial prior assumes one formative; a phrase needs
+  word-boundary detection (there are larger gaps between words) so each formative's primary is
+  recognized. Then run running text, not just single formatives.
+- **Milestone 9 — CNN** for the near-identical pairs, alignment-sensitive small marks, and general
+  robustness on noisy/real input (add pixel noise/blur augmentation first).
 - Polish: perspective-independent primary alignment; broaden `EXTENSION_SET` to all extensions;
-  vowel→slot (Vr/Vc) assignment for non-default vowels.
+  vowel→slot (Vr/Vc) assignment for non-default vowels; more specifications/features per character.
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.

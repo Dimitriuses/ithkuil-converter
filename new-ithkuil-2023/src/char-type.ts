@@ -11,20 +11,39 @@
 import "./dom-shim.js" // must precede @zsnout import
 import {
   ILLOCUTION_TO_SECONDARY_EXTENSION,
-  Primary,
   Quaternary,
   Secondary,
   Tertiary,
   VALENCE,
 } from "@zsnout/ithkuil/script"
+import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
 import { buildBaseTemplates, maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
 import { CONSONANTS } from "./glyph-classes.js"
-import type { Bitmap, SegmentedRegion } from "./segment.js"
+import { encode } from "./forward.js"
+import { svgToPng } from "./raster.js"
+import { decodePng } from "./image-io.js"
+import { binarize, segment, type Bitmap, type SegmentedRegion } from "./segment.js"
 
 export type CharType = "secondary" | "quaternary" | "tertiary" | "primary"
 
-// One template per representative base shape of each type, tagged via the class prefix.
+// Primary type templates are built from COMPOSED formatives (render a formative,
+// segment, take the leftmost = primary character) rather than isolated Primary()
+// renders — a primary embedded in a word (esp. the thin CTE blade) differs enough
+// from its isolated render to mis-type. The other types match their isolated forms.
+function composedPrimaryTemplates(): Template[] {
+  return ["BSC", "CTE", "CSV", "OBJ"].map((spec) => {
+    const text = formativeToIthkuil({ root: "l", type: "UNF/C", specification: spec as never })
+    const r = encode(text, { margin: 10 })
+    if (!r.ok) throw new Error(`encode failed for ${spec}: ${r.reason}`)
+    const img = decodePng(svgToPng(r.svg, { width: 700 }))
+    const bmp = binarize(img.data, img.width, img.height)
+    const primary = segment(bmp)[0] // leftmost character is the primary
+    return { label: spec, class: `primary-${spec}`, mask: maskOfBox(bmp, primary.base, 64) }
+  })
+}
+
+// One combined, type-tagged template set. Type is read from the class prefix.
 const TYPED_TEMPLATES: Template[] = [
   ...buildBaseTemplates(
     CONSONANTS.map((c) => ({ label: c, class: `secondary-${c}`, el: () => Secondary({ core: c }) })),
@@ -44,13 +63,7 @@ const TYPED_TEMPLATES: Template[] = [
       el: () => Tertiary({ valence: v as never }),
     })),
   ),
-  ...buildBaseTemplates(
-    ["BSC", "CTE", "CSV", "OBJ"].map((s) => ({
-      label: s,
-      class: `primary-${s}`,
-      el: () => Primary({ specification: s as never, perspective: "M" }),
-    })),
-  ),
+  ...composedPrimaryTemplates(),
 ]
 
 export interface CharTypeResult {

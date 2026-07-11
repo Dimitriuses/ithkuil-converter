@@ -42,12 +42,22 @@ export interface DecodedCharacter {
   decoded: Record<string, unknown>
 }
 
+/** Confidence below which the first character defaults to primary (see below). */
+const FIRST_CHAR_PRIMARY_THRESHOLD = 0.7
+
 /** Decode a composed word image into typed, decoded characters (left to right). */
 export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
-  return segment(bmp).map((region) => {
+  return segment(bmp).map((region, i) => {
     const ct = classifyCharType(bmp, region)
+    // Structural prior: a formative is primary-initial. The thin CTE primary blade
+    // otherwise mis-types as a secondary consonant, so if the leftmost character
+    // isn't confidently another type, treat it as the primary.
+    const type =
+      i === 0 && ct.type !== "primary" && ct.score < FIRST_CHAR_PRIMARY_THRESHOLD
+        ? "primary"
+        : ct.type
     let decoded: Record<string, unknown> = {}
-    switch (ct.type) {
+    switch (type) {
       case "secondary": {
         const s = decodeSecondary(bmp, region, diacriticTemplates)
         const consonants = [s.topExtension, s.core, s.bottomExtension].filter(Boolean).join("")
@@ -76,7 +86,7 @@ export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
         break
       }
     }
-    return { index: region.index, type: ct.type, typeScore: ct.score, decoded }
+    return { index: region.index, type, typeScore: ct.score, decoded }
   })
 }
 
