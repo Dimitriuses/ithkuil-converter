@@ -72,7 +72,7 @@ characters," a much smaller target.
 | **5** ✅ | **Reverse: preprocess + segment** — binarize, char split, diacritic merge | — | DONE — [`src/segment.ts`](src/segment.ts) → `SegmentedRegion[]`; demo [`src/segment-demo.ts`](src/segment-demo.ts) |
 | **6** ✅ | **Reverse: baseline classifier** — template match vs clean dataset samples | 4, 5 | DONE — [`src/classify.ts`](src/classify.ts); **90.3% top-1 / 99.7% top-3** on augmented consonants |
 | **7** ✅ | **Reverse: decoder** (scoped) — classified glyphs → romanized text | 6 | DONE — [`src/decode.ts`](src/decode.ts); **100%** round-trip on consonant+vowel |
-| 8 | **CLI + library API** — `encode` / `decode` commands and typed exports | 2, 7 | published-shape package |
+| **8** ✅ | **Local tool** — web dashboard + CLI over the shared core (reframed from a published library) | 2, 7 | DONE (v1) — [`src/server.ts`](src/server.ts) + [`src/web/index.html`](src/web/index.html), `npm run serve`. v2 (data/model jobs) planned |
 | **9** ✅ | **CNN classifier** (robustness for noisy input), trained on synthetic data | 4, 6 | DONE (proof-of-concept) — **97.6% vs 82.5%** template on noisy consonants |
 | 10 | **Round-trip test corpus + metrics** | 8 | `text → image → text ≈ original` |
 
@@ -444,22 +444,57 @@ over a **spec × perspective × configuration grid** (4×4×4) instead of 4 defa
 - No regression: `word-test` 48/48, `phrase-test` 7/7 (the larger template set didn't pull non-primary
   characters into the primary class).
 
-### Next up
+### Milestone 8 — local tool: web UI + CLI (done, v1)
 
-- **Improve alphabetic accuracy**: sharper extension discrimination (top s/r, bottom n/r), read
-  `left`/tone diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Scale the CNN** (higher input res, all 88 classes/character types, more epochs) once a faster
-  native/GPU backend is available — that's what would make it actually beat the 64px template and
-  subsume alignment-sensitive marks + compact-compressed characters. The persistence + wiring are
-  ready for a drop-in stronger model — and a learned extension classifier would also lift alphabetic mode.
-- Remaining polish: perspective-independent primary alignment (the aligned decode path is weak —
-  spec 78%, perspective 64% under Ca variation); broaden `EXTENSION_SET`; vowel→slot (Vr/Vc).
-- **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
-  `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
-  once the pipeline stabilizes.
-- **Milestone 9 — CNN classifier** to resolve the near-identical pairs (voiced/voiceless, cedilla)
-  under noise/rotation, using the synthetic dataset (add pixel noise/blur augmentation for this).
-- Deferred: multi-line segmentation; deskew/denoise for real scans; compact-layout Node shim.
+Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
+like `@resvg/resvg-js` make single-executable bundling fragile, and there's no distribution need).
+
+- **v1 (done) — visual dashboard** ([`src/server.ts`](src/server.ts) + [`src/web/index.html`](src/web/index.html),
+  `npm run serve` → http://localhost:3939): a zero-dependency Node `http` server over the same core
+  functions the CLI uses. `POST /api/encode` (text → SVG/PNG) and `POST /api/decode` (image → text with a
+  segmentation overlay + per-word/char breakdown, formative vs alphabetic tagged). The forward path is
+  instant; the decode path warms its template sets lazily (~1 min) so the server starts immediately.
+  Verified end-to-end over real HTTP: encode "saläha mela" → decode → "saläha mela". The CLI
+  ([`src/cli.ts`](src/cli.ts)) is kept for scripted/console use; both wrap the same core.
+- Supporting change: `encodePng` added to [`image-io.ts`](src/image-io.ts) (PNG buffer for the overlay).
+
+---
+
+### Status at a glance
+
+Everything through Milestone 9 is built; the reverse pipeline round-trips at 100% on formative words
+and phrases. What remains is accuracy polish on specific character classes and the optional heavier
+tooling — none of it blocks the tool being usable today.
+
+| Milestone / feature | State |
+|---|---|
+| M1 DOM shim · M5 segmentation · M6 classifier · M7 decoder | ✅ done |
+| Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
+| svgdom compact-render hit-testing shim | ✅ done |
+| **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
+| Alphabetic-register decoding | ✅ done, v1 — 82% char-level |
+| Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
+| **M8** local tool — web dashboard + CLI | ✅ v1 done · v2 planned |
+
+### Next up (planned — nothing below is built yet)
+
+- **M8 v2 — data/model control panel:** dataset generation + CNN training as background jobs with
+  progress/logs and clean process lifecycle (mind the earlier orphaned-worker issue); expose the
+  roundtrip/eval harnesses as UI buttons. Deferred out of v1 because these are long CPU-bound jobs
+  that need a job model, not blocking requests.
+- **Improve alphabetic accuracy** (currently 82% char-level): sharper extension discrimination
+  (top s/r, bottom n/r), read `left`/tone diacritics + geminate markers, and stress
+  (`STRESSED_SYLLABLE_PLACEHOLDER`).
+- **Scale the CNN** — the M9 model is a proof-of-concept: it beats the template *at 24×24* (97.6% vs
+  82.5%) but not the pipeline's 64×64 template (88.6% vs 90.7%). A higher-resolution model with more
+  training — which needs a faster native/GPU backend than the CPU-only one here — is what would let it
+  actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
+  opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
+  alphabetic mode.
+- **Remaining decode polish:** perspective-independent primary *alignment* — detection is now robust,
+  but the aligned *decode* path is weak (spec 78%, perspective 64% under Ca variation); broaden
+  `EXTENSION_SET`; vowel→slot (Vr/Vc).
+- **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 ---
 
@@ -510,6 +545,8 @@ composition comes entirely from `@zsnout/ithkuil`.
 
 ## 8. Immediate next step
 
-**Milestone 1 — the forward spike.** Add `@zsnout/ithkuil` + `linkedom`, render one known
-formative to an SVG string in Node, and confirm it's valid. This de-risks the entire forward
-path and data-generation chain (the last unproven assumption is whether the DOM shim works cleanly).
+The pipeline is built and usable end-to-end (`npm run serve` for the web tool, or the CLI). The
+original M1 forward-spike and everything through M9 are done — see **Status at a glance** and the
+completed `### … (done)` sections above. Pick the next task from **Next up (planned)**; the natural
+candidates are **M8 v2** (data/model control panel) or an accuracy item (alphabetic → past 82%, or
+the perspective-independent primary *alignment*/decode path). No milestone is currently blocking.

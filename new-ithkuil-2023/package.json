@@ -7,6 +7,7 @@
   "scripts": {
     "spike": "tsx src/spike-forward.ts",
     "encode": "tsx src/cli.ts",
+    "serve": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
     "dataset": "tsx src/generate-dataset.ts",
     "segment": "tsx src/segment-demo.ts",

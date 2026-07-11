@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New Ithkuil — local tool</title>
+    <style>
+      :root {
+        --bg: #f6f7f9; --panel: #fff; --ink: #1a1c1f; --muted: #6b7280;
+        --line: #e3e6ea; --accent: #3b5bdb; --ok: #2b8a3e; --bad: #c92a2a; --code: #f1f3f5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16181c; --panel: #1e2126; --ink: #e6e8eb; --muted: #9aa2ad;
+          --line: #2c3138; --accent: #748ffc; --ok: #51cf66; --bad: #ff6b6b; --code: #141619;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--ink);
+        font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+      header {
+        padding: 18px 24px; border-bottom: 1px solid var(--line);
+        display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      }
+      header h1 { font-size: 18px; margin: 0; font-weight: 650; }
+      header .sub { color: var(--muted); font-size: 13px; }
+      #status { margin-left: auto; font-size: 12.5px; color: var(--muted); }
+      #status .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); margin-right: 5px; vertical-align: baseline; }
+      #status.warm .dot { background: var(--ok); }
+      main { max-width: 1100px; margin: 0 auto; padding: 22px; display: grid; gap: 22px; }
+      .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+      .panel h2 { font-size: 15px; margin: 0 0 14px; font-weight: 620; }
+      label { display: block; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+      textarea, input[type="text"], input[type="number"] {
+        width: 100%; background: var(--code); color: var(--ink); border: 1px solid var(--line);
+        border-radius: 8px; padding: 9px 11px; font: inherit;
+      }
+      textarea { resize: vertical; min-height: 62px; font-family: ui-monospace, Menlo, Consolas, monospace; }
+      .row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; margin-top: 12px; }
+      .row > div { flex: 0 0 auto; }
+      .row .grow { flex: 1 1 200px; }
+      .check { display: flex; align-items: center; gap: 7px; }
+      .check input { width: auto; }
+      .check label { margin: 0; }
+      button {
+        background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+        padding: 9px 18px; font: inherit; font-weight: 560; cursor: pointer;
+      }
+      button:disabled { opacity: 0.5; cursor: default; }
+      button.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+      .out { margin-top: 16px; }
+      .imgbox {
+        background: repeating-conic-gradient(var(--code) 0% 25%, transparent 0% 50%) 50% / 20px 20px;
+        border: 1px solid var(--line); border-radius: 8px; padding: 10px; overflow: auto; text-align: center;
+      }
+      .imgbox svg, .imgbox img { max-width: 100%; height: auto; }
+      .result { font-size: 20px; font-weight: 600; padding: 12px 14px; background: var(--code); border-radius: 8px; word-break: break-word; }
+      .muted { color: var(--muted); }
+      .err { color: var(--bad); }
+      .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+      table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+      th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid var(--line); }
+      th { color: var(--muted); font-weight: 550; }
+      .tag { display: inline-block; padding: 1px 7px; border-radius: 999px; font-size: 11.5px; background: var(--code); border: 1px solid var(--line); }
+      .tag.alpha { color: var(--accent); border-color: var(--accent); }
+      a.dl { font-size: 12.5px; }
+      .drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 18px; text-align: center; color: var(--muted); cursor: pointer; }
+      .drop.hover { border-color: var(--accent); color: var(--accent); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>New Ithkuil</h1>
+      <span class="sub">local converter tool</span>
+      <span id="status"><span class="dot"></span><span class="txt">checking…</span></span>
+    </header>
+    <main>
+      <!-- ENCODE ------------------------------------------------------------->
+      <section class="panel">
+        <h2>Encode · text → script</h2>
+        <label for="enc-text">Romanized New Ithkuil</label>
+        <textarea id="enc-text" placeholder="e.g. saläha">saläha</textarea>
+        <div class="row">
+          <div class="grow"></div>
+          <div class="check"><input type="checkbox" id="enc-compact" /><label for="enc-compact">compact</label></div>
+          <div style="width: 110px">
+            <label for="enc-width">PNG width</label>
+            <input type="number" id="enc-width" value="800" min="100" max="4000" step="50" />
+          </div>
+          <div><button id="enc-go">Encode</button></div>
+        </div>
+        <div class="out" id="enc-out"></div>
+      </section>
+
+      <!-- DECODE ------------------------------------------------------------->
+      <section class="panel">
+        <h2>Decode · script image → text</h2>
+        <div class="row" style="margin-top: 0">
+          <div class="grow">
+            <div class="drop" id="drop">Drop a PNG here, click to choose, or use the last encoded image.</div>
+            <input type="file" id="dec-file" accept="image/png" hidden />
+          </div>
+          <div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; justify-content: flex-end">
+            <button class="ghost" id="dec-use-encoded" disabled>Use last encoded ↑</button>
+            <button id="dec-go" disabled>Decode</button>
+          </div>
+        </div>
+        <div class="out" id="dec-out"></div>
+      </section>
+    </main>
+
+    <script>
+      const $ = (id) => document.getElementById(id)
+      async function api(path, body) {
+        const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) })
+        return r.json()
+      }
+
+      // ---- status polling ----
+      async function poll() {
+        try {
+          const s = await (await fetch("/api/status")).json()
+          const el = $("status")
+          if (s.decodeWarm) { el.classList.add("warm"); el.querySelector(".txt").textContent = "decode ready" }
+          else { el.querySelector(".txt").textContent = "warming decode…" ; setTimeout(poll, 3000) }
+        } catch { setTimeout(poll, 3000) }
+      }
+      poll()
+
+      // ---- encode ----
+      let lastEncodedPng = null // base64 data-url of the last render
+      $("enc-go").onclick = async () => {
+        const btn = $("enc-go"); btn.disabled = true
+        const out = $("enc-out"); out.innerHTML = '<span class="muted">rendering…</span>'
+        const res = await api("/api/encode", {
+          text: $("enc-text").value, compact: $("enc-compact").checked, width: Number($("enc-width").value) || 800,
+        })
+        btn.disabled = false
+        if (!res.ok) { out.innerHTML = '<span class="err">✗ ' + esc(res.error) + "</span>"; return }
+        lastEncodedPng = "data:image/png;base64," + res.pngBase64
+        $("dec-use-encoded").disabled = false
+        const dl = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(res.svg)))
+        out.innerHTML =
+          '<div class="imgbox">' + res.svg + "</div>" +
+          '<div class="row"><span class="muted">' + res.pathCount + " paths · viewBox " + esc(res.viewBox) + "</span>" +
+          '<a class="dl" href="' + dl + '" download="ithkuil.svg">download SVG</a>' +
+          '<a class="dl" href="' + lastEncodedPng + '" download="ithkuil.png">download PNG</a></div>'
+      }
+
+      // ---- decode ----
+      let pendingImage = null // base64 data-url queued for decoding
+      const setImage = (dataUrl, label) => {
+        pendingImage = dataUrl
+        $("dec-go").disabled = false
+        $("drop").innerHTML = (label || "image ready") + " — press Decode."
+      }
+      $("drop").onclick = () => $("dec-file").click()
+      $("dec-file").onchange = (e) => {
+        const f = e.target.files[0]; if (!f) return
+        const rd = new FileReader(); rd.onload = () => setImage(rd.result, esc(f.name)); rd.readAsDataURL(f)
+      }
+      $("drop").ondragover = (e) => { e.preventDefault(); $("drop").classList.add("hover") }
+      $("drop").ondragleave = () => $("drop").classList.remove("hover")
+      $("drop").ondrop = (e) => {
+        e.preventDefault(); $("drop").classList.remove("hover")
+        const f = e.dataTransfer.files[0]; if (!f) return
+        const rd = new FileReader(); rd.onload = () => setImage(rd.result, esc(f.name)); rd.readAsDataURL(f)
+      }
+      $("dec-use-encoded").onclick = () => { if (lastEncodedPng) setImage(lastEncodedPng, "last encoded render") }
+
+      $("dec-go").onclick = async () => {
+        if (!pendingImage) return
+        const btn = $("dec-go"); btn.disabled = true
+        const out = $("dec-out"); out.innerHTML = '<span class="muted">decoding… (first call waits for warmup)</span>'
+        const res = await api("/api/decode", { imageBase64: pendingImage })
+        btn.disabled = false
+        if (!res.ok) { out.innerHTML = '<span class="err">✗ ' + esc(res.error) + "</span>"; return }
+        let html = '<div class="result">' + (esc(res.text) || '<span class="muted">(empty)</span>') + "</div>"
+        html += '<div class="grid2" style="margin-top:14px">'
+        html += '<div><label>segmentation</label><div class="imgbox"><img src="data:image/png;base64,' + res.overlayBase64 + '" /></div></div>'
+        html += "<div><label>words</label>" + wordsTable(res.words) + "</div>"
+        html += "</div>"
+        out.innerHTML = html
+      }
+
+      function wordsTable(words) {
+        if (!words || !words.length) return '<span class="muted">no words</span>'
+        let rows = ""
+        for (const w of words) {
+          const kind = '<span class="tag ' + (w.kind === "alphabetic" ? "alpha" : "") + '">' + w.kind + "</span>"
+          const chars = (w.characters || []).map((c) => c.type).join(" · ")
+          rows += "<tr><td>" + esc(w.text || "·") + "</td><td>" + kind + "</td><td class='muted'>" + esc(chars) + "</td></tr>"
+        }
+        return "<table><tr><th>text</th><th>mode</th><th>characters</th></tr>" + rows + "</table>"
+      }
+
+      function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])) }
+    </script>
+  </body>
+</html>

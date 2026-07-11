@@ -21,10 +21,15 @@ export function loadPng(path: string): RgbaImage {
   return decodePng(readFileSync(path))
 }
 
-export function savePng(path: string, img: RgbaImage): void {
+/** Encode an RGBA image to a PNG buffer. */
+export function encodePng(img: RgbaImage): Buffer {
   const png = new PNG({ width: img.width, height: img.height })
   png.data = Buffer.from(img.data.buffer, img.data.byteOffset, img.data.byteLength)
-  writeFileSync(path, PNG.sync.write(png))
+  return PNG.sync.write(png)
+}
+
+export function savePng(path: string, img: RgbaImage): void {
+  writeFileSync(path, encodePng(img))
 }
 
 /** Crop an RGBA image to a bounding box (out-of-bounds padded white). */
