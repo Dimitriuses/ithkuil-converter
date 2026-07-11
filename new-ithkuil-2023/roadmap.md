@@ -265,13 +265,30 @@ Lets a *segmented* primary (arbitrary scale/position) decode, not just an in-fra
   aligner scales by — coupling). Confirms the concept: large features decode after alignment; small
   marks need a better anchor (or the CNN).
 
+### Routing through `@zsnout/ithkuil/generate` (done)
+
+Closes the loop: decoded features → partial formative → romanized text (the inverse of the forward
+`text → parse → JSON → script` path).
+
+- **Assembler** ([`src/assemble.ts`](src/assemble.ts)): `featuresToText(features)` maps decoded
+  values (root, specification, vn, case, mood, …) into a partial formative and calls
+  `formativeToIthkuil`, which fills defaults.
+- **End-to-end round-trip** (`npm run formative-test`): render each feature's character → decode
+  (secondary → root consonants, tertiary → vn, primary → specification) → assemble → generate.
+  **100% (64/64)** — every decoded formative regenerated the original romanization.
+- **Documented gap:** characters are decoded *individually*. Pulling them out of a single **composed
+  formative image** is unsolved — a rendered formative merges characters under the current x-overlap
+  segmentation, uses cluster **extensions** (root "kt" → one secondary + extension, not two), and
+  **elides** default slots. That composed-word segmentation is the main remaining work for true
+  image→text on running text.
+
 ### Next up
 
-- **Improve small-feature alignment** (a perspective-independent scale anchor, e.g. the invariant
-  bottom-right core), and **extend primary** to the remaining feature zones (configuration,
-  function/version/stem, essence).
-- **Route through `@zsnout/ithkuil/generate`:** assemble decoded features (consonants/vowels +
-  quaternary/tertiary/primary) into the word-JSON shape for full-formative romanization.
+- **Composed-word segmentation** — split a real formative image into its actual characters (handle
+  merging, cluster extensions, elision), then run the per-character decoders over it. This is the
+  bridge from "validated per-character loop" to "image → romanized formative".
+- **Improve small-feature alignment** (perspective-independent scale anchor) and **extend primary**
+  to the remaining feature zones (configuration, function/version/stem, essence).
 - **Milestone 9 — CNN** for the near-identical pairs *and* alignment-sensitive small marks (add
   pixel noise/blur augmentation first).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
