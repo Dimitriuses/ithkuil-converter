@@ -340,21 +340,34 @@ Running text — multiple formatives — not just a single word.
   (much thinner than content chars), and decodes each group as a formative.
 - **Round-trip** (`npm run phrase-test`): formatives → phrase text → image → decode → text.
   **100% exact (5/5)**, **11/11 per-word** on the renderable phrases.
-- **Two documented limits:**
-  1. **Rendering:** some phrases need compact (collision) spacing, which svgdom can't do
-     (`isPointInStroke`) — the deferred M1 shim. Those are skipped (2/7 here).
-  2. **CTE primaries mid-phrase:** word splitting relies on primary detection, and the thin CTE
-     blade mis-types as a secondary (the primary-initial prior only rescues the *first* character).
-     Non-CTE phrases split cleanly.
+- **CTE primaries mid-phrase:** word splitting relies on primary detection, and the thin CTE
+  blade mis-types as a secondary (the primary-initial prior only rescues the *first* character).
+  Non-CTE phrases split cleanly.
+
+### svgdom hit-testing shim (done) — compact rendering unblocked
+
+The long-deferred M1 item. svgdom ships no `isPointInStroke`/`isPointInFill`, which @zsnout's compact
+(collision-kerned) layout needs.
+
+- **Implementation** ([`src/path-geometry.ts`](src/path-geometry.ts) + patch in
+  [`dom-shim.ts`](src/dom-shim.ts)): parse the path `d` (M/L/H/V + Q/C flattened) → subpaths;
+  **fill** = even-odd point-in-polygon, **stroke** = distance-to-polyline < strokeWidth/2 (round
+  caps/joins). Patched onto `SVGPathElement.prototype`, cached per (element, d).
+- **Verified:** the previously-unrenderable phrase "saläha mela" now encodes; `compact: true` produces
+  valid, tighter script (viewBox 379 vs 413 px non-compact). **Every phrase renders now** (0 skipped).
+- **New finding:** compact collision-adjustment *compresses* tight words — in "saläha mela", the last
+  word's primary shrinks to w=39 (vs 101) and mis-types, so it's dropped (phrase round-trip 5/7 when
+  the 2 compact phrases are included). The reverse pipeline's templates are built from non-compact
+  renders; decoding compact-compressed characters needs compact-context templates (or the CNN).
 
 ### Next up
 
-- **svgdom `isPointInStroke`/`isPointInFill` shim** — unblocks compact rendering (better forward
-  output *and* renders every phrase), the single most-referenced deferred item.
-- **Robust primary detection** (fixes CTE mid-phrase): a size/aspect or context cue beyond silhouette,
-  or the CNN.
-- **Milestone 9 — CNN** for near-identical pairs, alignment-sensitive marks, and real/noisy input
-  (add pixel noise/blur augmentation first).
+- **Compact-context reverse templates:** build the type/base templates from compact renders too (or
+  keep `encode` at `compact: false` for the reverse pipeline's input) so collision-compressed
+  characters decode.
+- **Robust primary detection** (fixes CTE mid-phrase): a size/aspect or context cue, or the CNN.
+- **Milestone 9 — CNN** for near-identical pairs, alignment-sensitive marks, compact/compressed
+  characters, and real/noisy input (add pixel noise/blur augmentation first).
 - Polish: perspective-independent primary alignment; broaden `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
