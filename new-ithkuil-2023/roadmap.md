@@ -310,16 +310,32 @@ Closes the biggest composed-word gap: multi-consonant roots and vowels.
 - **Integrated:** `decodeWord` now uses the full secondary decoder — the composed formative "aktalo"
   decodes its root as **"kt"** (core k + bottom-extension t) with vowel ë, not just "k".
 
+### Full composed-word → text (done — the headline loop)
+
+`image → segment → type-detect → per-character decode → map to formative slots → formativeToIthkuil`.
+
+- **Orchestration** ([`decodeWordToText`](src/decode-word.js) in `decode-word.ts`, `npm run word-test`):
+  maps decoded features to slots — root ← secondaries, specification ← primary, vn ← tertiary,
+  case/mood ← quaternary — and routes the whole word through `formativeToIthkuil`. **Elision is
+  automatic:** unread slots are omitted and default identically on both sides (no special handling).
+- **Round-trip:** render formative → image → decode → text. **87.5% (42/48)** exact-string match over
+  root × specification × vn (single + cluster roots).
+- **Secondary margin:** a with-extension reading is accepted only if it beats the bare core by a
+  margin (`EXTENSION_MARGIN`), which removed spurious extensions on plain roots ("s" → "ss") and
+  lifted the loop from 66.7% → 87.5% (secondary round-trip 97.3%).
+- **Remaining misses:** an **isolated-vs-composed template mismatch** — a few primaries (certain
+  specifications) mis-type as a secondary in composed context, prepending phantom consonants ("gk").
+  Fixed by composed-context templates or the CNN.
+
 ### Next up
 
-- **Full composed-word → text:** map decoded per-character features to formative slots (root from
-  secondaries, specification from primary, vn from tertiary, case/vowels) and route the whole word
-  through `formativeToIthkuil` — the running-text headline result. (Remaining subtleties: vowel→slot
-  assignment (Vr/Vc), default-slot elision.)
-- **Improve small-feature alignment** (perspective-independent scale anchor) and **extend primary**
-  to the remaining feature zones; broaden `EXTENSION_SET` to all extensions.
-- **Milestone 9 — CNN** for the near-identical pairs *and* alignment-sensitive small marks (add
-  pixel noise/blur augmentation first).
+- **Composed-context templates / robustness:** build type + base templates from characters as they
+  appear *in words* (not just isolated renders) to remove the primary mis-typing — or let the CNN
+  subsume it.
+- **Milestone 9 — CNN** for the near-identical pairs, alignment-sensitive small marks, *and* the
+  isolated-vs-composed gap (add pixel noise/blur augmentation first).
+- Polish: perspective-independent primary alignment; broaden `EXTENSION_SET` to all extensions;
+  vowel→slot (Vr/Vc) assignment for non-default vowels.
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.

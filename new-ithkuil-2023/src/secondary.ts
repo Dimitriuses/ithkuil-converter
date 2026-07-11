@@ -34,30 +34,38 @@ function renderSecondaryMask(spec: Parameters<typeof Secondary>[0]): Mask {
   return maskFromBitmap(binarize(img.data, img.width, img.height), SIZE)
 }
 
-// Joint core×extension templates. Label encodes [core, top, bottom]. Built once.
-let jointTemplates: Template[] | null = null
-function getJointTemplates(): Template[] {
-  if (jointTemplates) return jointTemplates
-  const t: Template[] = []
-  const push = (core: string, top: string | null, bottom: string | null) =>
-    t.push({
-      label: JSON.stringify([core, top, bottom]),
-      class: "secondary",
-      mask: renderSecondaryMask({
-        core: core as never,
-        ...(top ? { top: top as never } : {}),
-        ...(bottom ? { bottom: bottom as never } : {}),
-      }),
-    })
+/** Extra similarity an extension template must beat the best bare core by to be
+ * accepted (prevents spurious extensions on plain cores, which sit between bare and
+ * bare+extension templates). */
+const EXTENSION_MARGIN = 0.04
+
+function mkTemplate(core: string, top: string | null, bottom: string | null): Template {
+  return {
+    label: JSON.stringify([core, top, bottom]),
+    class: "secondary",
+    mask: renderSecondaryMask({
+      core: core as never,
+      ...(top ? { top: top as never } : {}),
+      ...(bottom ? { bottom: bottom as never } : {}),
+    }),
+  }
+}
+
+// Bare-core vs with-extension templates, scored separately so a margin can favour
+// the simpler (bare) reading. Built once, lazily.
+let bareTemplates: Template[] | null = null
+let extTemplates: Template[] | null = null
+function ensureTemplates(): void {
+  if (bareTemplates) return
+  bareTemplates = CONSONANTS.map((c) => mkTemplate(c, null, null))
+  const ext: Template[] = []
   for (const core of CONSONANTS) {
-    push(core, null, null) // bare
     for (const x of EXTENSION_SET) {
-      push(core, x, null) // top extension
-      push(core, null, x) // bottom extension
+      ext.push(mkTemplate(core, x, null)) // top extension
+      ext.push(mkTemplate(core, null, x)) // bottom extension
     }
   }
-  jointTemplates = t
-  return t
+  extTemplates = ext
 }
 
 export interface SecondaryDecode {
@@ -74,10 +82,17 @@ export function decodeSecondary(
   region: SegmentedRegion,
   diacriticTemplates: Template[],
 ): SecondaryDecode {
+  ensureTemplates()
   const baseMask = maskOfBox(bmp, region.base, SIZE)
-  const [core, topExtension, bottomExtension] = JSON.parse(
-    classifyMask(baseMask, getJointTemplates()).label,
-  ) as [string, string | null, string | null]
+  const bare = classifyMask(baseMask, bareTemplates!)
+  const ext = classifyMask(baseMask, extTemplates!)
+  // Accept an extension only if it clearly beats the best bare core.
+  const chosen = ext.score > bare.score + EXTENSION_MARGIN ? ext : bare
+  const [core, topExtension, bottomExtension] = JSON.parse(chosen.label) as [
+    string,
+    string | null,
+    string | null,
+  ]
 
   let superposedVowel: string | null = null
   let underposedVowel: string | null = null
