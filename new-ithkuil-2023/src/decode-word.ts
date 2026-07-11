@@ -14,6 +14,7 @@ import { decodeQuaternary } from "./quaternary.js"
 import { decodeTertiary } from "./tertiary.js"
 import { decodePrimaryAligned } from "./primary.js"
 import { decodeSecondary } from "./secondary.js"
+import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
 
 const templates = loadTemplates("dataset", 64)
@@ -139,34 +140,66 @@ export function decodeWordToText(bmp: Bitmap): WordDecode {
   return { text: featuresToText(features), features, characters }
 }
 
+/** A decoded phrase word: either a formative or an alphabetic-register spelling. */
+export interface PhraseWord {
+  /** Romanized text for the word. */
+  text: string
+  /** "formative" words carry decoded features/characters; "alphabetic" ones don't. */
+  kind: "formative" | "alphabetic"
+  features?: DecodedFeatures
+  characters?: DecodedCharacter[]
+}
+
 /**
- * Multi-formative phrase → text. Word boundaries are found structurally: a
- * formative is primary-initial, so each primary character starts a new word.
- * Narrow separator glyphs between words (much thinner than content characters)
- * are skipped. Each word group is then decoded like a single formative.
+ * Multi-word phrase → text. Words come in two rendering modes:
+ *
+ *  - **formative** — the normal character stack; primary-initial, so each primary
+ *    starts a new word (narrow separators are skipped);
+ *  - **alphabetic** — a word @zsnout couldn't parse as a formative in context, spelt
+ *    phonetically between a pair of `Register` glyphs (alphabetic.ts).
+ *
+ * We scan regions, toggling into an alphabetic span at each Register glyph; regions
+ * inside a span are decoded by `decodeAlphabeticSpan`, the rest grouped as formatives.
  */
-export function decodePhrase(bmp: Bitmap): { text: string; words: WordDecode[] } {
+export function decodePhrase(bmp: Bitmap): { text: string; words: PhraseWord[] } {
   const all = segment(bmp)
   const sortedW = all.map((r) => r.bbox.w).sort((a, b) => a - b)
   const medianW = sortedW[sortedW.length >> 1] ?? 0
 
-  const groups: SegmentedRegion[][] = []
-  let current: SegmentedRegion[] = []
-  for (const region of all) {
-    if (region.bbox.w < medianW * 0.45) continue // skip narrow inter-word separators
-    const isPrimary = classifyCharType(bmp, region).type === "primary"
-    if (isPrimary && current.length) {
-      groups.push(current)
-      current = []
-    }
-    current.push(region)
-  }
-  if (current.length) groups.push(current)
+  const words: PhraseWord[] = []
+  let formative: SegmentedRegion[] = []
+  let alphabetic: SegmentedRegion[] | null = null // non-null while inside a span
 
-  const words = groups.map((regions) => {
-    const characters = decodeRegions(bmp, regions)
+  const flushFormative = () => {
+    if (!formative.length) return
+    const characters = decodeRegions(bmp, formative)
     const features = charactersToFeatures(characters)
-    return { text: featuresToText(features), features, characters }
-  })
+    words.push({ text: featuresToText(features), kind: "formative", features, characters })
+    formative = []
+  }
+
+  for (const region of all) {
+    if (isRegister(bmp, region)) {
+      if (alphabetic) {
+        // closing register — decode the accumulated span
+        words.push({ text: decodeAlphabeticSpan(bmp, alphabetic), kind: "alphabetic" })
+        alphabetic = null
+      } else {
+        flushFormative()
+        alphabetic = []
+      }
+      continue
+    }
+    if (alphabetic) {
+      alphabetic.push(region)
+      continue
+    }
+    if (region.bbox.w < medianW * 0.45) continue // skip narrow inter-word separators
+    if (classifyCharType(bmp, region).type === "primary" && formative.length) flushFormative()
+    formative.push(region)
+  }
+  if (alphabetic?.length) words.push({ text: decodeAlphabeticSpan(bmp, alphabetic), kind: "alphabetic" })
+  flushFormative()
+
   return { text: words.map((w) => w.text).join(" "), words }
 }

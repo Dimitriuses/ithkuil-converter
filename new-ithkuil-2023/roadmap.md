@@ -406,13 +406,38 @@ The trained model is now **saved and reloadable** for inference — the plug-in 
   (low) resolution*; to beat the high-res template the CNN itself needs higher input resolution +
   more training, which the CPU-only backend here can't afford.
 
+### Alphabetic-register decoding (done, first version) — the real multi-word fix
+
+Investigating multi-word decode failures ("saläha mela" dropping the 2nd word) disproved
+both the "compact-context templates" and "word-split segmentation" hypotheses. **Root cause:**
+`textToScript` renders a word it can't parse as a formative *in sentence position* in
+**ALPHABETIC mode** — it spells the word phonetically with `ALPHABETIC_PLACEHOLDER` secondaries
+(letters packed into `top`/`bottom` extensions + `superposed`/`underposed`/`left`/`right`
+diacritics), bracketed by `Register` glyphs. The same word isolated parses as a normal formative
+(hence single-word decode is 100%). The "fragmentation" we saw was the segmenter splitting off
+the side (`right`) diacritics.
+
+- **New module** [`src/alphabetic.ts`](src/alphabetic.ts): detect `Register` glyphs → span
+  boundaries; group span regions into characters (folding split-off side diacritics back in); read
+  consonants from base zones (top/mid/bottom, with a "none" template + margin so the bare spine
+  isn't read as a consonant) and vowels from the separable diacritic components; reassemble in
+  reading order **top → superposed → core → right → bottom → underposed** (derived by round-trip).
+- **Integrated** into [`decodePhrase`](src/decode-word.ts): scans regions, toggling into an
+  alphabetic span at each `Register`; formative words decode as before, alphabetic words via
+  `decodeAlphabeticSpan`. Returns `PhraseWord[]` tagged `formative | alphabetic`.
+- **Accuracy** (`npm run alphabetic`, 15 CVCV/CV words): **6/15 exact, 82% char-level.** Remaining
+  errors are specific extension-shape confusions (top s↔r, bottom n↔r/ż) — the zone metric can't
+  fully separate similar consonant extensions. Tunable next: per-consonant zone weighting, or a
+  learned extension classifier; also left/tone diacritics + geminate markers are not yet read.
+
 ### Next up
 
+- **Improve alphabetic accuracy**: sharper extension discrimination (top s/r, bottom n/r), read
+  `left`/tone diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
 - **Scale the CNN** (higher input res, all 88 classes/character types, more epochs) once a faster
   native/GPU backend is available — that's what would make it actually beat the 64px template and
   subsume alignment-sensitive marks + compact-compressed characters. The persistence + wiring are
-  ready for a drop-in stronger model.
-- **Compact-context reverse templates** / keep `encode` at `compact: false` for reverse input.
+  ready for a drop-in stronger model — and a learned extension classifier would also lift alphabetic mode.
 - Polish: robust primary detection (CTE); perspective-independent primary alignment; broaden
   `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
