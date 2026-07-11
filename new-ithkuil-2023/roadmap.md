@@ -449,7 +449,7 @@ over a **spec × perspective × configuration grid** (4×4×4) instead of 4 defa
 - No regression: `word-test` 48/48, `phrase-test` 7/7 (the larger template set didn't pull non-primary
   characters into the primary class).
 
-### Milestone 8 — local tool: web UI + CLI (done, v1 + v2)
+### Milestone 8 — local tool: web UI + CLI (done, v1 + v2 + UI polish)
 
 Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
 like `@resvg/resvg-js` make single-executable bundling fragile, and there's no distribution need).
@@ -472,6 +472,13 @@ like `@resvg/resvg-js` make single-executable bundling fragile, and there's no d
   - **Verified:** heavy-guard rejects a concurrent dataset/train; cancel takes the process 1→0 (no
     orphan); killing the server takes its jobs down (no orphan); a test harness job runs to completion
     with captured logs.
+- **UI polish (done):** the three areas are now **tabs** (Encode · Decode · Data & models), each
+  URL-hash-linked, wired up by a single `loadscene()` init. The Data tab gained a **Pipeline & caches**
+  status strip (decode-warm + alphabetic-cache-present, mirrored by the header pill, driven by
+  `/api/status`'s new `alphaCache`/completed-`decodeWarm` fields) and a **Build / rebuild alphabetic
+  cache** action backed by a new `cache:alphabetic` job ([`src/build-alphabetic-cache.ts`](src/build-alphabetic-cache.ts))
+  — so the ~1200-glyph joint base-template cache (see alphabetic decoding above) can be (re)built from
+  the browser, honestly labelled as a several-minute one-time job.
 - Supporting change: `encodePng` added to [`image-io.ts`](src/image-io.ts) (PNG buffer for the overlay).
 
 ---
@@ -490,7 +497,7 @@ tooling — none of it blocks the tool being usable today.
 | **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
 | Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
-| **M8** local tool — web dashboard + CLI + data/model job panel | ✅ v1 + v2 done |
+| **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
 
@@ -507,6 +514,23 @@ tooling — none of it blocks the tool being usable today.
   but the aligned *decode* path is weak (spec 78%, perspective 64% under Ca variation); broaden
   `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
+
+**Web-tool (M8) polish ideas — design & functionality:**
+
+- **Decode inspector:** click a segmented region in the overlay to see its cropped glyph, detected
+  type, and the top candidate matches with scores (turn the flat words-table into a drill-down).
+- **Round-trip in one view:** an "encode → decode" button that renders text, decodes its own image,
+  and diffs the result inline (great for spotting regressions without leaving the page).
+- **Job ergonomics:** per-job elapsed timer that ticks live; "clear finished" button; download-log;
+  a small toast when a background job finishes while you're on another tab.
+- **Cache/dataset visibility:** list what's on disk (which datasets, model dirs, the alphabetic cache
+  with size/date) and let a dataset be previewed (a few sample glyphs) — the server already has the pieces.
+- **Encode niceties:** dark/light-aware SVG preview zoom/pan; copy-SVG-to-clipboard; a few example
+  words as quick-fill chips; show the parsed structure (primary/secondary/…) alongside the render.
+- **Persisted UI state:** remember the last tab, encode text, and form values in `localStorage`.
+- **Robustness:** friendlier errors when the decode pipeline is still warming (the UI knows via
+  `/api/status` — disable Decode with a "warming…" hint instead of letting the first call block).
+- **Accessibility/keyboard:** tab via arrow keys, `Enter` to encode, focus management on tab switch.
 
 ---
 

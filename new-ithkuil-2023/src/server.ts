@@ -19,6 +19,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { readFileSync } from "node:fs"
 import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
+import { alphaCacheExists } from "./alphabetic.js"
 import {
   JOB_KINDS,
   startJob,
@@ -37,6 +38,7 @@ type DecodeModule = typeof import("./decode-word.js")
 type SegmentModule = typeof import("./segment.js")
 type ImageModule = typeof import("./image-io.js")
 let decodeReady: Promise<{ decode: DecodeModule; seg: SegmentModule; img: ImageModule }> | null = null
+let decodeDone = false // true once warmup has actually finished (for /api/status)
 function warmDecode() {
   if (!decodeReady) {
     decodeReady = (async () => {
@@ -47,6 +49,7 @@ function warmDecode() {
         import("./alphabetic.js"),
       ])
       alpha.warmAlphabetic() // build/load the joint base templates now, not on first decode
+      decodeDone = true
       return { decode, seg, img }
     })()
   }
@@ -138,7 +141,11 @@ const server = createServer(async (req, res) => {
       return
     }
     if (req.method === "GET" && req.url === "/api/status") {
-      return sendJson(res, 200, { ok: true, decodeWarm: decodeReady != null })
+      return sendJson(res, 200, {
+        ok: true,
+        decodeWarm: decodeDone,
+        alphaCache: alphaCacheExists(),
+      })
     }
     if (req.method === "POST" && req.url === "/api/encode") {
       return handleEncode(JSON.parse((await readBody(req)) || "{}"), res)

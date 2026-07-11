@@ -32,7 +32,7 @@ import { maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
 import { chamferSimilarity, distanceTransform, meanNearestDistance } from "./chamfer.js"
 import { cropInk, type Mask } from "./normalize.js"
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { readFileSync, writeFileSync, mkdirSync, existsSync, unlinkSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 
@@ -255,6 +255,23 @@ function matchBase(query: Mask, templates: BaseTemplate[]): BaseTemplate {
 /** Build/load the reference templates now (call during server warmup so the first
  * real decode doesn't pay the one-time cache build). */
 export function warmAlphabetic(): void {
+  ensureTemplates()
+}
+
+/** Whether the on-disk base-template cache exists (for status display). */
+export function alphaCacheExists(): boolean {
+  return existsSync(CACHE_PATH)
+}
+
+/** Force a fresh rebuild: drop the on-disk cache and the in-process set, then
+ * rebuild + re-save. Used by the "Build alphabetic cache" job. */
+export function rebuildAlphabetic(): void {
+  cache = null
+  try {
+    unlinkSync(CACHE_PATH)
+  } catch {
+    /* nothing to delete */
+  }
   ensureTemplates()
 }
 

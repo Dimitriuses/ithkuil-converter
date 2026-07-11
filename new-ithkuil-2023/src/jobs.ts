@@ -77,6 +77,12 @@ export const JOB_KINDS: Record<string, JobKind> = {
       return [dir, String(epochs), String(perClass)]
     },
   },
+  "cache:alphabetic": {
+    label: "Build alphabetic cache",
+    script: "build-alphabetic-cache.ts",
+    heavy: true,
+    argv: (a) => (a.force === true ? ["--force"] : []),
+  },
   "test:word": { label: "Word round-trip", script: "word-roundtrip.ts" },
   "test:phrase": { label: "Phrase round-trip", script: "phrase-roundtrip.ts" },
   "test:alphabetic": { label: "Alphabetic round-trip", script: "alphabetic-test.ts" },

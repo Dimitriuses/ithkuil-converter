@@ -83,6 +83,18 @@
       .job .nm { flex: 0 0 auto; }
       .job .tail { color: var(--muted); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
         white-space: nowrap; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
+      nav.tabs { display: flex; gap: 2px; max-width: 1100px; margin: 0 auto; padding: 0 22px; }
+      nav.tabs button { background: transparent; color: var(--muted); border: 0; border-bottom: 2px solid transparent;
+        border-radius: 0; padding: 12px 16px; font: inherit; font-weight: 550; cursor: pointer; }
+      nav.tabs button:hover { color: var(--ink); }
+      nav.tabs button.active { color: var(--accent); border-bottom-color: var(--accent); }
+      .tabpanel { display: grid; gap: 22px; }
+      .tabpanel.hidden { display: none; }
+      .status-grid { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+      .status-item { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+      .status-item .sdot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); flex: 0 0 auto; }
+      .status-item.ok .sdot { background: var(--ok); }
+      .status-item.wait .sdot { background: var(--accent); }
     </style>
   </head>
   <body>
@@ -91,8 +103,14 @@
       <span class="sub">local converter tool</span>
       <span id="status"><span class="dot"></span><span class="txt">checking…</span></span>
     </header>
+    <nav class="tabs">
+      <button class="tab active" data-tab="encode">Encode</button>
+      <button class="tab" data-tab="decode">Decode</button>
+      <button class="tab" data-tab="data">Data &amp; models</button>
+    </nav>
     <main>
       <!-- ENCODE ------------------------------------------------------------->
+      <div class="tabpanel" id="tab-encode">
       <section class="panel">
         <h2>Encode · text → script</h2>
         <label for="enc-text">Romanized New Ithkuil</label>
@@ -108,8 +126,10 @@
         </div>
         <div class="out" id="enc-out"></div>
       </section>
+      </div>
 
       <!-- DECODE ------------------------------------------------------------->
+      <div class="tabpanel hidden" id="tab-decode">
       <section class="panel">
         <h2>Decode · script image → text</h2>
         <div class="row" style="margin-top: 0">
@@ -124,8 +144,19 @@
         </div>
         <div class="out" id="dec-out"></div>
       </section>
+      </div>
 
       <!-- DATA & MODELS ------------------------------------------------------>
+      <div class="tabpanel hidden" id="tab-data">
+      <section class="panel">
+        <h2>Pipeline &amp; caches</h2>
+        <div class="status-grid" id="pipeline-status"><span class="muted">checking…</span></div>
+        <div style="margin-top: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+          <button class="ghost sm" id="alpha-build">Build / rebuild alphabetic cache</button>
+          <span class="muted" style="font-size: 12px">renders ~1200 reference glyphs → <code>models/alphabetic-base.json</code>; several minutes, one-time (the reverse decoder's joint base-template set)</span>
+        </div>
+      </section>
+
       <section class="panel">
         <h2>Data &amp; models · background jobs</h2>
         <div class="grid2">
@@ -159,6 +190,7 @@
         </div>
         <pre id="joblog" class="log" hidden></pre>
       </section>
+      </div>
     </main>
 
     <script>
@@ -168,16 +200,28 @@
         return r.json()
       }
 
-      // ---- status polling ----
-      async function poll() {
+      // ---- pipeline status: header pill + the Data tab's status panel ----
+      let statusTimer = null
+      function statusItem(ok, label) {
+        return '<span class="status-item ' + (ok ? "ok" : "wait") + '"><span class="sdot"></span>' + esc(label) + "</span>"
+      }
+      async function refreshStatus() {
+        let warm = false
         try {
           const s = await (await fetch("/api/status")).json()
-          const el = $("status")
-          if (s.decodeWarm) { el.classList.add("warm"); el.querySelector(".txt").textContent = "decode ready" }
-          else { el.querySelector(".txt").textContent = "warming decode…" ; setTimeout(poll, 3000) }
-        } catch { setTimeout(poll, 3000) }
+          warm = !!s.decodeWarm
+          const pill = $("status")
+          pill.classList.toggle("warm", warm)
+          pill.querySelector(".txt").textContent = warm ? "decode ready" : "warming decode…"
+          $("pipeline-status").innerHTML =
+            statusItem(warm, warm ? "decode pipeline ready" : "warming decode pipeline…") +
+            statusItem(!!s.alphaCache, s.alphaCache ? "alphabetic cache present" : "alphabetic cache: not built")
+        } catch {
+          $("pipeline-status").innerHTML = '<span class="err">server unreachable</span>'
+        }
+        clearTimeout(statusTimer)
+        statusTimer = setTimeout(refreshStatus, warm ? 15000 : 3000) // poll fast until warm, then idle
       }
-      poll()
 
       // ---- encode ----
       let lastEncodedPng = null // base64 data-url of the last render
@@ -265,10 +309,10 @@
       })
 
       // build test/eval buttons from the server's whitelist
-      ;(async () => {
+      async function buildTestButtons() {
         try {
           const r = await (await fetch("/api/jobs/kinds")).json()
-          const box = $("test-btns")
+          const box = $("test-btns"); box.innerHTML = ""
           for (const k of r.kinds.filter((k) => k.id.startsWith("test:") || k.id === "eval")) {
             const b = document.createElement("button")
             b.className = "ghost sm"; b.textContent = k.label
@@ -276,7 +320,7 @@
             box.appendChild(b)
           }
         } catch {}
-      })()
+      }
 
       async function cancelJob(id) { await api("/api/jobs/" + encodeURIComponent(id) + "/cancel", {}); pollJobs() }
       async function toggleLog(id) { openLogId = openLogId === id ? null : id; renderLog(); }
@@ -328,7 +372,30 @@
         // poll fast while something runs or a log is open, slow otherwise
         jobsTimer = setTimeout(pollJobs, anyRunning || openLogId ? 1500 : 6000)
       }
-      pollJobs()
+
+      // ---- tabs ----
+      const TABS = ["encode", "decode", "data"]
+      function showTab(name) {
+        if (!TABS.includes(name)) name = "encode"
+        for (const b of document.querySelectorAll("nav.tabs button")) b.classList.toggle("active", b.dataset.tab === name)
+        for (const p of document.querySelectorAll(".tabpanel")) p.classList.toggle("hidden", p.id !== "tab-" + name)
+        if (location.hash !== "#" + name) history.replaceState(null, "", "#" + name)
+      }
+
+      // ---- loadscene: wire up and load everything the page needs ----
+      function loadscene() {
+        for (const b of document.querySelectorAll("nav.tabs button")) b.onclick = () => showTab(b.dataset.tab)
+        window.addEventListener("hashchange", () => showTab((location.hash || "#encode").slice(1)))
+        $("alpha-build").onclick = () => {
+          showTab("data")
+          startJob("cache:alphabetic", { force: true })
+        }
+        showTab((location.hash || "#encode").slice(1))
+        refreshStatus() // header pill + pipeline/cache status
+        buildTestButtons() // test/eval job buttons from the server whitelist
+        pollJobs() // background-job list
+      }
+      loadscene()
 
       function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])) }
     </script>
