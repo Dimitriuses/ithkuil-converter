@@ -45,9 +45,9 @@ export interface DecodedCharacter {
 /** Confidence below which the first character defaults to primary (see below). */
 const FIRST_CHAR_PRIMARY_THRESHOLD = 0.7
 
-/** Decode a composed word image into typed, decoded characters (left to right). */
-export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
-  return segment(bmp).map((region, i) => {
+/** Decode an explicit list of regions (one formative) into typed characters. */
+export function decodeRegions(bmp: Bitmap, regions: SegmentedRegion[]): DecodedCharacter[] {
+  return regions.map((region, i) => {
     const ct = classifyCharType(bmp, region)
     // Structural prior: a formative is primary-initial. The thin CTE primary blade
     // otherwise mis-types as a secondary consonant, so if the leftmost character
@@ -90,6 +90,11 @@ export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
   })
 }
 
+/** Decode a whole single-formative image into typed characters. */
+export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
+  return decodeRegions(bmp, segment(bmp))
+}
+
 export interface WordDecode {
   /** Romanized formative produced by routing decoded features through @zsnout. */
   text: string
@@ -98,13 +103,8 @@ export interface WordDecode {
   characters: DecodedCharacter[]
 }
 
-/**
- * Full composed-word → text: decode each character, map to formative slots (only
- * the features we can read — the rest default via @zsnout), and romanize.
- * Elision is handled implicitly: unread slots are simply left to their defaults.
- */
-export function decodeWordToText(bmp: Bitmap): WordDecode {
-  const characters = decodeWord(bmp)
+/** Map decoded characters (one formative) to formative slots. */
+function charactersToFeatures(characters: DecodedCharacter[]): DecodedFeatures {
   const features: DecodedFeatures = { type: "UNF/C" }
   const rootParts: string[] = []
   for (const c of characters) {
@@ -125,5 +125,48 @@ export function decodeWordToText(bmp: Bitmap): WordDecode {
     }
   }
   if (rootParts.length) features.root = rootParts.join("")
+  return features
+}
+
+/**
+ * Single composed-word → text: decode each character, map to formative slots (only
+ * the features we can read — the rest default via @zsnout), and romanize.
+ * Elision is handled implicitly: unread slots are simply left to their defaults.
+ */
+export function decodeWordToText(bmp: Bitmap): WordDecode {
+  const characters = decodeWord(bmp)
+  const features = charactersToFeatures(characters)
   return { text: featuresToText(features), features, characters }
+}
+
+/**
+ * Multi-formative phrase → text. Word boundaries are found structurally: a
+ * formative is primary-initial, so each primary character starts a new word.
+ * Narrow separator glyphs between words (much thinner than content characters)
+ * are skipped. Each word group is then decoded like a single formative.
+ */
+export function decodePhrase(bmp: Bitmap): { text: string; words: WordDecode[] } {
+  const all = segment(bmp)
+  const sortedW = all.map((r) => r.bbox.w).sort((a, b) => a - b)
+  const medianW = sortedW[sortedW.length >> 1] ?? 0
+
+  const groups: SegmentedRegion[][] = []
+  let current: SegmentedRegion[] = []
+  for (const region of all) {
+    if (region.bbox.w < medianW * 0.45) continue // skip narrow inter-word separators
+    const isPrimary = classifyCharType(bmp, region).type === "primary"
+    if (isPrimary && current.length) {
+      groups.push(current)
+      current = []
+    }
+    current.push(region)
+  }
+  if (current.length) groups.push(current)
+
+  const words = groups.map((regions) => {
+    const characters = decodeRegions(bmp, regions)
+    const features = charactersToFeatures(characters)
+    return { text: featuresToText(features), features, characters }
+  })
+  return { text: words.map((w) => w.text).join(" "), words }
 }

@@ -20,7 +20,8 @@
     "formative-test": "tsx src/formative-roundtrip.ts",
     "word": "tsx src/word-demo.ts",
     "secondary-test": "tsx src/secondary-roundtrip.ts",
-    "word-test": "tsx src/word-roundtrip.ts"
+    "word-test": "tsx src/word-roundtrip.ts",
+    "phrase-test": "tsx src/phrase-roundtrip.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",

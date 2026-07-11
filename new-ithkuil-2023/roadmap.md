@@ -329,15 +329,33 @@ Closes the biggest composed-word gap: multi-consonant roots and vowels.
      primary-initial, so if the leftmost character doesn't confidently type as another type, treat it
      as the primary. This resolved the thin **CTE** blade that otherwise mis-types as a secondary.
 
+### Multi-formative phrases (done)
+
+Running text — multiple formatives — not just a single word.
+
+- **Word boundaries are structural, not gaps:** measured inter-character gaps in a phrase are
+  *uniform* (~21px), so gaps don't mark words. Instead, a formative is **primary-initial**, so each
+  primary character starts a new word. `decodePhrase` ([`decode-word.ts`](src/decode-word.ts))
+  splits the segmented characters at each primary, skips the narrow inter-word separator glyphs
+  (much thinner than content chars), and decodes each group as a formative.
+- **Round-trip** (`npm run phrase-test`): formatives → phrase text → image → decode → text.
+  **100% exact (5/5)**, **11/11 per-word** on the renderable phrases.
+- **Two documented limits:**
+  1. **Rendering:** some phrases need compact (collision) spacing, which svgdom can't do
+     (`isPointInStroke`) — the deferred M1 shim. Those are skipped (2/7 here).
+  2. **CTE primaries mid-phrase:** word splitting relies on primary detection, and the thin CTE
+     blade mis-types as a secondary (the primary-initial prior only rescues the *first* character).
+     Non-CTE phrases split cleanly.
+
 ### Next up
 
-- **Multi-formative phrases:** the primary-initial prior assumes one formative; a phrase needs
-  word-boundary detection (there are larger gaps between words) so each formative's primary is
-  recognized. Then run running text, not just single formatives.
-- **Milestone 9 — CNN** for the near-identical pairs, alignment-sensitive small marks, and general
-  robustness on noisy/real input (add pixel noise/blur augmentation first).
-- Polish: perspective-independent primary alignment; broaden `EXTENSION_SET` to all extensions;
-  vowel→slot (Vr/Vc) assignment for non-default vowels; more specifications/features per character.
+- **svgdom `isPointInStroke`/`isPointInFill` shim** — unblocks compact rendering (better forward
+  output *and* renders every phrase), the single most-referenced deferred item.
+- **Robust primary detection** (fixes CTE mid-phrase): a size/aspect or context cue beyond silhouette,
+  or the CNN.
+- **Milestone 9 — CNN** for near-identical pairs, alignment-sensitive marks, and real/noisy input
+  (add pixel noise/blur augmentation first).
+- Polish: perspective-independent primary alignment; broaden `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.
