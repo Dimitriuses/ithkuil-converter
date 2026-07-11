@@ -15,7 +15,8 @@
     "decode-test": "tsx src/decode-roundtrip.ts",
     "quaternary-test": "tsx src/quaternary-roundtrip.ts",
     "tertiary-test": "tsx src/tertiary-roundtrip.ts",
-    "primary-test": "tsx src/primary-roundtrip.ts"
+    "primary-test": "tsx src/primary-roundtrip.ts",
+    "primary-align-test": "tsx src/primary-aligned-roundtrip.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",

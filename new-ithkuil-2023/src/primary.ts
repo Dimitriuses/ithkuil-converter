@@ -20,6 +20,8 @@ import { decodePng } from "./image-io.js"
 import { binarize, type BBox, type Bitmap } from "./segment.js"
 import { cropInk, normalizeMask, type Mask } from "./normalize.js"
 import { classifyMask, type Template } from "./classify.js"
+import { renderGlyphToSvg } from "./glyph-render.js"
+import { alignToFrame } from "./align.js"
 
 const NS = "http://www.w3.org/2000/svg"
 const CANVAS = 160
@@ -78,5 +80,35 @@ export function decodePrimaryFixed(bmp: Bitmap): PrimaryDecode {
   return {
     perspective: classifyMask(zoneMask(bmp, ZONE_PERSPECTIVE), perspTemplates).label,
     specification: classifyMask(zoneMask(bmp, ZONE_CORE), specTemplates).label,
+  }
+}
+
+// ── Aligned path: decode a *segmented* primary (arbitrary scale/position) ──────
+// Templates are built from natural-scale renders passed through alignToFrame — the
+// exact same processing a real query gets, so both land in the canonical frame.
+
+/** Natural-scale render (bbox-centred, like a segmented crop) → binary bitmap. */
+function renderNatural(spec: Parameters<typeof Primary>[0], canvas = 120): Bitmap {
+  const img = decodePng(svgToPng(renderGlyphToSvg(Primary(spec), {}, { canvas }), { width: canvas }))
+  return binarize(img.data, img.width, img.height)
+}
+
+const perspTemplatesAligned: Template[] = PERSPECTIVES.map((p) => ({
+  label: p,
+  class: `persp-${p}`,
+  mask: zoneMask(alignToFrame(renderNatural({ ...BASE, perspective: p })), ZONE_PERSPECTIVE),
+}))
+const specTemplatesAligned: Template[] = SPECIFICATIONS.map((s) => ({
+  label: s,
+  class: `spec-${s}`,
+  mask: zoneMask(alignToFrame(renderNatural({ specification: s, perspective: "M" })), ZONE_CORE),
+}))
+
+/** Decode a segmented primary of unknown scale/position (aligns it first). */
+export function decodePrimaryAligned(queryBmp: Bitmap): PrimaryDecode {
+  const aligned = alignToFrame(queryBmp)
+  return {
+    perspective: classifyMask(zoneMask(aligned, ZONE_PERSPECTIVE), perspTemplatesAligned).label,
+    specification: classifyMask(zoneMask(aligned, ZONE_CORE), specTemplatesAligned).label,
   }
 }

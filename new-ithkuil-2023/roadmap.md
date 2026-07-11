@@ -250,14 +250,30 @@ because features change the overall size). In a fixed frame: perspective → lef
 - **Near-identical shapes** (voiced/voiceless, ḑ/ţ, DIR/ADM) remain the ceiling for all template
   matching → the M9 CNN.
 
+### Real-image alignment — Primary (done)
+
+Lets a *segmented* primary (arbitrary scale/position) decode, not just an in-frame render.
+
+- **Invariant anchor:** measured across all 16 spec×perspective variants, the **bottom baseline is
+  feature-invariant** (`B≈130`) while the top/left move with the features. So [`src/align.ts`](src/align.ts)
+  places the query's ink bottom on a fixed row, centres it horizontally, and scales by ink height —
+  approximating the @zsnout coordinate frame from pixels alone. Templates are rebuilt through the same
+  alignment so query and reference land identically.
+- **Round-trip** (`npm run primary-align-test`, simulating segmentation at scales 90/120/150px):
+  **70.8% full** — **specification 95.8%** (the large core survives alignment; scale-invariance
+  achieved) but **perspective 70.8%** (a small top-left mark, and perspective changes the height the
+  aligner scales by — coupling). Confirms the concept: large features decode after alignment; small
+  marks need a better anchor (or the CNN).
+
 ### Next up
 
-- **Extend primary** to the remaining feature zones (configuration, function/version/stem, essence);
-  solve **real-image → fixed-frame alignment** so segmented primaries (not just in-frame renders)
-  decode.
+- **Improve small-feature alignment** (a perspective-independent scale anchor, e.g. the invariant
+  bottom-right core), and **extend primary** to the remaining feature zones (configuration,
+  function/version/stem, essence).
 - **Route through `@zsnout/ithkuil/generate`:** assemble decoded features (consonants/vowels +
   quaternary/tertiary/primary) into the word-JSON shape for full-formative romanization.
-- **Milestone 9 — CNN** for the near-identical pairs (add pixel noise/blur augmentation first).
+- **Milestone 9 — CNN** for the near-identical pairs *and* alignment-sensitive small marks (add
+  pixel noise/blur augmentation first).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.
