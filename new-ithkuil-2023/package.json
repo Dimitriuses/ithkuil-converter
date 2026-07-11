@@ -12,11 +12,11 @@
     "segment": "tsx src/segment-demo.ts",
     "eval": "tsx src/eval-classifier.ts",
     "recognize": "tsx src/recognize-demo.ts",
-    "decode-test": "tsx src/decode-roundtrip.ts"
+    "decode-test": "tsx src/decode-roundtrip.ts",
+    "quaternary-test": "tsx src/quaternary-roundtrip.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",
-    "linkedom": "^0.18.13",
     "pngjs": "^7.0.0",
     "svgdom": "^0.1.23"
   },

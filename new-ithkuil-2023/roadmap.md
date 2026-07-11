@@ -205,13 +205,32 @@ full `text → image → text` round-trip is now closed for that domain.
   modeled consonant show `·`. On "Wattunkí ruyün" it correctly reads the two secondary consonants
   with their vowels (`är`, `än`) and marks the rest.
 
+### Structural decomposition — Quaternary (pilot, done)
+
+First combinatorial character type decomposed, via a technique that generalizes.
+
+- **Insight:** mood and case-scope are *separable* diacritic components (the segmenter isolates
+  them), so the quaternary base varies only by its `value` (illocution/validation top-extension or
+  case bottom-extension) — an enumerable set. No geometric bar-splitting needed.
+- **Method** ([`src/quaternary.ts`](src/quaternary.ts)): template-match the base against on-the-fly
+  `Quaternary({ value })` renders; read mood/case-scope from the super/under diacritic components,
+  mapping shape→value with `@zsnout`'s own maps inverted (`MOOD_TO_DIACRITIC_MAP`,
+  `CASE_SCOPE_TO_DIACRITIC_MAP`). Same diacritic shape means different things by position — which the
+  segmenter's role tagging disambiguates.
+- **Round-trip** (`npm run quaternary-test`): **95.1% full** (77/81) over value × mood × case-scope
+  — **mood 100%, case-scope 100%**, value 95.1% (only the ḑ/ţ-shaped illocutions DIR↔ADM confuse,
+  same near-identical-pair limit as elsewhere).
+- **Reusable recipe** for tertiary/primary: separate the diacritic components, enumerate the base by
+  its non-separable feature(s), template-match, invert `@zsnout`'s value→shape maps.
+
 ### Next up
 
-- **Structural decomposition of primary / tertiary / quaternary characters** — the main remaining
-  gap. These aren't flat classes; recognizing them means detecting the character type, then reading
-  its component features. Once a character can be turned into the `@zsnout` word-JSON shape, the
-  decoder can route through `@zsnout/ithkuil/generate` for full-formative romanization (vs the
-  current direct alphabetic-style reading).
+- **Extend decomposition:** quaternary VC **case** bottom-extensions (same method, `CASE_TO_SECONDARY_EXTENSION`),
+  then **tertiary** (valence + aspect) and **primary** (the big composite). Then route decoded
+  features through `@zsnout/ithkuil/generate` for full-formative romanization.
+- **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
+  `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
+  once the pipeline stabilizes.
 - **Milestone 9 — CNN classifier** to resolve the near-identical pairs (voiced/voiceless, cedilla)
   under noise/rotation, using the synthetic dataset (add pixel noise/blur augmentation for this).
 - Deferred: multi-line segmentation; deskew/denoise for real scans; compact-layout Node shim.
