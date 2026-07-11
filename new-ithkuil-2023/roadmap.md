@@ -282,13 +282,32 @@ Closes the loop: decoded features → partial formative → romanized text (the 
   **elides** default slots. That composed-word segmentation is the main remaining work for true
   image→text on running text.
 
+### Composed-word orchestrator (done)
+
+Reads a real composed formative image into typed, decoded characters — the integration layer over
+the per-character decoders.
+
+- **Segmentation** already separates a composed formative correctly (characters have clear gaps in
+  the non-compact rendering): "aktalo" → Primary (diagonal blade) + Secondary (root + diacritic).
+- **Character-type detection** ([`src/char-type.ts`](src/char-type.ts)): classify a character's base
+  against one combined, type-tagged template set (secondary/quaternary/tertiary/primary). The four
+  base silhouettes are very different → **9/9** on the type test, all at 1.00.
+- **Orchestrator** ([`src/decode-word.ts`](src/decode-word.ts), `npm run word`): segment → detect
+  type → route to the matching decoder (secondary consonant+diacritics / quaternary / tertiary /
+  primary-aligned). On composed formatives it correctly types every character (0.94–0.98) and
+  decodes primary specification (e.g. OBJ), secondary consonants, and tertiary valence.
+- **Remaining gaps for full text:** multi-consonant roots render as one secondary + **cluster
+  extension** (root "kt" → base "k", the "t" extension undecoded); **vowels/case** on secondaries
+  come back as the diacritic *shape* (needs the shape→vowel/case mapping in formative context);
+  default slots are **elided**. Closing these turns the correct character breakdown into a full
+  `formativeToIthkuil` round-trip on running text.
+
 ### Next up
 
-- **Composed-word segmentation** — split a real formative image into its actual characters (handle
-  merging, cluster extensions, elision), then run the per-character decoders over it. This is the
-  bridge from "validated per-character loop" to "image → romanized formative".
+- **Cluster-extension + vowel/case decoding on secondaries** — the last piece to reconstruct full
+  roots and route composed words all the way to romanized text.
 - **Improve small-feature alignment** (perspective-independent scale anchor) and **extend primary**
-  to the remaining feature zones (configuration, function/version/stem, essence).
+  to the remaining feature zones.
 - **Milestone 9 — CNN** for the near-identical pairs *and* alignment-sensitive small marks (add
   pixel noise/blur augmentation first).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
