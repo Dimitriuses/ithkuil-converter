@@ -378,13 +378,27 @@ A learned classifier that beats the template baseline on the near-identical pair
   small config (24px, 16 samples/class, 12 epochs, ~7 min). A working native/GPU backend would allow
   full-scale training (all 88 classes, larger input) directly.
 
+### CNN persistence + inference (done)
+
+The trained model is now **saved and reloadable** for inference — the plug-in point for the pipeline.
+
+- **Persistence** ([`src/cnn-io.ts`](src/cnn-io.ts)): filesystem save/load IOHandlers (pure-JS tfjs
+  has no `file://` handler). `cnn.ts` now writes `models/consonant-cnn/{model.json, weights.bin,
+  labels.json}` after training.
+- **Loadable classifier** ([`src/cnn-classify.ts`](src/cnn-classify.ts)): `loadCnnClassifier()` →
+  `classifyImage(img)` / `classifyGray(gray)` → label + candidates. Inference runs fine on the
+  pure-JS backend (only conv *training* was slow/unsupported).
+- **Verified round-trip** (`npm run cnn-infer`): a fresh process loads the saved model and classifies
+  rendered consonants at **89.3%** (weights load correctly; clean renders are slightly
+  out-of-distribution vs the noise-trained model).
+
 ### Next up
 
-- **Integrate the CNN** into the classifier as an option (needs model **persistence** — pure-JS tfjs
-  needs a custom IOHandler, or use tfjs-node once a working backend exists; currently train+eval run
-  in one process).
-- **Scale the CNN** to all 88 classes + character types once a faster backend is available; it also
-  subsumes the alignment-sensitive marks and compact-compressed characters.
+- **Wire the CNN into `decodeSecondary`** as the consonant-core classifier (replace/ensemble with the
+  template match): convert a segmented base bitmap → grayscale N×N → `classifyGray`. Foundation is in
+  place; remaining work is the consonant-only scope + binary-vs-grayscale input handling.
+- **Scale the CNN** to all 88 classes + character types once a faster (native/GPU) backend is
+  available; also subsumes alignment-sensitive marks and compact-compressed characters.
 - **Compact-context reverse templates** / keep `encode` at `compact: false` for reverse input.
 - Polish: robust primary detection (CTE); perspective-independent primary alignment; broaden
   `EXTENSION_SET`; vowel→slot (Vr/Vc).

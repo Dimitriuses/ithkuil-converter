@@ -10,9 +10,14 @@
  *   npm run cnn -- [dataset-dir] [epochs]
  */
 import * as tf from "@tensorflow/tfjs"
+import { mkdirSync, writeFileSync } from "node:fs"
+import { join } from "node:path"
 import { CNN_SIZE, loadDataset, type LoadedSample } from "./cnn-data.js"
 import { chamferSimilarity } from "./chamfer.js"
+import { fileSaveHandler } from "./cnn-io.js"
 import type { Mask } from "./normalize.js"
+
+const MODEL_DIR = "models/consonant-cnn"
 
 const DIR = process.argv[2] ?? "cnn-dataset"
 const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 20
@@ -132,6 +137,12 @@ async function main(): Promise<void> {
     .sort((x, y) => y[1] - x[1]).slice(0, 8).map(([k, n]) => `${k}×${n}`).join("  ")
   if (tmplConf.length) console.log(`  template errors: ${tally(tmplConf)}`)
   if (cnnConf.length) console.log(`  CNN errors:      ${tally(cnnConf)}`)
+
+  // Persist the trained model + label list so inference can reuse it.
+  mkdirSync(MODEL_DIR, { recursive: true })
+  await model.save(fileSaveHandler(MODEL_DIR))
+  writeFileSync(join(MODEL_DIR, "labels.json"), JSON.stringify({ labels: ds.labels, size: SZ }))
+  console.log(`\nsaved model → ${MODEL_DIR}/ (model.json, weights.bin, labels.json)`)
 }
 
 main().catch((e) => {
