@@ -19,6 +19,14 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { readFileSync } from "node:fs"
 import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
+import {
+  JOB_KINDS,
+  startJob,
+  cancelJob,
+  listJobs,
+  jobLog,
+  installJobShutdownHooks,
+} from "./jobs.js"
 
 const PORT = Number(process.env.PORT) || 3939
 const MAX_BODY = 32 * 1024 * 1024 // 32 MB — images can be a few MB
@@ -136,11 +144,38 @@ const server = createServer(async (req, res) => {
     if (req.method === "POST" && req.url === "/api/decode") {
       return await handleDecode(JSON.parse((await readBody(req)) || "{}"), res)
     }
+
+    // ---- jobs (data/model control panel) ----
+    if (req.method === "GET" && req.url === "/api/jobs/kinds") {
+      const kinds = Object.entries(JOB_KINDS).map(([id, k]) => ({ id, label: k.label, heavy: !!k.heavy }))
+      return sendJson(res, 200, { ok: true, kinds })
+    }
+    if (req.method === "GET" && req.url === "/api/jobs") {
+      return sendJson(res, 200, { ok: true, jobs: listJobs() })
+    }
+    if (req.method === "POST" && req.url === "/api/jobs") {
+      const body = JSON.parse((await readBody(req)) || "{}") as { kind?: string; args?: Record<string, unknown> }
+      const r = startJob(String(body.kind), body.args ?? {})
+      return sendJson(res, r.ok ? 200 : 400, r)
+    }
+    const logMatch = req.method === "GET" && req.url?.match(/^\/api\/jobs\/([^/]+)\/log$/)
+    if (logMatch) {
+      const log = jobLog(decodeURIComponent(logMatch[1]!))
+      return sendJson(res, log ? 200 : 404, log ? { ok: true, log } : { ok: false, error: "no such job" })
+    }
+    const cancelMatch = req.method === "POST" && req.url?.match(/^\/api\/jobs\/([^/]+)\/cancel$/)
+    if (cancelMatch) {
+      const ok = cancelJob(decodeURIComponent(cancelMatch[1]!))
+      return sendJson(res, ok ? 200 : 404, { ok })
+    }
+
     sendJson(res, 404, { ok: false, error: "not found" })
   } catch (e) {
     sendJson(res, 500, { ok: false, error: e instanceof Error ? e.message : String(e) })
   }
 })
+
+installJobShutdownHooks() // never let a background job outlive the server
 
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`New Ithkuil tool → http://localhost:${PORT}`)

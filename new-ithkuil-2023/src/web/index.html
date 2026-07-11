@@ -69,6 +69,20 @@
       a.dl { font-size: 12.5px; }
       .drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 18px; text-align: center; color: var(--muted); cursor: pointer; }
       .drop.hover { border-color: var(--accent); color: var(--accent); }
+      button.sm { padding: 5px 11px; font-size: 12.5px; }
+      .field { flex: 0 0 auto; }
+      .field label { margin-bottom: 3px; }
+      .log { background: var(--code); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+        font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; line-height: 1.45;
+        max-height: 340px; overflow: auto; white-space: pre-wrap; word-break: break-word; margin-top: 12px; }
+      .job { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+      .job:last-child { border-bottom: 0; }
+      .job .st { font-weight: 600; flex: 0 0 auto; width: 78px; }
+      .st-running { color: var(--accent); } .st-done { color: var(--ok); }
+      .st-error, .st-cancelled { color: var(--bad); }
+      .job .nm { flex: 0 0 auto; }
+      .job .tail { color: var(--muted); flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+        white-space: nowrap; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px; }
     </style>
   </head>
   <body>
@@ -109,6 +123,41 @@
           </div>
         </div>
         <div class="out" id="dec-out"></div>
+      </section>
+
+      <!-- DATA & MODELS ------------------------------------------------------>
+      <section class="panel">
+        <h2>Data &amp; models · background jobs</h2>
+        <div class="grid2">
+          <div>
+            <label>Generate dataset</label>
+            <div class="row" style="margin-top: 6px">
+              <div class="field" style="width: 116px"><label>out dir</label><input id="ds-out" type="text" value="dataset" /></div>
+              <div class="field" style="width: 84px"><label>per-class</label><input id="ds-per" type="number" value="24" min="1" /></div>
+              <div class="field" style="width: 76px"><label>noise</label><input id="ds-noise" type="number" value="0" min="0" max="255" /></div>
+              <div class="check" style="padding-bottom: 6px"><input type="checkbox" id="ds-clean" /><label for="ds-clean">clean</label></div>
+            </div>
+            <div style="margin-top: 8px"><button id="ds-go">Generate dataset</button></div>
+          </div>
+          <div>
+            <label>Train CNN</label>
+            <div class="row" style="margin-top: 6px">
+              <div class="field" style="width: 116px"><label>dataset dir</label><input id="tr-dir" type="text" value="cnn-dataset" /></div>
+              <div class="field" style="width: 76px"><label>epochs</label><input id="tr-ep" type="number" value="12" min="1" /></div>
+              <div class="field" style="width: 84px"><label>per-class</label><input id="tr-per" type="number" value="16" min="1" /></div>
+            </div>
+            <div style="margin-top: 8px"><button id="tr-go">Train CNN</button></div>
+          </div>
+        </div>
+        <div style="margin-top: 16px">
+          <label>Run test / eval harness</label>
+          <div id="test-btns" class="row" style="margin-top: 6px; gap: 8px"></div>
+        </div>
+        <div style="margin-top: 18px">
+          <label>Jobs <span class="muted" id="jobs-hint"></span></label>
+          <div id="jobs"><span class="muted">none yet</span></div>
+        </div>
+        <pre id="joblog" class="log" hidden></pre>
       </section>
     </main>
 
@@ -196,6 +245,90 @@
         }
         return "<table><tr><th>text</th><th>mode</th><th>characters</th></tr>" + rows + "</table>"
       }
+
+      // ---- data & models (background jobs) ----
+      let openLogId = null // job whose full log is expanded
+      let jobsTimer = null
+
+      async function startJob(kind, args) {
+        const r = await api("/api/jobs", { kind, args })
+        if (!r.ok) { alert("Could not start: " + esc(r.error)); return }
+        openLogId = r.id
+        pollJobs()
+      }
+
+      $("ds-go").onclick = () => startJob("dataset", {
+        out: $("ds-out").value, perClass: Number($("ds-per").value), noise: Number($("ds-noise").value), clean: $("ds-clean").checked,
+      })
+      $("tr-go").onclick = () => startJob("train", {
+        dir: $("tr-dir").value, epochs: Number($("tr-ep").value), trainPerClass: Number($("tr-per").value),
+      })
+
+      // build test/eval buttons from the server's whitelist
+      ;(async () => {
+        try {
+          const r = await (await fetch("/api/jobs/kinds")).json()
+          const box = $("test-btns")
+          for (const k of r.kinds.filter((k) => k.id.startsWith("test:") || k.id === "eval")) {
+            const b = document.createElement("button")
+            b.className = "ghost sm"; b.textContent = k.label
+            b.onclick = () => startJob(k.id, {})
+            box.appendChild(b)
+          }
+        } catch {}
+      })()
+
+      async function cancelJob(id) { await api("/api/jobs/" + encodeURIComponent(id) + "/cancel", {}); pollJobs() }
+      async function toggleLog(id) { openLogId = openLogId === id ? null : id; renderLog(); }
+
+      async function renderLog() {
+        const pre = $("joblog")
+        if (!openLogId) { pre.hidden = true; return }
+        try {
+          const r = await (await fetch("/api/jobs/" + encodeURIComponent(openLogId) + "/log")).json()
+          if (!r.ok) { pre.hidden = true; return }
+          const atBottom = pre.scrollHeight - pre.scrollTop - pre.clientHeight < 40
+          pre.hidden = false
+          pre.textContent = r.log.join("\n")
+          if (atBottom) pre.scrollTop = pre.scrollHeight
+        } catch {}
+      }
+
+      async function pollJobs() {
+        let anyRunning = false
+        try {
+          const r = await (await fetch("/api/jobs")).json()
+          const box = $("jobs")
+          if (!r.jobs.length) { box.innerHTML = '<span class="muted">none yet</span>' }
+          else {
+            box.innerHTML = ""
+            for (const j of r.jobs) {
+              if (j.status === "running") anyRunning = true
+              const el = document.createElement("div"); el.className = "job"
+              const dur = ((j.endedAt || Date.now()) - j.startedAt) / 1000
+              const tail = (j.logTail || []).slice(-1)[0] || ""
+              el.innerHTML =
+                '<span class="st st-' + j.status + '">' + j.status + "</span>" +
+                '<span class="nm">' + esc(j.label) + (j.code != null && j.status !== "done" ? " (exit " + j.code + ")" : "") + "</span>" +
+                '<span class="tail">' + esc(tail) + "</span>" +
+                '<span class="muted" style="flex:0 0 auto">' + dur.toFixed(0) + "s</span>"
+              const logBtn = document.createElement("button"); logBtn.className = "ghost sm"; logBtn.textContent = openLogId === j.id ? "hide" : "log"
+              logBtn.onclick = () => toggleLog(j.id); el.appendChild(logBtn)
+              if (j.status === "running") {
+                const c = document.createElement("button"); c.className = "ghost sm"; c.textContent = "cancel"
+                c.onclick = () => cancelJob(j.id); el.appendChild(c)
+              }
+              box.appendChild(el)
+            }
+          }
+          $("jobs-hint").textContent = anyRunning ? "· running…" : ""
+        } catch {}
+        renderLog()
+        clearTimeout(jobsTimer)
+        // poll fast while something runs or a log is open, slow otherwise
+        jobsTimer = setTimeout(pollJobs, anyRunning || openLogId ? 1500 : 6000)
+      }
+      pollJobs()
 
       function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])) }
     </script>

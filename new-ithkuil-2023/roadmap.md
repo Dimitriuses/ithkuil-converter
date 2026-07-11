@@ -72,7 +72,7 @@ characters," a much smaller target.
 | **5** ✅ | **Reverse: preprocess + segment** — binarize, char split, diacritic merge | — | DONE — [`src/segment.ts`](src/segment.ts) → `SegmentedRegion[]`; demo [`src/segment-demo.ts`](src/segment-demo.ts) |
 | **6** ✅ | **Reverse: baseline classifier** — template match vs clean dataset samples | 4, 5 | DONE — [`src/classify.ts`](src/classify.ts); **90.3% top-1 / 99.7% top-3** on augmented consonants |
 | **7** ✅ | **Reverse: decoder** (scoped) — classified glyphs → romanized text | 6 | DONE — [`src/decode.ts`](src/decode.ts); **100%** round-trip on consonant+vowel |
-| **8** ✅ | **Local tool** — web dashboard + CLI over the shared core (reframed from a published library) | 2, 7 | DONE (v1) — [`src/server.ts`](src/server.ts) + [`src/web/index.html`](src/web/index.html), `npm run serve`. v2 (data/model jobs) planned |
+| **8** ✅ | **Local tool** — web dashboard + CLI + data/model job panel over the shared core (reframed from a published library) | 2, 7 | DONE — [`src/server.ts`](src/server.ts), [`src/web/index.html`](src/web/index.html), [`src/jobs.ts`](src/jobs.ts); `npm run serve` |
 | **9** ✅ | **CNN classifier** (robustness for noisy input), trained on synthetic data | 4, 6 | DONE (proof-of-concept) — **97.6% vs 82.5%** template on noisy consonants |
 | 10 | **Round-trip test corpus + metrics** | 8 | `text → image → text ≈ original` |
 
@@ -444,7 +444,7 @@ over a **spec × perspective × configuration grid** (4×4×4) instead of 4 defa
 - No regression: `word-test` 48/48, `phrase-test` 7/7 (the larger template set didn't pull non-primary
   characters into the primary class).
 
-### Milestone 8 — local tool: web UI + CLI (done, v1)
+### Milestone 8 — local tool: web UI + CLI (done, v1 + v2)
 
 Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
 like `@resvg/resvg-js` make single-executable bundling fragile, and there's no distribution need).
@@ -456,6 +456,17 @@ like `@resvg/resvg-js` make single-executable bundling fragile, and there's no d
   instant; the decode path warms its template sets lazily (~1 min) so the server starts immediately.
   Verified end-to-end over real HTTP: encode "saläha mela" → decode → "saläha mela". The CLI
   ([`src/cli.ts`](src/cli.ts)) is kept for scripted/console use; both wrap the same core.
+- **v2 (done) — data/model control panel** ([`src/jobs.ts`](src/jobs.ts) + `/api/jobs*` endpoints +
+  the UI's "Data & models" panel): run the project's own scripts — **dataset generation, CNN training,
+  and every round-trip/eval harness** — as tracked background jobs with live polled logs and cancel.
+  - **Process lifecycle** (the whole point — earlier training left orphaned workers): each job is a
+    **single** process, `node --import tsx <script>` (no npm/shell wrapper), and cancel/shutdown kill
+    the whole **process tree** (`taskkill /T` on Windows). The server kills every running job on exit.
+  - **Safety:** only whitelisted scripts run, and each job's argv is built server-side from a typed
+    args object (no arbitrary path/flag from the client); one heavy (dataset/train) job at a time.
+  - **Verified:** heavy-guard rejects a concurrent dataset/train; cancel takes the process 1→0 (no
+    orphan); killing the server takes its jobs down (no orphan); a test harness job runs to completion
+    with captured logs.
 - Supporting change: `encodePng` added to [`image-io.ts`](src/image-io.ts) (PNG buffer for the overlay).
 
 ---
@@ -474,14 +485,10 @@ tooling — none of it blocks the tool being usable today.
 | **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
 | Alphabetic-register decoding | ✅ done, v1 — 82% char-level |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
-| **M8** local tool — web dashboard + CLI | ✅ v1 done · v2 planned |
+| **M8** local tool — web dashboard + CLI + data/model job panel | ✅ v1 + v2 done |
 
 ### Next up (planned — nothing below is built yet)
 
-- **M8 v2 — data/model control panel:** dataset generation + CNN training as background jobs with
-  progress/logs and clean process lifecycle (mind the earlier orphaned-worker issue); expose the
-  roundtrip/eval harnesses as UI buttons. Deferred out of v1 because these are long CPU-bound jobs
-  that need a job model, not blocking requests.
 - **Improve alphabetic accuracy** (currently 82% char-level): sharper extension discrimination
   (top s/r, bottom n/r), read `left`/tone diacritics + geminate markers, and stress
   (`STRESSED_SYLLABLE_PLACEHOLDER`).
