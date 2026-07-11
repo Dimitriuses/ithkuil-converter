@@ -7,3 +7,7 @@ dist/
 
 # generated dataset
 dataset/
+
+# generated CNN dataset + models
+cnn-dataset/
+models/

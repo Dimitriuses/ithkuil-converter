@@ -21,7 +21,8 @@
     "word": "tsx src/word-demo.ts",
     "secondary-test": "tsx src/secondary-roundtrip.ts",
     "word-test": "tsx src/word-roundtrip.ts",
-    "phrase-test": "tsx src/phrase-roundtrip.ts"
+    "phrase-test": "tsx src/phrase-roundtrip.ts",
+    "cnn": "tsx src/cnn.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",
@@ -30,6 +31,8 @@
   },
   "devDependencies": {
     "@resvg/resvg-js": "^2.6.2",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
     "@types/node": "^26.1.1",
     "@types/pngjs": "^6.0.5",
     "tsx": "^4.23.0",

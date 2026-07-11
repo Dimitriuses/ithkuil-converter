@@ -73,7 +73,7 @@ characters," a much smaller target.
 | **6** ✅ | **Reverse: baseline classifier** — template match vs clean dataset samples | 4, 5 | DONE — [`src/classify.ts`](src/classify.ts); **90.3% top-1 / 99.7% top-3** on augmented consonants |
 | **7** ✅ | **Reverse: decoder** (scoped) — classified glyphs → romanized text | 6 | DONE — [`src/decode.ts`](src/decode.ts); **100%** round-trip on consonant+vowel |
 | 8 | **CLI + library API** — `encode` / `decode` commands and typed exports | 2, 7 | published-shape package |
-| 9 | **CNN classifier** (robustness for noisy/photo input), trained on synthetic data | 4, 6 | ONNX/TF.js model + integration |
+| **9** ✅ | **CNN classifier** (robustness for noisy input), trained on synthetic data | 4, 6 | DONE (proof-of-concept) — **97.6% vs 82.5%** template on noisy consonants |
 | 10 | **Round-trip test corpus + metrics** | 8 | `text → image → text ≈ original` |
 
 Milestones 1–4 are integration/plumbing and unlock everything. The genuine research is 5–7 (and 9).
@@ -360,15 +360,34 @@ The long-deferred M1 item. svgdom ships no `isPointInStroke`/`isPointInFill`, wh
   the 2 compact phrases are included). The reverse pipeline's templates are built from non-compact
   renders; decoding compact-compressed characters needs compact-context templates (or the CNN).
 
+### Milestone 9 — CNN classifier (done, proof-of-concept)
+
+A learned classifier that beats the template baseline on the near-identical pairs and noise.
+
+- **Pixel augmentation** ([`src/augment-pixels.ts`](src/augment-pixels.ts)): Gaussian noise + box
+  blur, wired into the generator (`--noise`, `--blur`, `--family`). Adds the appearance variation a
+  CNN needs to generalize toward real/scanned input.
+- **Pipeline** ([`src/cnn-data.ts`](src/cnn-data.ts) → normalized grayscale tensors;
+  [`src/cnn.ts`](src/cnn.ts), `npm run cnn`): trains a small conv net (2 conv + pool + dense) and
+  compares it **head-to-head with the template baseline on the same held-out noisy test set**.
+- **Result** (28 consonants, noisy test): **CNN 97.6% vs template 82.5%**. The CNN eliminates the
+  confusions template matching makes on the voiced/voiceless + cedilla pairs — template errors
+  ḑ→ţ, g→k, v→f, t→d, č→j (×3–5 each) drop to 0–1 for the CNN. Confirms the CNN direction end-to-end.
+- **Backend reality:** `tfjs-node` (native) won't load on Node 22 here; `tfjs-wasm` can't train conv
+  layers (`Conv2DBackpropFilter` unregistered). So training runs on **pure-JS CPU** — slow, hence a
+  small config (24px, 16 samples/class, 12 epochs, ~7 min). A working native/GPU backend would allow
+  full-scale training (all 88 classes, larger input) directly.
+
 ### Next up
 
-- **Compact-context reverse templates:** build the type/base templates from compact renders too (or
-  keep `encode` at `compact: false` for the reverse pipeline's input) so collision-compressed
-  characters decode.
-- **Robust primary detection** (fixes CTE mid-phrase): a size/aspect or context cue, or the CNN.
-- **Milestone 9 — CNN** for near-identical pairs, alignment-sensitive marks, compact/compressed
-  characters, and real/noisy input (add pixel noise/blur augmentation first).
-- Polish: perspective-independent primary alignment; broaden `EXTENSION_SET`; vowel→slot (Vr/Vc).
+- **Integrate the CNN** into the classifier as an option (needs model **persistence** — pure-JS tfjs
+  needs a custom IOHandler, or use tfjs-node once a working backend exists; currently train+eval run
+  in one process).
+- **Scale the CNN** to all 88 classes + character types once a faster backend is available; it also
+  subsumes the alignment-sensitive marks and compact-compressed characters.
+- **Compact-context reverse templates** / keep `encode` at `compact: false` for reverse input.
+- Polish: robust primary detection (CTE); perspective-independent primary alignment; broaden
+  `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.

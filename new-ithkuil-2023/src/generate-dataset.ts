@@ -15,6 +15,8 @@ import { join } from "node:path"
 import { GLYPH_CLASSES } from "./glyph-classes.js"
 import { renderGlyphToSvg, type Augment } from "./glyph-render.js"
 import { svgToPng } from "./raster.js"
+import { decodePng, savePng } from "./image-io.js"
+import { augmentPixels } from "./augment-pixels.js"
 
 const HELP = `Usage: npm run dataset -- [options]
 
@@ -22,6 +24,9 @@ const HELP = `Usage: npm run dataset -- [options]
   -n, --per-class <N>    samples per class incl. 1 clean (default: 24)
   -s, --size <px>        image size (default: 128)
       --seed <n>         RNG seed for reproducible augmentation (default: 1)
+      --family <name>    only generate classes of this family (e.g. secondary-consonant)
+      --noise <sigma>    add Gaussian pixel noise (0-255 std) to augmented samples
+      --blur <radius>    box-blur augmented samples by this radius
       --clean            wipe the output dir first
   -h, --help`
 
@@ -52,6 +57,9 @@ function main(): number {
       "per-class": { type: "string", short: "n" },
       size: { type: "string", short: "s" },
       seed: { type: "string" },
+      family: { type: "string" },
+      noise: { type: "string" },
+      blur: { type: "string" },
       clean: { type: "boolean" },
       help: { type: "boolean", short: "h" },
     },
@@ -68,11 +76,17 @@ function main(): number {
   const rand = mulberry32(seed)
   const between = (lo: number, hi: number) => lo + rand() * (hi - lo)
 
+  const classes = values.family
+    ? GLYPH_CLASSES.filter((c) => c.family === values.family)
+    : GLYPH_CLASSES
+  const pixelAug = { noise: values.noise ? Number(values.noise) : 0, blur: values.blur ? Number(values.blur) : 0 }
+  const hasPixelAug = pixelAug.noise > 0 || pixelAug.blur > 0
+
   if (values.clean && existsSync(outDir)) rmSync(outDir, { recursive: true, force: true })
   mkdirSync(outDir, { recursive: true })
 
   const samples: Sample[] = []
-  for (const cls of GLYPH_CLASSES) {
+  for (const cls of classes) {
     mkdirSync(join(outDir, cls.id), { recursive: true })
     for (let i = 0; i < perClass; i++) {
       const clean = i === 0
@@ -86,7 +100,15 @@ function main(): number {
           }
       const png = svgToPng(renderGlyphToSvg(cls.make(), aug, { canvas: size }), { width: size })
       const rel = `${cls.id}/${cls.id}_${String(i).padStart(3, "0")}.png`
-      writeFileSync(join(outDir, rel), png)
+      // Pixel augmentation (noise/blur) is applied to augmented samples only —
+      // the clean sample stays pristine as the template reference.
+      if (hasPixelAug && !clean) {
+        const img = decodePng(png)
+        augmentPixels(img, pixelAug, rand)
+        savePng(join(outDir, rel), img)
+      } else {
+        writeFileSync(join(outDir, rel), png)
+      }
       samples.push({ file: rel, label: cls.label, class: cls.id, family: cls.family, clean, aug })
     }
   }
@@ -97,8 +119,8 @@ function main(): number {
     canvas: size,
     seed,
     perClass,
-    classCount: GLYPH_CLASSES.length,
-    classes: GLYPH_CLASSES.map((c) => ({ id: c.id, label: c.label, family: c.family })),
+    classCount: classes.length,
+    classes: classes.map((c) => ({ id: c.id, label: c.label, family: c.family })),
     sampleCount: samples.length,
     samples,
   }
