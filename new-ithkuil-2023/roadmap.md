@@ -425,10 +425,15 @@ the side (`right`) diacritics.
 - **Integrated** into [`decodePhrase`](src/decode-word.ts): scans regions, toggling into an
   alphabetic span at each `Register`; formative words decode as before, alphabetic words via
   `decodeAlphabeticSpan`. Returns `PhraseWord[]` tagged `formative | alphabetic`.
-- **Accuracy** (`npm run alphabetic`, 15 CVCV/CV words): **6/15 exact, 82% char-level.** Remaining
-  errors are specific extension-shape confusions (top s↔r, bottom n↔r/ż) — the zone metric can't
-  fully separate similar consonant extensions. Tunable next: per-consonant zone weighting, or a
-  learned extension classifier; also left/tone diacritics + geminate markers are not yet read.
+- **Accuracy** (`npm run alphabetic`, 15 CVCV/CV words): **13/15 exact, 94.6% char-level** — up from
+  6/15 / 82%. The gain came from replacing the three per-zone consonant reads (top/mid/bottom, each
+  bbox-normalized, which discarded where a mark sat and confused top s↔r, bottom n↔r/b↔c) with a
+  **joint whole-base match**: stretch the base into a fixed square and match it against ~1200 rendered
+  `{core, top, bottom}` references at once. Because each render costs ~260 ms (resvg), the reference
+  set is **built once and cached to `models/alphabetic-base.json`** (masks only; distance transforms
+  recomputed on load) — warmed at server startup so the first decode doesn't pay the build.
+  - Remaining 2 misses are the near-identical extension pair `n↔ż` / `d↔ļ` at this frame resolution;
+    `left`/tone diacritics + geminate markers + stress are still unread.
 
 ### Robust primary detection (CTE) — done
 
@@ -483,15 +488,15 @@ tooling — none of it blocks the tool being usable today.
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
 | **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
-| Alphabetic-register decoding | ✅ done, v1 — 82% char-level |
+| Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | **M8** local tool — web dashboard + CLI + data/model job panel | ✅ v1 + v2 done |
 
 ### Next up (planned — nothing below is built yet)
 
-- **Improve alphabetic accuracy** (currently 82% char-level): sharper extension discrimination
-  (top s/r, bottom n/r), read `left`/tone diacritics + geminate markers, and stress
-  (`STRESSED_SYLLABLE_PLACEHOLDER`).
+- **Alphabetic — remaining bits** (now 94.6% char-level): separate the last near-identical extension
+  pairs (`n↔ż`, `d↔ļ`) — likely a higher frame resolution or a targeted tie-break; read `left`/tone
+  diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
 - **Scale the CNN** — the M9 model is a proof-of-concept: it beats the template *at 24×24* (97.6% vs
   82.5%) but not the pipeline's 64×64 template (88.6% vs 90.7%). A higher-resolution model with more
   training — which needs a faster native/GPU backend than the CPU-only one here — is what would let it

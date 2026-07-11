@@ -46,7 +46,10 @@ export function distanceTransform(mask: Mask): Float32Array {
   return d
 }
 
-function meanNearestDistance(inkMask: Mask, dtOfOther: Float32Array): number {
+/** Mean distance from each ink pixel of `inkMask` to the nearest ink of another
+ * shape (whose distance transform is `dtOfOther`). Exposed so callers matching one
+ * query against many templates can precompute the templates' transforms. */
+export function meanNearestDistance(inkMask: Mask, dtOfOther: Float32Array): number {
   let sum = 0
   let n = 0
   for (let i = 0; i < inkMask.data.length; i++) {

@@ -40,11 +40,13 @@ let decodeReady: Promise<{ decode: DecodeModule; seg: SegmentModule; img: ImageM
 function warmDecode() {
   if (!decodeReady) {
     decodeReady = (async () => {
-      const [decode, seg, img] = await Promise.all([
+      const [decode, seg, img, alpha] = await Promise.all([
         import("./decode-word.js"),
         import("./segment.js"),
         import("./image-io.js"),
+        import("./alphabetic.js"),
       ])
+      alpha.warmAlphabetic() // build/load the joint base templates now, not on first decode
       return { decode, seg, img }
     })()
   }
@@ -179,6 +181,7 @@ installJobShutdownHooks() // never let a background job outlive the server
 
 server.listen(PORT, "127.0.0.1", () => {
   console.log(`New Ithkuil tool → http://localhost:${PORT}`)
-  console.log(`  encode is ready now; warming the decode pipeline (templates, ~1 min)…`)
+  console.log(`  encode is ready now; warming the decode pipeline (templates)…`)
+  console.log(`  (first ever run builds the alphabetic template cache — several minutes, one-time)`)
   warmDecode().then(() => console.log(`  decode pipeline ready.`))
 })

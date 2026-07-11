@@ -12,12 +12,15 @@
  *   1. detect Register glyphs → the alphabetic span boundaries;
  *   2. group span regions into characters, re-associating `right`/`left` side
  *      diacritics (which the segmenter splits off) with their base;
- *   3. read each character's slots — consonants from base zones (top/mid/bottom),
- *      vowels from the separable diacritic components;
+ *   3. read each character's consonants by matching the whole framed base against
+ *      joint {core, top, bottom} references — one match, not three per-zone reads.
+ *      The extensions perturb each other's zones and per-zone bbox-normalization
+ *      discards where each mark sits, so a joint whole-base match is far more
+ *      accurate (it fixed the top s/r and bottom n/r/b confusions). Vowels are read
+ *      from the separable diacritic components;
  *   4. reassemble in reading order: top, superposed, core, right, bottom, underposed.
  *
- * Consonant slots use a "none" template + margin so a bare placeholder spine isn't
- * mistaken for a consonant. See the reading-order derivation in the round-trip test.
+ * See the reading-order derivation in the round-trip test.
  */
 import "./dom-shim.js" // must precede @zsnout import
 import { Secondary, Register } from "@zsnout/ithkuil/script"
@@ -27,26 +30,21 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment, type Bitmap, type BBox, type SegmentedRegion } from "./segment.js"
 import { maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
-import { chamferSimilarity } from "./chamfer.js"
-import type { Mask } from "./normalize.js"
+import { chamferSimilarity, distanceTransform, meanNearestDistance } from "./chamfer.js"
+import { cropInk, type Mask } from "./normalize.js"
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
 
 /** Consonants that can appear in top/bottom/core slots (the secondary core set). */
 const CONSONANTS = "pbtdkgfvţḑszšžçxhļcżčjmnňrlř".split("")
 /** Vowels that can appear in diacritic slots. */
 const VOWELS = ["a", "ä", "e", "ë", "i", "o", "ö", "u", "ü"]
 
-const SIZE = 48
-/** Vertical zone fractions for reading top/bottom extensions and the core spine.
- * Tight strips isolate the distinguishing extension from the shared placeholder
- * spine (a wider strip lets the common spine dominate the Chamfer score). */
-const TOP_FRAC = 0.4
-const BOTTOM_FRAC = 0.4
-const MID_FRAC = 0.5
-/** A consonant slot must beat the bare-placeholder "none" template by this margin.
- * Core is the noisiest zone (the placeholder spine resembles a consonant), so it
- * uses a larger margin. */
-const EXT_MARGIN = 0.06
-const CORE_MARGIN = 0.15
+const SIZE = 48 // vowel-diacritic + register masks
+/** Square frame the whole base is stretched into for joint matching. Stretching (not
+ * bbox-padding) keeps each extension at a consistent position for query and template. */
+const FRAME = 56
 /** Chamfer score above which a region's base is a Register glyph. */
 const REGISTER_THRESHOLD = 0.72
 /** A span region shorter than this fraction of the tallest is a side diacritic. */
@@ -76,20 +74,50 @@ function baseBoxOf(bmp: Bitmap): BBox {
     .reduce((a, b) => (a.w * a.h >= b.w * b.h ? a : b))
 }
 
-/** A vertical zone of a base box: the top strip, bottom strip, or middle band. */
-function zoneBox(box: BBox, which: "top" | "bottom" | "mid", frac: number): BBox {
-  const hh = Math.round(box.h * frac)
-  if (which === "top") return { x: box.x, y: box.y, w: box.w, h: hh }
-  if (which === "bottom") return { x: box.x, y: box.y + box.h - hh, w: box.w, h: hh }
-  return { x: box.x, y: box.y + Math.round(box.h * (0.5 - frac / 2)), w: box.w, h: hh }
+/** Stretch a base box's ink to a FRAME×FRAME square mask (nearest-neighbour, no
+ * padding) so the same (core,top,bottom) always frames identically. */
+function frameSquare(bmp: Bitmap, box: BBox): Mask {
+  const { ink, width, height } = cropInk(bmp, box)
+  let minx = width, maxx = -1, miny = height, maxy = -1
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (ink[y * width + x]) {
+        if (x < minx) minx = x
+        if (x > maxx) maxx = x
+        if (y < miny) miny = y
+        if (y > maxy) maxy = y
+      }
+    }
+  }
+  const data = new Uint8Array(FRAME * FRAME)
+  if (maxx < 0) return { size: FRAME, data }
+  const w = maxx - minx + 1
+  const h = maxy - miny + 1
+  for (let ty = 0; ty < FRAME; ty++) {
+    const sy = miny + Math.floor((ty * h) / FRAME)
+    for (let tx = 0; tx < FRAME; tx++) {
+      const sx = minx + Math.floor((tx * w) / FRAME)
+      if (ink[sy * width + sx]) data[ty * FRAME + tx] = 1
+    }
+  }
+  return { size: FRAME, data }
 }
 
 // ---- Lazily-built reference templates (rendered once). ------------------------
 
+/** A whole-base reference: a (core, top, bottom) letter combination + its framed
+ * mask and precomputed distance transform (so matching one query against all of
+ * them doesn't recompute each template's transform). "" = slot empty. */
+interface BaseTemplate {
+  core: string
+  top: string
+  bottom: string
+  mask: Mask
+  dt: Float32Array
+}
+
 interface AlphaTemplates {
-  top: Template[]
-  bottom: Template[]
-  core: Template[]
+  base: BaseTemplate[]
   superposed: Template[]
   underposed: Template[]
   side: Template[]
@@ -114,49 +142,93 @@ function vowelTemplates(position: string): Template[] {
   })
 }
 
+function baseTemplate(core: string, top: string, bottom: string, bmp: Bitmap): BaseTemplate {
+  const mask = frameSquare(bmp, baseBoxOf(bmp))
+  return { core, top, bottom, mask, dt: distanceTransform(mask) }
+}
+
+// Rendering each reference costs ~260ms (resvg), and there are ~1200 of them, so the
+// set is built once and cached to disk (masks only; the distance transform is cheap
+// to recompute on load). Bump CACHE_VERSION when the render or consonant set changes.
+const CACHE_VERSION = 1
+const CACHE_PATH = fileURLToPath(new URL("../models/alphabetic-base.json", import.meta.url))
+
+function loadBaseCache(): BaseTemplate[] | null {
+  try {
+    const j = JSON.parse(readFileSync(CACHE_PATH, "utf8")) as {
+      version: number
+      frame: number
+      templates: { c: string; t: string; b: string; m: string }[]
+    }
+    if (j.version !== CACHE_VERSION || j.frame !== FRAME) return null
+    return j.templates.map((t) => {
+      const mask: Mask = { size: FRAME, data: new Uint8Array(Buffer.from(t.m, "base64")) }
+      return { core: t.c, top: t.t, bottom: t.b, mask, dt: distanceTransform(mask) }
+    })
+  } catch {
+    return null // no/invalid cache → rebuild
+  }
+}
+
+function saveBaseCache(templates: BaseTemplate[]): void {
+  try {
+    mkdirSync(dirname(CACHE_PATH), { recursive: true })
+    const j = {
+      version: CACHE_VERSION,
+      frame: FRAME,
+      templates: templates.map((t) => ({
+        c: t.core,
+        t: t.top,
+        b: t.bottom,
+        m: Buffer.from(t.mask.data).toString("base64"),
+      })),
+    }
+    writeFileSync(CACHE_PATH, JSON.stringify(j))
+  } catch {
+    /* cache is best-effort — a failure just means we rebuild next time */
+  }
+}
+
+/**
+ * The joint base reference set. Two families cover how alphabetic mode packs
+ * consonants (see the round-trip data):
+ *   - placeholder core + top/bottom extensions (CVC-style syllables) — top × bottom;
+ *   - a consonant core (+ optional bottom) — the CV / VCC-style syllables.
+ * "" for a slot means empty; the bare placeholder is `("","","")`.
+ */
+function buildBaseTemplates(): BaseTemplate[] {
+  const cached = loadBaseCache()
+  if (cached) return cached
+
+  const opts = ["", ...CONSONANTS]
+  const out: BaseTemplate[] = []
+  for (const top of opts) {
+    for (const bottom of opts) {
+      const spec: Record<string, string> = {}
+      if (top) spec.top = top
+      if (bottom) spec.bottom = bottom
+      out.push(baseTemplate("", top, bottom, renderPlaceholder(spec)))
+    }
+  }
+  for (const core of CONSONANTS) {
+    out.push(baseTemplate(core, "", "", renderCoreConsonant(core)))
+    for (const bottom of CONSONANTS) {
+      out.push(baseTemplate(core, "", bottom, renderPlaceholder({ core, bottom })))
+    }
+  }
+  saveBaseCache(out)
+  return out
+}
+
 function ensureTemplates(): AlphaTemplates {
   if (cache) return cache
-  const none = renderPlaceholder({})
-  const noneBox = baseBoxOf(none)
-  const noneTop: Template = { label: "", class: "none", mask: maskOfBox(none, zoneBox(noneBox, "top", TOP_FRAC), SIZE) }
-  const noneBot: Template = {
-    label: "",
-    class: "none",
-    mask: maskOfBox(none, zoneBox(noneBox, "bottom", BOTTOM_FRAC), SIZE),
-  }
-  const noneMid: Template = { label: "", class: "none", mask: maskOfBox(none, zoneBox(noneBox, "mid", MID_FRAC), SIZE) }
-
-  const top = [
-    noneTop,
-    ...CONSONANTS.map((c) => {
-      const b = renderPlaceholder({ top: c })
-      return { label: c, class: "c", mask: maskOfBox(b, zoneBox(baseBoxOf(b), "top", TOP_FRAC), SIZE) }
-    }),
-  ]
-  const bottom = [
-    noneBot,
-    ...CONSONANTS.map((c) => {
-      const b = renderPlaceholder({ bottom: c })
-      return { label: c, class: "c", mask: maskOfBox(b, zoneBox(baseBoxOf(b), "bottom", BOTTOM_FRAC), SIZE) }
-    }),
-  ]
-  const core = [
-    noneMid,
-    ...CONSONANTS.map((c) => {
-      const b = renderCoreConsonant(c)
-      return { label: c, class: "c", mask: maskOfBox(b, zoneBox(baseBoxOf(b), "mid", MID_FRAC), SIZE) }
-    }),
-  ]
-
   const regImg = decodePng(
     svgToPng(renderGlyphToSvg(Register({ mode: "alphabetic" }), {}, { canvas: 128 }), { width: 256 }),
   )
   const regBmp = binarize(regImg.data, regImg.width, regImg.height)
 
   cache = {
-    top,
-    bottom,
-    core,
+    base: buildBaseTemplates(),
     superposed: vowelTemplates("superposed"),
     underposed: vowelTemplates("underposed"),
     side: vowelTemplates("right"),
@@ -165,12 +237,25 @@ function ensureTemplates(): AlphaTemplates {
   return cache
 }
 
-/** Pick a consonant for a zone, or "" if the bare "none" template wins (by margin). */
-function pickConsonant(mask: Mask, templates: Template[], margin: number): string {
-  const best = classifyMask(mask, templates)
-  if (best.label === "") return ""
-  const none = templates.find((t) => t.label === "")!
-  return best.score > chamferSimilarity(mask, none.mask) + margin ? best.label : ""
+/** Match a framed query base against the joint set → best (core, top, bottom). */
+function matchBase(query: Mask, templates: BaseTemplate[]): BaseTemplate {
+  const qDt = distanceTransform(query)
+  let best = templates[0]!
+  let bestDist = Infinity
+  for (const t of templates) {
+    const d = 0.5 * (meanNearestDistance(query, t.dt) + meanNearestDistance(t.mask, qDt))
+    if (d < bestDist) {
+      bestDist = d
+      best = t
+    }
+  }
+  return best
+}
+
+/** Build/load the reference templates now (call during server warmup so the first
+ * real decode doesn't pay the one-time cache build). */
+export function warmAlphabetic(): void {
+  ensureTemplates()
 }
 
 /** True if a region's base is a Register (word-boundary) glyph. */
@@ -210,9 +295,7 @@ function groupChars(span: SegmentedRegion[]): AlphaChar[] {
 
 /** Decode one alphabetic character to its romanized letters, in reading order. */
 function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates): string {
-  const top = pickConsonant(maskOfBox(bmp, zoneBox(ch.base, "top", TOP_FRAC), SIZE), t.top, EXT_MARGIN)
-  const bottom = pickConsonant(maskOfBox(bmp, zoneBox(ch.base, "bottom", BOTTOM_FRAC), SIZE), t.bottom, EXT_MARGIN)
-  const core = pickConsonant(maskOfBox(bmp, zoneBox(ch.base, "mid", MID_FRAC), SIZE), t.core, CORE_MARGIN)
+  const { core, top, bottom } = matchBase(frameSquare(bmp, ch.base), t.base)
   let superposed = ""
   let underposed = ""
   let right = ""
