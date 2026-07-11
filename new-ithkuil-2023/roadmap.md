@@ -223,14 +223,41 @@ Two combinatorial character types decomposed, via one shared, validated recipe.
   superposed → `absoluteLevel`, underposed → `relativeLevel` (both via `LEVEL_TO_DIACRITIC_MAP`).
   **100% full** (81/81) — valence/absLevel/relLevel all 100%.
 
+### Geometric zone-splitting — Primary (pilot, done)
+
+The primary is a *single connected blob* (not separable components), so the decompose recipe
+doesn't apply — this is the genuine zone-splitting case. Key finding from difference-imaging: a
+primary's features only localize in a **fixed coordinate frame** (bbox-recentering scrambles them,
+because features change the overall size). In a fixed frame: perspective → left zone, specification
+→ central core, configuration → bottom-right.
+
+- **Method** ([`src/primary.ts`](src/primary.ts)): render in a shared fixed frame (a neutral
+  primary's bbox), crop fixed positional zones, template-match each against zone references built
+  the same way.
+- **Round-trip** (`npm run primary-test`): **93.8%** (15/16) over specification × perspective —
+  **specification 100%** (core zone), perspective 93.8% (one CSV/M→N where the core bleeds left).
+- **Scope/limits:** pilot covers 2 of ~10 primary features (add zones + value sets for the rest,
+  e.g. configuration bottom-right). Aligning a *real segmented* primary to the reference frame is
+  future work — the round-trip renders directly in-frame.
+
+### Findings — which technique each character needs
+
+- **Quaternary / tertiary:** superposed/underposed features are **separable components** (gaps
+  between them) → the `decompose.ts` recipe. Tertiary top/bottom **segments** are *also* separate
+  components (not connected to the bar), so they need multi-component role-assignment by vertical
+  order, not zone-splitting — a small future extension.
+- **Primary:** one connected blob → **fixed-frame geometric zone-splitting**.
+- **Near-identical shapes** (voiced/voiceless, ḑ/ţ, DIR/ADM) remain the ceiling for all template
+  matching → the M9 CNN.
+
 ### Next up
 
-- **Finish the combinatorial parts:** quaternary VC **case** bottom-extensions; tertiary top/bottom
-  **segments** (aspect/phase/effect) and **primary** (the big composite) — these need geometric
-  zone-splitting of the connected base (top-zone / bar / bottom-zone), the one piece the current
-  separable-diacritic recipe doesn't cover.
-- **Route through `@zsnout/ithkuil/generate`:** assemble decoded features into the word-JSON shape
-  for full-formative romanization (vs the current direct alphabetic reading).
+- **Extend primary** to the remaining feature zones (configuration, function/version/stem, essence);
+  solve **real-image → fixed-frame alignment** so segmented primaries (not just in-frame renders)
+  decode.
+- **Route through `@zsnout/ithkuil/generate`:** assemble decoded features (consonants/vowels +
+  quaternary/tertiary/primary) into the word-JSON shape for full-formative romanization.
+- **Milestone 9 — CNN** for the near-identical pairs (add pixel noise/blur augmentation first).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.
