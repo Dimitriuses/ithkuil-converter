@@ -27,6 +27,28 @@ export function savePng(path: string, img: RgbaImage): void {
   writeFileSync(path, PNG.sync.write(png))
 }
 
+/** Crop an RGBA image to a bounding box (out-of-bounds padded white). */
+export function cropRgba(img: RgbaImage, box: BBox): RgbaImage {
+  const data = new Uint8Array(box.w * box.h * 4)
+  for (let ry = 0; ry < box.h; ry++) {
+    for (let rx = 0; rx < box.w; rx++) {
+      const sx = box.x + rx
+      const sy = box.y + ry
+      const d = (ry * box.w + rx) * 4
+      if (sx >= 0 && sy >= 0 && sx < img.width && sy < img.height) {
+        const s = (sy * img.width + sx) * 4
+        data[d] = img.data[s]
+        data[d + 1] = img.data[s + 1]
+        data[d + 2] = img.data[s + 2]
+        data[d + 3] = img.data[s + 3]
+      } else {
+        data[d] = data[d + 1] = data[d + 2] = data[d + 3] = 255
+      }
+    }
+  }
+  return { width: box.w, height: box.h, data }
+}
+
 type RGB = readonly [number, number, number]
 
 /** Draw a rectangle outline (in place). */

@@ -23,7 +23,8 @@
     "word-test": "tsx src/word-roundtrip.ts",
     "phrase-test": "tsx src/phrase-roundtrip.ts",
     "cnn": "tsx src/cnn.ts",
-    "cnn-infer": "tsx src/cnn-infer-test.ts"
+    "cnn-infer": "tsx src/cnn-infer-test.ts",
+    "secondary-cnn": "tsx src/secondary-cnn-test.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",

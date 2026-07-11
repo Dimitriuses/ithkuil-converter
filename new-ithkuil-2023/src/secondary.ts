@@ -22,6 +22,7 @@ import { maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
 import { buildVowelMap } from "./decode.js"
 import { CONSONANTS } from "./glyph-classes.js"
+import { cropRgba, type RgbaImage } from "./image-io.js"
 
 const SIZE = 64
 const vowelMap = buildVowelMap()
@@ -76,11 +77,24 @@ export interface SecondaryDecode {
   underposedVowel: string | null
 }
 
+/**
+ * Optional learned core classifier (the M9 CNN). Structural type so this module
+ * stays tfjs-free; `loadCnnClassifier()` satisfies it. It consumes a *grayscale*
+ * RGBA crop — the CNN trained on grayscale, so feeding it the binary mask loses
+ * its noise-robustness advantage.
+ */
+export interface CoreClassifier {
+  classifyImage(img: RgbaImage): { label: string }
+}
+
 /** Decode a segmented secondary character into consonant(s) + vowels. */
 export function decodeSecondary(
   bmp: Bitmap,
   region: SegmentedRegion,
   diacriticTemplates: Template[],
+  cnn?: CoreClassifier,
+  /** Grayscale source image (same dimensions as `bmp`); required to use the CNN. */
+  grayImage?: RgbaImage,
 ): SecondaryDecode {
   ensureTemplates()
   const baseMask = maskOfBox(bmp, region.base, SIZE)
@@ -88,11 +102,18 @@ export function decodeSecondary(
   const ext = classifyMask(baseMask, extTemplates!)
   // Accept an extension only if it clearly beats the best bare core.
   const chosen = ext.score > bare.score + EXTENSION_MARGIN ? ext : bare
-  const [core, topExtension, bottomExtension] = JSON.parse(chosen.label) as [
+  let [core] = JSON.parse(chosen.label) as [string, string | null, string | null]
+  const [, topExtension, bottomExtension] = JSON.parse(chosen.label) as [
     string,
     string | null,
     string | null,
   ]
+
+  // The CNN was trained on BARE grayscale cores, so use it to refine the core only
+  // when no extension is present (its input domain); template handles extended clusters.
+  if (cnn && grayImage && !topExtension && !bottomExtension) {
+    core = cnn.classifyImage(cropRgba(grayImage, region.base)).label
+  }
 
   let superposedVowel: string | null = null
   let underposedVowel: string | null = null
