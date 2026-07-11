@@ -31,16 +31,40 @@ export type CharType = "secondary" | "quaternary" | "tertiary" | "primary"
 // segment, take the leftmost = primary character) rather than isolated Primary()
 // renders — a primary embedded in a word (esp. the thin CTE blade) differs enough
 // from its isolated render to mis-type. The other types match their isolated forms.
+//
+// The primary's silhouette varies with its Ca (perspective + configuration): the
+// thin CTE blade under perspective A or a multiplex configuration otherwise mis-types
+// as a secondary/tertiary/quaternary. So we cover a spec × perspective × configuration
+// grid — enough shape variety that any primary matches a primary template first.
+const PRIMARY_SPECS = ["BSC", "CTE", "CSV", "OBJ"]
+const PRIMARY_PERSPECTIVES = ["M", "G", "N", "A"]
+// One representative from each configuration family — uniplex, multiplex (MSS/MSC),
+// and duplex (DPX) — since the families have distinct primary silhouettes.
+const PRIMARY_CONFIGURATIONS = ["UPX", "MSS", "MSC", "DPX"]
+
 function composedPrimaryTemplates(): Template[] {
-  return ["BSC", "CTE", "CSV", "OBJ"].map((spec) => {
-    const text = formativeToIthkuil({ root: "l", type: "UNF/C", specification: spec as never })
-    const r = encode(text, { margin: 10 })
-    if (!r.ok) throw new Error(`encode failed for ${spec}: ${r.reason}`)
-    const img = decodePng(svgToPng(r.svg, { width: 700 }))
-    const bmp = binarize(img.data, img.width, img.height)
-    const primary = segment(bmp)[0] // leftmost character is the primary
-    return { label: spec, class: `primary-${spec}`, mask: maskOfBox(bmp, primary.base, 64) }
-  })
+  const templates: Template[] = []
+  for (const spec of PRIMARY_SPECS) {
+    for (const perspective of PRIMARY_PERSPECTIVES) {
+      for (const configuration of PRIMARY_CONFIGURATIONS) {
+        const text = formativeToIthkuil({
+          root: "l",
+          type: "UNF/C",
+          specification: spec as never,
+          ca: { perspective: perspective as never, configuration: configuration as never },
+        })
+        const r = encode(text, { margin: 10 })
+        if (!r.ok) throw new Error(`encode failed for ${spec}/${perspective}/${configuration}: ${r.reason}`)
+        const img = decodePng(svgToPng(r.svg, { width: 700 }))
+        const bmp = binarize(img.data, img.width, img.height)
+        const primary = segment(bmp)[0] // leftmost character is the primary
+        // Label with spec only — type detection just needs "primary"; the spec is
+        // re-read by the primary decoder. (Multiple templates share a spec label.)
+        templates.push({ label: spec, class: `primary-${spec}`, mask: maskOfBox(bmp, primary.base, 64) })
+      }
+    }
+  }
+  return templates
 }
 
 // One combined, type-tagged template set. Type is read from the class prefix.

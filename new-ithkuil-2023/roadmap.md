@@ -430,6 +430,20 @@ the side (`right`) diacritics.
   fully separate similar consonant extensions. Tunable next: per-consonant zone weighting, or a
   learned extension classifier; also left/tone diacritics + geminate markers are not yet read.
 
+### Robust primary detection (CTE) — done
+
+The primary's silhouette varies with its Ca (perspective × configuration); the thin **CTE** blade under
+a multiplex/duplex configuration or perspective A otherwise mis-typed as secondary/tertiary/quaternary.
+Fix ([`composedPrimaryTemplates` in char-type.ts](src/char-type.ts)): build the primary type templates
+over a **spec × perspective × configuration grid** (4×4×4) instead of 4 default-Ca renders.
+
+- Original CTE-failing grid (spec × persp × {UPX,MSS,MSC,MDS}): **58/64 → 64/64**.
+- Held-out harder configs (duplex/multiplex-dual + extension variation not in the grid): 89–96% raw,
+  and **100% with the existing first-char primary prior** (every miss scores <0.7, where the prior
+  corrects it — and a formative's primary is always its first character).
+- No regression: `word-test` 48/48, `phrase-test` 7/7 (the larger template set didn't pull non-primary
+  characters into the primary class).
+
 ### Next up
 
 - **Improve alphabetic accuracy**: sharper extension discrimination (top s/r, bottom n/r), read
@@ -438,8 +452,8 @@ the side (`right`) diacritics.
   native/GPU backend is available — that's what would make it actually beat the 64px template and
   subsume alignment-sensitive marks + compact-compressed characters. The persistence + wiring are
   ready for a drop-in stronger model — and a learned extension classifier would also lift alphabetic mode.
-- Polish: robust primary detection (CTE); perspective-independent primary alignment; broaden
-  `EXTENSION_SET`; vowel→slot (Vr/Vc).
+- Remaining polish: perspective-independent primary alignment (the aligned decode path is weak —
+  spec 78%, perspective 64% under Ca variation); broaden `EXTENSION_SET`; vowel→slot (Vr/Vc).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.
