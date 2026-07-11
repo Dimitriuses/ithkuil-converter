@@ -205,29 +205,32 @@ full `text → image → text` round-trip is now closed for that domain.
   modeled consonant show `·`. On "Wattunkí ruyün" it correctly reads the two secondary consonants
   with their vowels (`är`, `än`) and marks the rest.
 
-### Structural decomposition — Quaternary (pilot, done)
+### Structural decomposition — Quaternary + Tertiary (done)
 
-First combinatorial character type decomposed, via a technique that generalizes.
+Two combinatorial character types decomposed, via one shared, validated recipe.
 
-- **Insight:** mood and case-scope are *separable* diacritic components (the segmenter isolates
-  them), so the quaternary base varies only by its `value` (illocution/validation top-extension or
-  case bottom-extension) — an enumerable set. No geometric bar-splitting needed.
-- **Method** ([`src/quaternary.ts`](src/quaternary.ts)): template-match the base against on-the-fly
-  `Quaternary({ value })` renders; read mood/case-scope from the super/under diacritic components,
-  mapping shape→value with `@zsnout`'s own maps inverted (`MOOD_TO_DIACRITIC_MAP`,
-  `CASE_SCOPE_TO_DIACRITIC_MAP`). Same diacritic shape means different things by position — which the
-  segmenter's role tagging disambiguates.
-- **Round-trip** (`npm run quaternary-test`): **95.1% full** (77/81) over value × mood × case-scope
-  — **mood 100%, case-scope 100%**, value 95.1% (only the ḑ/ţ-shaped illocutions DIR↔ADM confuse,
-  same near-identical-pair limit as elsewhere).
-- **Reusable recipe** for tertiary/primary: separate the diacritic components, enumerate the base by
-  its non-separable feature(s), template-match, invert `@zsnout`'s value→shape maps.
+- **Insight:** superposed/underposed diacritics are *separable* components (the segmenter isolates
+  them), so a character's base varies only by its non-separable feature — an enumerable set. No
+  geometric zone-splitting needed for these.
+- **Shared recipe** ([`src/decompose.ts`](src/decompose.ts)): template-match the base against
+  on-the-fly `Constructor({ feature })` renders; classify each diacritic component and map shape→value
+  with `@zsnout`'s own value→shape maps, inverted. Same shape means different things by position,
+  which the segmenter's role tags disambiguate. Both decoders below are ~30 lines on top of this.
+- **Quaternary** ([`src/quaternary.ts`](src/quaternary.ts), `npm run quaternary-test`): base →
+  `value` (illocution/validation), superposed → `mood`, underposed → `caseScope`. **95.1% full**
+  (77/81); mood 100%, case-scope 100%, value 95.1% (only ḑ/ţ-shaped DIR↔ADM confuse).
+- **Tertiary** ([`src/tertiary.ts`](src/tertiary.ts), `npm run tertiary-test`): base → `valence`,
+  superposed → `absoluteLevel`, underposed → `relativeLevel` (both via `LEVEL_TO_DIACRITIC_MAP`).
+  **100% full** (81/81) — valence/absLevel/relLevel all 100%.
 
 ### Next up
 
-- **Extend decomposition:** quaternary VC **case** bottom-extensions (same method, `CASE_TO_SECONDARY_EXTENSION`),
-  then **tertiary** (valence + aspect) and **primary** (the big composite). Then route decoded
-  features through `@zsnout/ithkuil/generate` for full-formative romanization.
+- **Finish the combinatorial parts:** quaternary VC **case** bottom-extensions; tertiary top/bottom
+  **segments** (aspect/phase/effect) and **primary** (the big composite) — these need geometric
+  zone-splitting of the connected base (top-zone / bar / bottom-zone), the one piece the current
+  separable-diacritic recipe doesn't cover.
+- **Route through `@zsnout/ithkuil/generate`:** assemble decoded features into the word-JSON shape
+  for full-formative romanization (vs the current direct alphabetic reading).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/
   `recognize`/`decode-test`/`quaternary-test`) into a typed library API + a `bin`. Not started; comes
   once the pipeline stabilizes.
