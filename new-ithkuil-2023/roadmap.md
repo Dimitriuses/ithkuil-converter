@@ -296,18 +296,28 @@ the per-character decoders.
   type → route to the matching decoder (secondary consonant+diacritics / quaternary / tertiary /
   primary-aligned). On composed formatives it correctly types every character (0.94–0.98) and
   decodes primary specification (e.g. OBJ), secondary consonants, and tertiary valence.
-- **Remaining gaps for full text:** multi-consonant roots render as one secondary + **cluster
-  extension** (root "kt" → base "k", the "t" extension undecoded); **vowels/case** on secondaries
-  come back as the diacritic *shape* (needs the shape→vowel/case mapping in formative context);
-  default slots are **elided**. Closing these turns the correct character breakdown into a full
-  `formativeToIthkuil` round-trip on running text.
+### Full secondary decoding — core + extensions + vowels (done)
+
+Closes the biggest composed-word gap: multi-consonant roots and vowels.
+
+- **Core + cluster extension** ([`src/secondary.ts`](src/secondary.ts)): the extension is connected
+  to the core and perturbs the base, so bare-core matching fails (core dropped to 72% with an
+  extension present). Fixed by **joint** decoding — match the base against `Secondary({ core, top|bottom: X })`
+  over *all* cores at once (lazy-built, cached), so the correct core+extension template wins together.
+- **Vowels:** the superposed/underposed diacritics are separable components → classify + map
+  shape→vowel via the shared vowel map.
+- **Round-trip** (`npm run secondary-test`): **98.7% full** — **core 100%, top-ext 98.7%, vowel 100%**.
+- **Integrated:** `decodeWord` now uses the full secondary decoder — the composed formative "aktalo"
+  decodes its root as **"kt"** (core k + bottom-extension t) with vowel ë, not just "k".
 
 ### Next up
 
-- **Cluster-extension + vowel/case decoding on secondaries** — the last piece to reconstruct full
-  roots and route composed words all the way to romanized text.
+- **Full composed-word → text:** map decoded per-character features to formative slots (root from
+  secondaries, specification from primary, vn from tertiary, case/vowels) and route the whole word
+  through `formativeToIthkuil` — the running-text headline result. (Remaining subtleties: vowel→slot
+  assignment (Vr/Vc), default-slot elision.)
 - **Improve small-feature alignment** (perspective-independent scale anchor) and **extend primary**
-  to the remaining feature zones.
+  to the remaining feature zones; broaden `EXTENSION_SET` to all extensions.
 - **Milestone 9 — CNN** for the near-identical pairs *and* alignment-sensitive small marks (add
   pixel noise/blur augmentation first).
 - **Milestone 8 — CLI + library API:** unify the current per-tool scripts (`encode`/`segment`/

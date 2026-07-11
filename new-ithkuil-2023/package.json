@@ -18,7 +18,8 @@
     "primary-test": "tsx src/primary-roundtrip.ts",
     "primary-align-test": "tsx src/primary-aligned-roundtrip.ts",
     "formative-test": "tsx src/formative-roundtrip.ts",
-    "word": "tsx src/word-demo.ts"
+    "word": "tsx src/word-demo.ts",
+    "secondary-test": "tsx src/secondary-roundtrip.ts"
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",

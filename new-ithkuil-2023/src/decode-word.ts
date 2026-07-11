@@ -9,10 +9,11 @@
 import "./dom-shim.js" // must precede @zsnout imports (via the decoders)
 import { segment, type Bitmap, type SegmentedRegion } from "./segment.js"
 import { classifyCharType, type CharType } from "./char-type.js"
-import { classifyRegionsDetailed, loadTemplates, partitionTemplates, type Template } from "./classify.js"
+import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeQuaternary } from "./quaternary.js"
 import { decodeTertiary } from "./tertiary.js"
 import { decodePrimaryAligned } from "./primary.js"
+import { decodeSecondary } from "./secondary.js"
 
 const templates = loadTemplates("dataset", 64)
 const diacriticTemplates = partitionTemplates(templates).diacritic
@@ -41,16 +42,20 @@ export interface DecodedCharacter {
 }
 
 /** Decode a composed word image into typed, decoded characters (left to right). */
-export function decodeWord(bmp: Bitmap, allTemplates: Template[] = templates): DecodedCharacter[] {
+export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
   return segment(bmp).map((region) => {
     const ct = classifyCharType(bmp, region)
     let decoded: Record<string, unknown> = {}
     switch (ct.type) {
       case "secondary": {
-        const g = classifyRegionsDetailed(bmp, [region], allTemplates, 64)[0]
+        const s = decodeSecondary(bmp, region, diacriticTemplates)
+        const consonants = [s.topExtension, s.core, s.bottomExtension].filter(Boolean).join("")
         decoded = {
-          consonant: g.base.label,
-          marks: g.marks.map((m) => ({ role: m.role, glyph: m.glyph.label })),
+          consonants,
+          core: s.core,
+          topExtension: s.topExtension,
+          bottomExtension: s.bottomExtension,
+          vowel: s.underposedVowel ?? s.superposedVowel,
         }
         break
       }
