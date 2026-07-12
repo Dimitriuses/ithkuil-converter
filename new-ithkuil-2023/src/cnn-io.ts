@@ -3,7 +3,10 @@
  * `file://` IO handler (that's tfjs-node only), so we implement minimal handlers that
  * write/read the model topology + weight specs (model.json) and raw weights (weights.bin).
  */
-import * as tf from "@tensorflow/tfjs"
+// Type-only import: these handlers do no runtime tf calls (they just serialize the
+// model artifacts), so we borrow the `io` types from tfjs without loading a second
+// runtime alongside tfjs-node. tfjs-node's own type declarations don't re-export `io`.
+import type * as tf from "@tensorflow/tfjs"
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 

@@ -4,7 +4,7 @@
  * secondary base). Inference runs fine on the pure-JS backend (only conv *training*
  * is slow / unsupported on wasm).
  */
-import * as tf from "@tensorflow/tfjs"
+import * as tf from "@tensorflow/tfjs-node"
 import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { fileLoadHandler } from "./cnn-io.js"

@@ -406,12 +406,16 @@ The trained model is now **saved and reloadable** for inference — the plug-in 
   domain), and only from the **grayscale** crop (`cropRgba`), since the CNN trained on grayscale and
   binary input loses its noise-robustness. Opt-in: the pipeline doesn't pass it by default → no
   regression.
-- **Finding** (`npm run secondary-cnn`, noisy bare consonants): template **90.7%** vs +CNN 88.6%.
-  The small CPU-trained CNN does **not** beat the pipeline's template here. Why: the CNN's earlier win
-  (97.6% vs 82.5%) compared both at the CNN's **24×24** resolution, but `decodeSecondary`'s template
-  runs at **64×64** — higher resolution lifts it to 90.7%. So the CNN's advantage is real *at equal
-  (low) resolution*; to beat the high-res template the CNN itself needs higher input resolution +
-  more training, which the CPU-only backend here can't afford.
+- **Finding — then resolved by the native backend.** At 24px (pure-JS-CPU limit) the CNN *lost* to the
+  pipeline template (88.6% vs 90.7%): its earlier 97.6%-vs-82.5% win was measured at the CNN's own 24×24,
+  while the pipeline template runs high-res. Diagnosis: the CNN just needed more resolution + training,
+  which the slow backend couldn't afford. **Now that `tfjs-node` works (~30× faster), a 48px model
+  retrained in ~1 min (`npm run cnn`) hits 100% on its own held-out noisy test and — the decisive
+  result — the pipeline head-to-head FLIPS: `npm run secondary-cnn` → +CNN core 90.7% vs template
+  85.0%.** The CNN's errors are a strict subset of the template's on the near-identical pairs
+  (v→f, g→k, ḑ→ţ). So the CNN now genuinely beats template matching; next is to wire it on by default
+  (load the model at warmup, pass the grayscale crop) and to train the analogous *entangled-feature*
+  classifiers (primary Vr/Vv, 3-consonant top-vs-none) the last few turns were blocked on.
 
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
@@ -578,7 +582,7 @@ tooling — none of it blocks the tool being usable today.
 | M1 DOM shim · M5 segmentation · M6 classifier · M7 decoder | ✅ done |
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
-| **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
+| **M9** CNN — native training (tfjs-node), 48px | ✅ done — **beats template 90.7% vs 85.0%** in-pipeline |
 | Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
@@ -592,16 +596,14 @@ tooling — none of it blocks the tool being usable today.
 - **Alphabetic — remaining bits** (now 94.6% char-level): separate the last near-identical extension
   pairs (`n↔ż`, `d↔ļ`) — likely a higher frame resolution or a targeted tie-break; read `left`/tone
   diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Scale the CNN — now UNBLOCKED (native backend works, see M9 above).** The M9 model is a
-  proof-of-concept: it beats the template *at 24×24* (97.6% vs 82.5%) but not the pipeline's 64×64
-  template (88.6% vs 90.7%) because pure-JS CPU forced a tiny config. With `tfjs-node` (~30× faster) a
-  higher-resolution model with more training is now feasible — the concrete next steps: (1) switch
-  `cnn.ts`/`cnn-data.ts`/`cnn-classify.ts` from `@tensorflow/tfjs` to `@tensorflow/tfjs-node`, (2)
-  retrain at 48-64px on more samples/epochs, (3) re-run the `secondary-cnn` head-to-head vs the 64px
-  template, (4) expose training in the web job panel. This is the unlock for the **entanglement-limited**
-  decodes — primary Vr/Vv and the 3-consonant top-vs-none detector both bottlenecked on a learned
-  classifier. A learned extension classifier would also lift alphabetic mode. Persistence + opt-in wiring
-  are ready for a drop-in stronger model.
+- **Scale the CNN — DONE (native, beats template).** Switched `cnn.ts`/`cnn-classify.ts`/`cnn-io.ts`
+  to `@tensorflow/tfjs-node`, bumped to 48px + 16/32/32-filter, trained on all samples in ~1 min: CNN
+  **100%** on its held-out noisy test, and **+CNN core 90.7% vs template 85.0%** in the pipeline
+  head-to-head — it now wins. Wired into the web tool's **Train CNN** job (native, full-config defaults).
+  Follow-ups: (1) turn the consonant CNN on by default in `decodeSecondary` (warm-load the model, pass
+  the grayscale crop); (2) train the **entanglement-limited** classifiers the last turns were blocked on
+  — primary Vr/Vv and the 3-consonant top-vs-none detector; (3) a learned extension classifier for
+  alphabetic mode.
 - **Primary Vr/Vv slots — investigated, blocked by entanglement (not shipped).** Vr = function +
   context, Vv = stem + version, all in the primary (specification already decoded). Difference-imaging:
   **context** sits at the top (decoupled), **function/version/stem** overlap in the bottom-right.

@@ -4,12 +4,12 @@
  * held-out noisy test set. The CNN is expected to win on the near-identical pairs
  * (p/b, f/v, t/d, g/k, ḑ/ţ) that a coarse Chamfer template match confuses.
  *
- * Uses pure-JS @tensorflow/tfjs (the tfjs-node native backend won't load on Node 22
- * here), so training is CPU-bound and slow — run in the background.
+ * Uses the native @tensorflow/tfjs-node backend (~30× faster than pure-JS CPU), so it
+ * trains a full-size model (48px, 16/32 filters, all samples) in seconds/minutes.
  *
- *   npm run cnn -- [dataset-dir] [epochs]
+ *   npm run cnn -- [dataset-dir] [epochs] [trainPerClass]
  */
-import * as tf from "@tensorflow/tfjs"
+import * as tf from "@tensorflow/tfjs-node"
 import { mkdirSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { CNN_SIZE, loadDataset, type LoadedSample } from "./cnn-data.js"
@@ -20,7 +20,7 @@ import type { Mask } from "./normalize.js"
 const MODEL_DIR = "models/consonant-cnn"
 
 const DIR = process.argv[2] ?? "cnn-dataset"
-const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 20
+const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 30
 
 const ds = loadDataset(DIR, CNN_SIZE)
 const K = ds.labels.length
@@ -31,8 +31,9 @@ const cleanByLabel = new Map(ds.samples.filter((s) => s.clean).map((s) => [s.lab
 const augByLabel = new Map<string, LoadedSample[]>()
 for (const s of ds.samples) if (!s.clean) (augByLabel.get(s.label) ?? augByLabel.set(s.label, []).get(s.label)!).push(s)
 
-// Cap train samples per class so pure-JS CPU training stays fast enough.
-const TRAIN_PER_CLASS = process.argv[4] ? Number(process.argv[4]) : 16
+// Native backend is fast, so use all augmented samples per class by default (the tiny
+// cap was a pure-JS-CPU workaround).
+const TRAIN_PER_CLASS = process.argv[4] ? Number(process.argv[4]) : 1000
 const train: LoadedSample[] = []
 const test: LoadedSample[] = []
 for (const arr of augByLabel.values()) {
@@ -71,15 +72,17 @@ async function main(): Promise<void> {
   console.log(`dataset ${DIR}: ${K} classes, ${train.length} train / ${test.length} test (${SZ}×${SZ})`)
 
   const model = tf.sequential()
-  model.add(tf.layers.conv2d({ filters: 8, kernelSize: 3, activation: "relu", inputShape: [SZ, SZ, 1] }))
+  model.add(tf.layers.conv2d({ filters: 16, kernelSize: 3, activation: "relu", inputShape: [SZ, SZ, 1] }))
   model.add(tf.layers.maxPooling2d({ poolSize: 2 }))
-  model.add(tf.layers.conv2d({ filters: 16, kernelSize: 3, activation: "relu" }))
+  model.add(tf.layers.conv2d({ filters: 32, kernelSize: 3, activation: "relu" }))
+  model.add(tf.layers.maxPooling2d({ poolSize: 2 }))
+  model.add(tf.layers.conv2d({ filters: 32, kernelSize: 3, activation: "relu" }))
   model.add(tf.layers.maxPooling2d({ poolSize: 2 }))
   model.add(tf.layers.flatten())
-  model.add(tf.layers.dense({ units: 48, activation: "relu" }))
+  model.add(tf.layers.dense({ units: 64, activation: "relu" }))
   model.add(tf.layers.dropout({ rate: 0.3 }))
   model.add(tf.layers.dense({ units: K, activation: "softmax" }))
-  model.compile({ optimizer: tf.train.adam(0.003), loss: "categoricalCrossentropy", metrics: ["accuracy"] })
+  model.compile({ optimizer: tf.train.adam(0.001), loss: "categoricalCrossentropy", metrics: ["accuracy"] })
   console.log(`model params: ${model.countParams()} · training ${EPOCHS} epochs…`)
 
   const xs = stack(train)

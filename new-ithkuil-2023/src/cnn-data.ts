@@ -7,7 +7,10 @@ import { readFileSync } from "node:fs"
 import { join } from "node:path"
 import { decodePng, type RgbaImage } from "./image-io.js"
 
-export const CNN_SIZE = 24
+// 48px now that the native tfjs-node backend makes training fast (was 24px, capped by
+// the slow pure-JS CPU backend). Higher resolution preserves the fine features that
+// separate the near-identical consonant pairs. Inference reads the size from the model.
+export const CNN_SIZE = 48
 
 /** bbox-crop → pad square → resize to N×N grayscale ink intensity (ink=1, bg=0). */
 export function toGrayNxN(img: RgbaImage, n = CNN_SIZE): Float32Array {

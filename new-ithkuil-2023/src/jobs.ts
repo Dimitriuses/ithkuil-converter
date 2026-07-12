@@ -70,10 +70,11 @@ export const JOB_KINDS: Record<string, JobKind> = {
     script: "cnn.ts",
     heavy: true,
     argv: (a) => {
-      // positional: [dataset-dir] [epochs] [trainPerClass]
+      // positional: [dataset-dir] [epochs] [trainPerClass]. Native tfjs-node is fast,
+      // so defaults train the full model (all samples/class, more epochs).
       const dir = safeName(a.dir) ?? "cnn-dataset"
-      const epochs = num(a.epochs, 1, 200) ?? 12
-      const perClass = num(a.trainPerClass, 1, 500) ?? 16
+      const epochs = num(a.epochs, 1, 500) ?? 30
+      const perClass = num(a.trainPerClass, 1, 5000) ?? 1000
       return [dir, String(epochs), String(perClass)]
     },
   },
