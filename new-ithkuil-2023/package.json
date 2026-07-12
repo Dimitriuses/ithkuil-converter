@@ -23,6 +23,7 @@
     "secondary-test": "tsx src/secondary-roundtrip.ts",
     "word-test": "tsx src/word-roundtrip.ts",
     "phrase-test": "tsx src/phrase-roundtrip.ts",
+    "case-test": "tsx src/case-roundtrip.ts",
     "alphabetic": "tsx src/alphabetic-test.ts",
     "cnn": "tsx src/cnn.ts",
     "cnn-infer": "tsx src/cnn-infer-test.ts",

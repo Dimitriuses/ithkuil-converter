@@ -14,6 +14,7 @@ import { decodeQuaternary } from "./quaternary.js"
 import { decodeTertiary } from "./tertiary.js"
 import { decodePrimaryAligned } from "./primary.js"
 import { decodeSecondary } from "./secondary.js"
+import { diacriticsToCase } from "./case-vowel.js"
 import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
 
@@ -68,6 +69,9 @@ export function decodeRegions(bmp: Bitmap, regions: SegmentedRegion[]): DecodedC
           topExtension: s.topExtension,
           bottomExtension: s.bottomExtension,
           vowel: s.underposedVowel ?? s.superposedVowel,
+          // Case (Vc) rides on the case-bearing secondary as super/underposed
+          // diacritics; keyed by raw shape, resolved in charactersToFeatures.
+          case: diacriticsToCase(s.superposedShape, s.underposedShape),
         }
         break
       }
@@ -115,6 +119,9 @@ function charactersToFeatures(characters: DecodedCharacter[]): DecodedFeatures {
         break
       case "secondary":
         if (c.decoded.consonants) rootParts.push(c.decoded.consonants as string)
+        // Case (Vc) is carried by the case-bearing secondary; the last one that
+        // resolves to a real case wins (a plain root secondary resolves to null).
+        if (c.decoded.case) features.case = c.decoded.case as string
         break
       case "tertiary":
         if (c.decoded.valence) features.vn = c.decoded.valence as string

@@ -491,6 +491,24 @@ at server startup — same pattern as the alphabetic/primary caches.
   extensions). 3-consonant (top+bottom) clusters remain out of scope — they'd need a decompose reader,
   not a 28³ joint set.
 
+### Case (Vc) decoding — all 68 cases (done)
+
+The pipeline never decoded case — it always defaulted to THM. Case rides on the *case-bearing*
+secondary (the last one) as **superposed + underposed diacritics**, and the (superposed-shape,
+underposed-shape) pair **uniquely identifies all 68 cases** (0 collisions; the 32 glottal-stop cases
+are told apart by the `_WITH_LINE`/`_WITH_DOT` diacritic variants). So [`case-vowel.ts`](src/case-vowel.ts)
+inverts @zsnout's forward case→Vc mapping into a shape-pair → case table (built from data, no rendering).
+
+- **Key on the raw diacritic SHAPE labels, not vowel letters.** `decodeSecondary`'s vowel map is
+  calibrated for a phonological reading and *mislabels* the case diacritics (reads HORIZ_BAR as "ä"
+  where ABS wants "e") and drops CURVE_TO_LEFT/RIGHT. So `decodeSecondary` now also returns
+  `superposedShape`/`underposedShape` (raw classifier labels), and the case reader uses those.
+- **`case-test` round-trip: 70/70 = 100%** (all 68 cases on a single-consonant root + 2 multi-consonant
+  spot checks — the case correctly lands on the last secondary, e.g. `aktalo` = kt+ERG). No regression
+  (`word-test` 48/48).
+- **Vr** is *not* a secondary diacritic — it's in the **primary** (function/specification/context;
+  specification already decoded). So "vowel→slot Vr" is really further primary decoding, tracked below.
+
 ### Milestone 8 — local tool: web UI + CLI (done, v1 + v2 + UI polish)
 
 Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
@@ -541,6 +559,7 @@ tooling — none of it blocks the tool being usable today.
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
+| Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -554,10 +573,11 @@ tooling — none of it blocks the tool being usable today.
   actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
   opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
   alphabetic mode.
-- **Remaining decode polish:** vowel→slot (Vr/Vc); 3-consonant clusters (top+bottom extensions
-  together — needs a decompose reader); optionally push aligned perspective past 84% by adding an
-  affiliation axis to the primary grid (spec is already 98%), and recover the `s`-on-k/t/p bottom
-  extension (extension-margin tuning).
+- **Remaining decode polish:** more primary slots — **Vr** (function/context) and **Vv** (stem/version)
+  both live in the primary and aren't decoded yet (specification is); 3-consonant clusters (top+bottom
+  extensions together — needs a decompose reader); optionally push aligned perspective past 84% by
+  adding an affiliation axis to the primary grid (spec already 98%), and recover the `s`-on-k/t/p
+  bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 **Web-tool (M8) polish ideas — design & functionality:**

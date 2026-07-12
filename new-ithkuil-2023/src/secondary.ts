@@ -139,6 +139,11 @@ export interface SecondaryDecode {
   bottomExtension: string | null
   superposedVowel: string | null
   underposedVowel: string | null
+  /** Raw classified diacritic SHAPE labels (e.g. "HORIZ_BAR"), before the vowel map.
+   * The case (Vc) reader keys on these — the vowel map is calibrated for a different
+   * (phonological) reading and mislabels the case diacritics. */
+  superposedShape: string | null
+  underposedShape: string | null
 }
 
 /**
@@ -181,13 +186,28 @@ export function decodeSecondary(
 
   let superposedVowel: string | null = null
   let underposedVowel: string | null = null
+  let superposedShape: string | null = null
+  let underposedShape: string | null = null
   for (const c of region.components) {
     if (c.role !== "superposed" && c.role !== "underposed") continue
     const d = classifyMask(maskOfBox(bmp, c.bbox, SIZE), diacriticTemplates)
     const vowel = vowelMap[d.label] ?? null
-    if (c.role === "superposed") superposedVowel = vowel
-    else underposedVowel = vowel
+    if (c.role === "superposed") {
+      superposedVowel = vowel
+      superposedShape = d.label
+    } else {
+      underposedVowel = vowel
+      underposedShape = d.label
+    }
   }
 
-  return { core, topExtension, bottomExtension, superposedVowel, underposedVowel }
+  return {
+    core,
+    topExtension,
+    bottomExtension,
+    superposedVowel,
+    underposedVowel,
+    superposedShape,
+    underposedShape,
+  }
 }
