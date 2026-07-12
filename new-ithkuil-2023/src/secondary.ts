@@ -23,12 +23,22 @@ import { classifyMask, type Template } from "./classify.js"
 import { buildVowelMap } from "./decode.js"
 import { CONSONANTS } from "./glyph-classes.js"
 import { cropRgba, type RgbaImage } from "./image-io.js"
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
 
 const SIZE = 64
 const vowelMap = buildVowelMap()
 
-/** Cluster extensions to consider (a common subset; extend as needed). */
-export const EXTENSION_SET = ["t", "k", "p", "s", "m"] as const
+/**
+ * Cluster extensions to consider — the **full consonant inventory**. A biconsonantal
+ * root's second consonant is rendered as a *bottom* extension and can be any consonant,
+ * so we build a template for every one (was a 5-consonant subset → out-of-set extensions
+ * decoded at 0%). Only bottom extensions are built: top-only extensions don't occur in
+ * real formatives (a triconsonantal root uses top AND bottom together, which these
+ * single-extension templates don't model), so top templates were dead weight.
+ */
+export const EXTENSION_SET: readonly string[] = CONSONANTS
 
 function renderSecondaryMask(spec: Parameters<typeof Secondary>[0]): Mask {
   const img = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec), {}, { canvas: 128 }), { width: 128 }))
@@ -54,19 +64,73 @@ function mkTemplate(core: string, top: string | null, bottom: string | null): Te
 
 // Bare-core vs with-extension templates, scored separately so a margin can favour
 // the simpler (bare) reading. Built once, lazily.
+//
+// With the full extension set there are 28 bare + 28×28 core+bottom = 812 templates,
+// each a ~260 ms resvg render (~3.5 min). So they're cached to disk (masks only) and
+// loaded fast thereafter — mirrors the alphabetic base-template cache. Bump
+// CACHE_VERSION when the render or the core/extension sets change.
 let bareTemplates: Template[] | null = null
 let extTemplates: Template[] | null = null
+
+const CACHE_VERSION = 1
+const CACHE_PATH = fileURLToPath(new URL("../models/secondary-ext.json", import.meta.url))
+
+function loadCache(): { bare: Template[]; ext: Template[] } | null {
+  try {
+    const j = JSON.parse(readFileSync(CACHE_PATH, "utf8")) as {
+      version: number
+      size: number
+      bare: { l: string; m: string }[]
+      ext: { l: string; m: string }[]
+    }
+    if (j.version !== CACHE_VERSION || j.size !== SIZE) return null
+    const mk = (t: { l: string; m: string }): Template => ({
+      label: t.l,
+      class: "secondary",
+      mask: { size: SIZE, data: new Uint8Array(Buffer.from(t.m, "base64")) },
+    })
+    return { bare: j.bare.map(mk), ext: j.ext.map(mk) }
+  } catch {
+    return null
+  }
+}
+
+function saveCache(bare: Template[], ext: Template[]): void {
+  try {
+    mkdirSync(dirname(CACHE_PATH), { recursive: true })
+    const ser = (t: Template) => ({ l: t.label, m: Buffer.from(t.mask.data).toString("base64") })
+    writeFileSync(
+      CACHE_PATH,
+      JSON.stringify({ version: CACHE_VERSION, size: SIZE, bare: bare.map(ser), ext: ext.map(ser) }),
+    )
+  } catch {
+    /* best-effort cache */
+  }
+}
+
 function ensureTemplates(): void {
   if (bareTemplates) return
+  const cached = loadCache()
+  if (cached) {
+    bareTemplates = cached.bare
+    extTemplates = cached.ext
+    return
+  }
   bareTemplates = CONSONANTS.map((c) => mkTemplate(c, null, null))
   const ext: Template[] = []
   for (const core of CONSONANTS) {
     for (const x of EXTENSION_SET) {
-      ext.push(mkTemplate(core, x, null)) // top extension
-      ext.push(mkTemplate(core, null, x)) // bottom extension
+      ext.push(mkTemplate(core, null, x)) // bottom extension (the real cluster case)
     }
   }
   extTemplates = ext
+  saveCache(bareTemplates, extTemplates)
+}
+
+/** Build/load the secondary template set now (call at server warmup so the first
+ * decode doesn't pay the one-time cache build). */
+export function warmSecondary(): void {
+  ensureTemplates()
 }
 
 export interface SecondaryDecode {

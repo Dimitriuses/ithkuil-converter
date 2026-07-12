@@ -42,13 +42,16 @@ let decodeDone = false // true once warmup has actually finished (for /api/statu
 function warmDecode() {
   if (!decodeReady) {
     decodeReady = (async () => {
-      const [decode, seg, img, alpha] = await Promise.all([
+      const [decode, seg, img, alpha, secondary] = await Promise.all([
         import("./decode-word.js"),
         import("./segment.js"),
         import("./image-io.js"),
         import("./alphabetic.js"),
+        import("./secondary.js"),
       ])
-      alpha.warmAlphabetic() // build/load the joint base templates now, not on first decode
+      // build/load the cached template sets now, not on the first decode
+      alpha.warmAlphabetic()
+      secondary.warmSecondary()
       decodeDone = true
       return { decode, seg, img }
     })()

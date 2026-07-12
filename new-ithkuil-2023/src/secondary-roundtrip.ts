@@ -1,8 +1,10 @@
 /**
  * Secondary decoding round-trip: core + cluster extension + vowel.
  *
- * Renders Secondary({ core, top/bottom: ext, underposed: vowel }), then
- * segment → decodeSecondary, and checks each part is recovered.
+ * Renders Secondary({ core, bottom: ext, underposed: vowel }), then
+ * segment → decodeSecondary, and checks each part is recovered. A biconsonantal
+ * root's second consonant is a *bottom* extension; the sample mixes formerly in-set
+ * (t/k/s) and formerly out-of-set (l/n/r/d/ç) extensions to exercise the broadened set.
  *
  *   npm run secondary-test
  */
@@ -13,12 +15,12 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { loadTemplates, partitionTemplates } from "./classify.js"
-import { decodeSecondary, EXTENSION_SET } from "./secondary.js"
+import { decodeSecondary } from "./secondary.js"
 
 const diacriticTemplates = partitionTemplates(loadTemplates("dataset", 64)).diacritic
 
 const CORES = ["k", "t", "s", "m", "r"]
-const EXTS = ["∅", ...EXTENSION_SET.slice(0, 4)] // none + t,k,p,s
+const EXTS = ["∅", "t", "k", "s", "l", "n", "r", "d", "ç"] // none + in/out-of-former-set
 const VOWELS = ["∅", "a", "i"] // none + underposed a/i
 
 function run(spec: Record<string, unknown>) {
@@ -40,22 +42,22 @@ for (const core of CORES) {
   for (const ext of EXTS) {
     for (const vowel of VOWELS) {
       const spec: Record<string, unknown> = { core }
-      if (ext !== "∅") spec.top = ext
+      if (ext !== "∅") spec.bottom = ext
       if (vowel !== "∅") spec.underposed = vowel
       const got = run(spec)
       total++
       const cOk = got.core === core
-      const eOk = (got.topExtension ?? "∅") === ext
+      const eOk = (got.bottomExtension ?? "∅") === ext
       const vOk = (got.underposedVowel ?? "∅") === vowel
       if (cOk) coreOk++
       if (eOk) extOk++
       if (vOk) vowOk++
       if (cOk && eOk && vOk) ok++
-      else misses.push(`${core}/${ext}/${vowel} → ${got.core}/${got.topExtension ?? "∅"}/${got.underposedVowel ?? "∅"}`)
+      else misses.push(`${core}/${ext}/${vowel} → ${got.core}/${got.bottomExtension ?? "∅"}/${got.underposedVowel ?? "∅"}`)
     }
   }
 }
 
 console.log(`secondary round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
-console.log(`  core ${((100 * coreOk) / total).toFixed(1)}%  ·  top-ext ${((100 * extOk) / total).toFixed(1)}%  ·  vowel ${((100 * vowOk) / total).toFixed(1)}%`)
+console.log(`  core ${((100 * coreOk) / total).toFixed(1)}%  ·  bottom-ext ${((100 * extOk) / total).toFixed(1)}%  ·  vowel ${((100 * vowOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)

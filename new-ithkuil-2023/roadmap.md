@@ -470,6 +470,27 @@ perspective 63%→84%**; the dedicated `primary-align-test` went **70.8%→100%*
 affiliations the grid doesn't cover — adding an affiliation axis lifts it a further ~4–7 pp at ~2×
 the (module-load) build cost, deferred as not worth it yet.
 
+### Secondary cluster extensions — full breadth (done)
+
+`EXTENSION_SET` was a 5-consonant subset (`t k p s m`), so a biconsonantal root whose second consonant
+was any of the other 23 decoded that extension at **0%**. Structural check first: a 2-consonant root
+renders as core + **bottom** extension (15/15), a 3-consonant root as top + core + bottom *together*
+(never top-only). So top-only extensions never occur — the old top templates were dead weight, and
+3-consonant clusters aren't modelled by single-extension templates anyway.
+
+Fix ([`secondary.ts`](src/secondary.ts)): `EXTENSION_SET` = the **full 28-consonant** inventory, and
+build **bottom-only** joint templates (28 bare + 28×28 core+bottom = 812). Since each is a ~260 ms
+resvg render (~3.5 min), the set is **cached to `models/secondary-ext.json`** (masks only) and warmed
+at server startup — same pattern as the alphabetic/primary caches.
+
+- **Bottom-extension recovery: 0% → 97%** across all 28 extensions × 8 cores (7 misses: mostly `s`
+  dropped on k/t/p via the extension margin, plus a couple of near-consonant pairs).
+- `secondary-test` (broadened to bottom extensions incl. formerly out-of-set l/n/r/d/ç): **94.8%**
+  (core 100%, bottom-ext 94.8%, vowel 100%).
+- No regression: `word-test` 48/48; **bare cores 28/28 clean** (the margin still blocks spurious
+  extensions). 3-consonant (top+bottom) clusters remain out of scope — they'd need a decompose reader,
+  not a 28³ joint set.
+
 ### Milestone 8 — local tool: web UI + CLI (done, v1 + v2 + UI polish)
 
 Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
@@ -519,6 +540,7 @@ tooling — none of it blocks the tool being usable today.
 | Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
+| Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -532,8 +554,10 @@ tooling — none of it blocks the tool being usable today.
   actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
   opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
   alphabetic mode.
-- **Remaining decode polish:** broaden `EXTENSION_SET`; vowel→slot (Vr/Vc); optionally push aligned
-  perspective past 84% by adding an affiliation axis to the primary grid (spec is already 98%).
+- **Remaining decode polish:** vowel→slot (Vr/Vc); 3-consonant clusters (top+bottom extensions
+  together — needs a decompose reader); optionally push aligned perspective past 84% by adding an
+  affiliation axis to the primary grid (spec is already 98%), and recover the `s`-on-k/t/p bottom
+  extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 **Web-tool (M8) polish ideas — design & functionality:**
