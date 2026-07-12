@@ -15,13 +15,15 @@
  */
 import { shimWindow } from "./dom-shim.js" // must precede @zsnout import
 import { getBBox, Primary } from "@zsnout/ithkuil/script"
+import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
-import { binarize, type BBox, type Bitmap } from "./segment.js"
+import { binarize, segment, type BBox, type Bitmap } from "./segment.js"
 import { cropInk, normalizeMask, type Mask } from "./normalize.js"
 import { classifyMask, type Template } from "./classify.js"
-import { renderGlyphToSvg } from "./glyph-render.js"
+import { distanceTransform, meanNearestDistance } from "./chamfer.js"
 import { alignToFrame } from "./align.js"
+import { encode } from "./forward.js"
 
 const NS = "http://www.w3.org/2000/svg"
 const CANVAS = 160
@@ -84,31 +86,117 @@ export function decodePrimaryFixed(bmp: Bitmap): PrimaryDecode {
 }
 
 // ── Aligned path: decode a *segmented* primary (arbitrary scale/position) ──────
-// Templates are built from natural-scale renders passed through alignToFrame — the
-// exact same processing a real query gets, so both land in the canonical frame.
+//
+// The primary encodes specification, perspective, AND nuisance Ca (configuration,
+// affiliation, …) in one blob. With single-Ca templates a non-default-Ca primary
+// mis-decodes badly (spec drifts to CTE; perspectives G/N read as M → spec 80% /
+// persp 63%). Two fixes, each matched to how a feature lives in the glyph:
+//   - build a specification × perspective × configuration GRID so a template with the
+//     query's feature exists regardless of Ca (mirrors the type-detection grid); and
+//   - read each feature with the metric it suits — perspective is a global left mark,
+//     so a JOINT whole-shape match wins; specification is a subtle central detail, so
+//     the isolated (aligned) CORE zone wins. Hybrid → spec 92% / persp 88% held-out.
+//
+// Templates are extracted the same way a query is: rendered in a word, segmented,
+// and cropped — so both land in the same distribution.
 
-/** Natural-scale render (bbox-centred, like a segmented crop) → binary bitmap. */
-function renderNatural(spec: Parameters<typeof Primary>[0], canvas = 120): Bitmap {
-  const img = decodePng(svgToPng(renderGlyphToSvg(Primary(spec), {}, { canvas }), { width: canvas }))
-  return binarize(img.data, img.width, img.height)
+const PRIMARY_CONFIGS = ["UPX", "MSS", "MSC", "DPX"]
+const FRAME = 64
+
+/** Stretch a bitmap box's ink into a FRAME×FRAME square — a Ca-independent whole-shape
+ * normalization (matches how the perspective grid templates are framed). */
+function frameSquare(bmp: Bitmap, box: BBox): Mask {
+  const { ink, width, height } = cropInk(bmp, box)
+  let minx = width, maxx = -1, miny = height, maxy = -1
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (ink[y * width + x]) {
+        if (x < minx) minx = x
+        if (x > maxx) maxx = x
+        if (y < miny) miny = y
+        if (y > maxy) maxy = y
+      }
+    }
+  }
+  const data = new Uint8Array(FRAME * FRAME)
+  if (maxx < 0) return { size: FRAME, data }
+  const w = maxx - minx + 1
+  const h = maxy - miny + 1
+  for (let ty = 0; ty < FRAME; ty++) {
+    const sy = miny + Math.floor((ty * h) / FRAME)
+    for (let tx = 0; tx < FRAME; tx++) {
+      const sx = minx + Math.floor((tx * w) / FRAME)
+      if (ink[sy * width + sx]) data[ty * FRAME + tx] = 1
+    }
+  }
+  return { size: FRAME, data }
 }
 
-const perspTemplatesAligned: Template[] = PERSPECTIVES.map((p) => ({
-  label: p,
-  class: `persp-${p}`,
-  mask: zoneMask(alignToFrame(renderNatural({ ...BASE, perspective: p })), ZONE_PERSPECTIVE),
-}))
-const specTemplatesAligned: Template[] = SPECIFICATIONS.map((s) => ({
-  label: s,
-  class: `spec-${s}`,
-  mask: zoneMask(alignToFrame(renderNatural({ specification: s, perspective: "M" })), ZONE_CORE),
-}))
+/** Copy a region's ink into its own bitmap (for the aligner). */
+function cropRegionBitmap(bmp: Bitmap, box: BBox): Bitmap {
+  const { ink, width, height } = cropInk(bmp, box)
+  return { width, height, ink }
+}
 
-/** Decode a segmented primary of unknown scale/position (aligns it first). */
+interface WholeTemplate {
+  label: string
+  mask: Mask
+  dt: Float32Array
+}
+
+// Build the grid once (rendered as words, primary = leftmost region). Perspective
+// gets whole-shape masks (+ distance transforms for the joint match); specification
+// gets aligned core-zone masks.
+const perspWhole: WholeTemplate[] = []
+const specCore: Template[] = []
+for (const spec of SPECIFICATIONS) {
+  for (const persp of PERSPECTIVES) {
+    for (const cfg of PRIMARY_CONFIGS) {
+      const text = formativeToIthkuil({
+        root: "l",
+        type: "UNF/C",
+        specification: spec as never,
+        ca: { perspective: persp as never, configuration: cfg as never },
+      })
+      const r = encode(text, { margin: 10 })
+      if (!r.ok) continue
+      const img = decodePng(svgToPng(r.svg, { width: 500 }))
+      const bmp = binarize(img.data, img.width, img.height)
+      const region = segment(bmp)[0]
+      if (!region) continue
+      const whole = frameSquare(bmp, region.bbox)
+      perspWhole.push({ label: persp, mask: whole, dt: distanceTransform(whole) })
+      specCore.push({
+        label: spec,
+        class: `spec-${spec}`,
+        mask: zoneMask(alignToFrame(cropRegionBitmap(bmp, region.bbox)), ZONE_CORE),
+      })
+    }
+  }
+}
+
+/** Nearest whole-shape template by symmetric Chamfer distance (templates carry a
+ * precomputed distance transform, so only the query's is computed). */
+function matchWhole(query: Mask, templates: WholeTemplate[]): string {
+  const qDt = distanceTransform(query)
+  let best = templates[0]!
+  let bestDist = Infinity
+  for (const t of templates) {
+    const d = 0.5 * (meanNearestDistance(query, t.dt) + meanNearestDistance(t.mask, qDt))
+    if (d < bestDist) {
+      bestDist = d
+      best = t
+    }
+  }
+  return best.label
+}
+
+/** Decode a segmented primary of unknown scale/position. */
 export function decodePrimaryAligned(queryBmp: Bitmap): PrimaryDecode {
-  const aligned = alignToFrame(queryBmp)
+  const whole = frameSquare(queryBmp, { x: 0, y: 0, w: queryBmp.width, h: queryBmp.height })
+  const core = zoneMask(alignToFrame(queryBmp), ZONE_CORE)
   return {
-    perspective: classifyMask(zoneMask(aligned, ZONE_PERSPECTIVE), perspTemplatesAligned).label,
-    specification: classifyMask(zoneMask(aligned, ZONE_CORE), specTemplatesAligned).label,
+    perspective: matchWhole(whole, perspWhole),
+    specification: classifyMask(core, specCore).label,
   }
 }

@@ -449,6 +449,27 @@ over a **spec × perspective × configuration grid** (4×4×4) instead of 4 defa
 - No regression: `word-test` 48/48, `phrase-test` 7/7 (the larger template set didn't pull non-primary
   characters into the primary class).
 
+### Aligned-primary decode (spec + perspective) — done
+
+Primary *detection* was already robust (CTE, above); the aligned *decode* — reading specification +
+perspective from a segmented primary — was the weak link: single-Ca templates gave spec 80% /
+perspective 63% under Ca variation (spec drifted to CTE; perspectives G/N read as M). Fixed in
+[`decodePrimaryAligned`](src/primary.ts) with two changes, each matched to how a feature lives in the glyph:
+
+- **A specification × perspective × configuration grid** of templates (extracted the same way a query
+  is — rendered in a word, segmented, cropped) so a template with the query's feature exists whatever
+  the nuisance Ca is (same idea as the type-detection grid).
+- **The right metric per feature:** perspective is a *global left mark* → a **joint whole-shape** match
+  (bbox-stretched to a square, symmetric Chamfer) wins; specification is a *subtle central detail* →
+  the isolated (aligned) **core zone** wins. (Empirically: whole-shape gave persp 88% but spec only
+  63%; core-zone gave spec 92% — so each feature uses its own.)
+
+Result: on a broad Ca grid (spec × perspective × configuration × affiliation) **spec 80%→98%,
+perspective 63%→84%**; the dedicated `primary-align-test` went **70.8%→100%** (spec 100%, perspective
+100%). No regression (`word-test` 48/48). Remaining perspective errors are mostly A→G under
+affiliations the grid doesn't cover — adding an affiliation axis lifts it a further ~4–7 pp at ~2×
+the (module-load) build cost, deferred as not worth it yet.
+
 ### Milestone 8 — local tool: web UI + CLI (done, v1 + v2 + UI polish)
 
 Reframed from "released library" to a **local tool** — no npm publish, no single binary (native deps
@@ -497,6 +518,7 @@ tooling — none of it blocks the tool being usable today.
 | **M9** CNN — train · persist · infer · opt-in wiring | ✅ done (proof-of-concept; see note below) |
 | Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
+| Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -510,9 +532,8 @@ tooling — none of it blocks the tool being usable today.
   actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
   opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
   alphabetic mode.
-- **Remaining decode polish:** perspective-independent primary *alignment* — detection is now robust,
-  but the aligned *decode* path is weak (spec 78%, perspective 64% under Ca variation); broaden
-  `EXTENSION_SET`; vowel→slot (Vr/Vc).
+- **Remaining decode polish:** broaden `EXTENSION_SET`; vowel→slot (Vr/Vc); optionally push aligned
+  perspective past 84% by adding an affiliation axis to the primary grid (spec is already 98%).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 **Web-tool (M8) polish ideas — design & functionality:**
