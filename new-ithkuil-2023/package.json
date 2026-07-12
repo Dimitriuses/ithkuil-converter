@@ -5,6 +5,8 @@
   "type": "module",
   "description": "Bidirectional New Ithkuil (2023) script converter",
   "scripts": {
+    "postinstall": "node scripts/fix-tfjs-node.mjs",
+    "fix-tfjs-node": "node scripts/fix-tfjs-node.mjs",
     "spike": "tsx src/spike-forward.ts",
     "encode": "tsx src/cli.ts",
     "serve": "tsx src/server.ts",
@@ -39,6 +41,7 @@
     "@resvg/resvg-js": "^2.6.2",
     "@tensorflow/tfjs": "^4.22.0",
     "@tensorflow/tfjs-backend-wasm": "^4.22.0",
+    "@tensorflow/tfjs-node": "^4.22.0",
     "@types/node": "^26.1.1",
     "@types/pngjs": "^6.0.5",
     "tsx": "^4.23.0",

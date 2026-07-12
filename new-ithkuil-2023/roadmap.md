@@ -373,10 +373,17 @@ A learned classifier that beats the template baseline on the near-identical pair
 - **Result** (28 consonants, noisy test): **CNN 97.6% vs template 82.5%**. The CNN eliminates the
   confusions template matching makes on the voiced/voiceless + cedilla pairs — template errors
   ḑ→ţ, g→k, v→f, t→d, č→j (×3–5 each) drop to 0–1 for the CNN. Confirms the CNN direction end-to-end.
-- **Backend reality:** `tfjs-node` (native) won't load on Node 22 here; `tfjs-wasm` can't train conv
-  layers (`Conv2DBackpropFilter` unregistered). So training runs on **pure-JS CPU** — slow, hence a
-  small config (24px, 16 samples/class, 12 epochs, ~7 min). A working native/GPU backend would allow
-  full-scale training (all 88 classes, larger input) directly.
+- **Backend — RESOLVED (native `tfjs-node` now works).** History: `tfjs-wasm` can't train conv
+  (`Conv2DBackpropFilter` unregistered) and pure-JS CPU was slow (~45 s/epoch at 24px), forcing a tiny
+  config. `tfjs-node` (native libtensorflow CPU) initially failed to load on Node 22 — but the cause was
+  a *packaging split*, not incompatibility: pre-gyp put `tfjs_binding.node` in `lib/napi-v8/` without its
+  dependent `tensorflow.dll` (Windows error 126). Fix ([`scripts/fix-tfjs-node.mjs`](scripts/fix-tfjs-node.mjs),
+  wired to `postinstall`): copy `tensorflow.dll` next to the binding. Now the native backend loads and
+  **trains conv layers at ~1.4 s/epoch on a 48px / 32-filter model vs ~45 s/epoch pure-JS at 24px — ~30×
+  faster on a 4× larger model.** Full-scale training (higher res, all classes, more epochs) is now feasible
+  in seconds/minutes. GPU is *not* needed (and not available anyway: AMD card → no CUDA). Next: switch the
+  training scripts from `@tensorflow/tfjs` to `@tensorflow/tfjs-node` and retrain, then expose it in the
+  web tool's job panel.
 
 ### CNN persistence + inference (done)
 
@@ -585,12 +592,16 @@ tooling — none of it blocks the tool being usable today.
 - **Alphabetic — remaining bits** (now 94.6% char-level): separate the last near-identical extension
   pairs (`n↔ż`, `d↔ļ`) — likely a higher frame resolution or a targeted tie-break; read `left`/tone
   diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Scale the CNN** — the M9 model is a proof-of-concept: it beats the template *at 24×24* (97.6% vs
-  82.5%) but not the pipeline's 64×64 template (88.6% vs 90.7%). A higher-resolution model with more
-  training — which needs a faster native/GPU backend than the CPU-only one here — is what would let it
-  actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
-  opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
-  alphabetic mode.
+- **Scale the CNN — now UNBLOCKED (native backend works, see M9 above).** The M9 model is a
+  proof-of-concept: it beats the template *at 24×24* (97.6% vs 82.5%) but not the pipeline's 64×64
+  template (88.6% vs 90.7%) because pure-JS CPU forced a tiny config. With `tfjs-node` (~30× faster) a
+  higher-resolution model with more training is now feasible — the concrete next steps: (1) switch
+  `cnn.ts`/`cnn-data.ts`/`cnn-classify.ts` from `@tensorflow/tfjs` to `@tensorflow/tfjs-node`, (2)
+  retrain at 48-64px on more samples/epochs, (3) re-run the `secondary-cnn` head-to-head vs the 64px
+  template, (4) expose training in the web job panel. This is the unlock for the **entanglement-limited**
+  decodes — primary Vr/Vv and the 3-consonant top-vs-none detector both bottlenecked on a learned
+  classifier. A learned extension classifier would also lift alphabetic mode. Persistence + opt-in wiring
+  are ready for a drop-in stronger model.
 - **Primary Vr/Vv slots — investigated, blocked by entanglement (not shipped).** Vr = function +
   context, Vv = stem + version, all in the primary (specification already decoded). Difference-imaging:
   **context** sits at the top (decoupled), **function/version/stem** overlap in the bottom-right.
