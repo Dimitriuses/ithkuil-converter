@@ -573,11 +573,20 @@ tooling — none of it blocks the tool being usable today.
   actually win, and subsume alignment-sensitive marks + compact-compressed characters. Persistence +
   opt-in wiring are ready for a drop-in stronger model; a learned extension classifier would also lift
   alphabetic mode.
-- **Remaining decode polish:** more primary slots — **Vr** (function/context) and **Vv** (stem/version)
-  both live in the primary and aren't decoded yet (specification is); 3-consonant clusters (top+bottom
-  extensions together — needs a decompose reader); optionally push aligned perspective past 84% by
-  adding an affiliation axis to the primary grid (spec already 98%), and recover the `s`-on-k/t/p
-  bottom extension (extension-margin tuning).
+- **Primary Vr/Vv slots — investigated, blocked by entanglement (not shipped).** Vr = function +
+  context, Vv = stem + version, all in the primary (specification already decoded). Difference-imaging:
+  **context** sits at the top (decoupled), **function/version/stem** overlap in the bottom-right.
+  Findings: context reads 95% in isolation via a whole-shape grid, but **function/version/stem are
+  near-chance** (they entangle in the bottom-right and the aligner shifts with them — bottom-right joint
+  only 41% all-three); worse, **any non-default primary feature degrades the others** — e.g. spec drops
+  100%→65% when context varies, because each per-feature grid is built holding the rest at defaults, and
+  covering the full space (spec×persp×config×context×function×version×stem) is a combinatorial wall. So
+  robust primary decode needs a **learned classifier over the joint feature space (the parked M9 CNN)**
+  or a feature-invariant structural decomposition — not more template grids. Current primary decode is
+  validated only at *default* Vr/Vv (spec 98% / persp 84% there).
+- **Other polish:** 3-consonant clusters (top+bottom extensions together — needs a decompose reader);
+  optionally push aligned perspective past 84% (affiliation axis on the primary grid); recover the
+  `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 **Web-tool (M8) polish ideas — design & functionality:**
