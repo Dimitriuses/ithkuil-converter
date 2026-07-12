@@ -488,8 +488,25 @@ at server startup — same pattern as the alphabetic/primary caches.
 - `secondary-test` (broadened to bottom extensions incl. formerly out-of-set l/n/r/d/ç): **94.8%**
   (core 100%, bottom-ext 94.8%, vowel 100%).
 - No regression: `word-test` 48/48; **bare cores 28/28 clean** (the margin still blocks spurious
-  extensions). 3-consonant (top+bottom) clusters remain out of scope — they'd need a decompose reader,
-  not a 28³ joint set.
+  extensions).
+
+### 3-consonant clusters (top+core+bottom) — decompose reader (partial)
+
+A triconsonantal root C1-C2-C3 renders as top:C1 + core:C2 + bottom:C3 in one base; a full joint is 28³.
+So it's decomposed ([`secondary.ts`](src/secondary.ts)):
+
+- **Read core+bottom from the LOWER portion** (top 35% excluded). With the top included, the core+bottom
+  match collapses (97%→24%); excluding it restores **93%** on 3-consonant bases — and it's a *pure win*
+  for the common case too (2-consonant 97%→**100%**, so `secondary-test` rose 94.8%→**97%**).
+- **Read the top separately, conditioned on the decoded core** (28×29 = 812 cached top-zone templates):
+  the naive core-independent top read is 37% (the core's own top interferes); conditioning on the core
+  lifts it to ~68-81%. A margin (`TOP_MARGIN=0.14`) keeps 2-consonant/bare bases from gaining a spurious
+  top (**98% no-spurious**).
+- **Result:** 3-consonant full (top+core+bottom) **0% → 48%** (`npm run tricon-test`), whole-word
+  round-trip 2/6. No regression: `word-test` **48/48**, `secondary-test` **97%**.
+- **Partial by nature:** the top-detection margin trades recovery vs spurious (0.09 → ~52% full but 89%
+  no-spurious; 0.14 → 48% full, 98% no-spurious — chose safety since 2-consonant is far more common).
+  Pushing further would need a cleaner top-vs-none detector (e.g. the CNN).
 
 ### Case (Vc) decoding — all 68 cases (done)
 
@@ -559,6 +576,7 @@ tooling — none of it blocks the tool being usable today.
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
+| 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
@@ -584,7 +602,7 @@ tooling — none of it blocks the tool being usable today.
   robust primary decode needs a **learned classifier over the joint feature space (the parked M9 CNN)**
   or a feature-invariant structural decomposition — not more template grids. Current primary decode is
   validated only at *default* Vr/Vv (spec 98% / persp 84% there).
-- **Other polish:** 3-consonant clusters (top+bottom extensions together — needs a decompose reader);
+- **Other polish:** push 3-consonant past 48% with a cleaner top-vs-none detector (the margin caps it);
   optionally push aligned perspective past 84% (affiliation axis on the primary grid); recover the
   `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.

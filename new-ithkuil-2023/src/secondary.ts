@@ -15,11 +15,12 @@ import "./dom-shim.js" // must precede @zsnout import
 import { Secondary } from "@zsnout/ithkuil/script"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
-import { binarize, type Bitmap, type SegmentedRegion } from "./segment.js"
+import { binarize, segment, type Bitmap, type BBox, type SegmentedRegion } from "./segment.js"
 import { renderGlyphToSvg } from "./glyph-render.js"
-import { maskFromBitmap, type Mask } from "./normalize.js"
+import { type Mask } from "./normalize.js"
 import { maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
+import { chamferSimilarity } from "./chamfer.js"
 import { buildVowelMap } from "./decode.js"
 import { CONSONANTS } from "./glyph-classes.js"
 import { cropRgba, type RgbaImage } from "./image-io.js"
@@ -40,9 +41,27 @@ const vowelMap = buildVowelMap()
  */
 export const EXTENSION_SET: readonly string[] = CONSONANTS
 
+/** Fraction of the base height (from the top) excluded when reading core+bottom, so a
+ * 3-consonant cluster's TOP extension doesn't corrupt the core+bottom match (with the
+ * top included, core+bottom collapses 97%→24%; excluding it restores 93%, and it's a
+ * pure win for bare/2-consonant too: 100%). */
+const CORE_BOTTOM_TOP_EXCL = 0.35
+
+function baseBoxOf(bmp: Bitmap): BBox {
+  return segment(bmp)
+    .map((r) => r.base)
+    .reduce((a, b) => (a.w * a.h >= b.w * b.h ? a : b))
+}
+/** Lower portion of a base box (top excluded) — the core+bottom region. */
+function lowerBox(base: BBox): BBox {
+  const off = Math.round(base.h * CORE_BOTTOM_TOP_EXCL)
+  return { x: base.x, y: base.y + off, w: base.w, h: base.h - off }
+}
+
 function renderSecondaryMask(spec: Parameters<typeof Secondary>[0]): Mask {
   const img = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec), {}, { canvas: 128 }), { width: 128 }))
-  return maskFromBitmap(binarize(img.data, img.width, img.height), SIZE)
+  const bmp = binarize(img.data, img.width, img.height)
+  return maskOfBox(bmp, lowerBox(baseBoxOf(bmp)), SIZE) // core+bottom only (top excluded)
 }
 
 /** Extra similarity an extension template must beat the best bare core by to be
@@ -62,6 +81,30 @@ function mkTemplate(core: string, top: string | null, bottom: string | null): Te
   }
 }
 
+// ── Top-extension (3-consonant cluster) reading ────────────────────────────────
+// A triconsonantal root C1-C2-C3 renders as top:C1 + core:C2 + bottom:C3 in ONE base
+// (a full joint set would be 28³). So we read core+bottom with the joint templates
+// above, then read the TOP separately. The top extension can't be read from the top
+// zone alone — the core's own top interferes (37%) — so top templates are CONDITIONED
+// on the (already-decoded) core: given the core, match the top zone against that core's
+// {none, top:X} references. A margin keeps 2-consonant/bare bases from gaining a
+// spurious top (0% spurious at TOP_MARGIN=0.09, while real tops read at ~81%).
+const TOP_FRAC = 0.42
+const TOP_MARGIN = 0.14
+
+function topZoneBox(base: BBox): BBox {
+  return { x: base.x, y: base.y, w: base.w, h: Math.round(base.h * TOP_FRAC) }
+}
+function renderTopZone(spec: Parameters<typeof Secondary>[0]): Mask {
+  const img = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec), {}, { canvas: 128 }), { width: 128 }))
+  const bmp = binarize(img.data, img.width, img.height)
+  return maskOfBox(bmp, topZoneBox(baseBoxOf(bmp)), SIZE)
+}
+interface TopSet {
+  none: Mask
+  tops: Template[]
+}
+
 // Bare-core vs with-extension templates, scored separately so a margin can favour
 // the simpler (bare) reading. Built once, lazily.
 //
@@ -71,38 +114,51 @@ function mkTemplate(core: string, top: string | null, bottom: string | null): Te
 // CACHE_VERSION when the render or the core/extension sets change.
 let bareTemplates: Template[] | null = null
 let extTemplates: Template[] | null = null
+let topByCore: Map<string, TopSet> | null = null
 
-const CACHE_VERSION = 1
+const CACHE_VERSION = 3 // bumped: core+bottom templates are now lower-portion (top-excluded)
 const CACHE_PATH = fileURLToPath(new URL("../models/secondary-ext.json", import.meta.url))
 
-function loadCache(): { bare: Template[]; ext: Template[] } | null {
+interface CacheShape {
+  version: number
+  size: number
+  bare: { l: string; m: string }[]
+  ext: { l: string; m: string }[]
+  /** Core-conditioned top-zone templates. `x` = "" is that core's "none" reference. */
+  top: { c: string; x: string; m: string }[]
+}
+
+function loadCache(): { bare: Template[]; ext: Template[]; top: Map<string, TopSet> } | null {
   try {
-    const j = JSON.parse(readFileSync(CACHE_PATH, "utf8")) as {
-      version: number
-      size: number
-      bare: { l: string; m: string }[]
-      ext: { l: string; m: string }[]
-    }
+    const j = JSON.parse(readFileSync(CACHE_PATH, "utf8")) as CacheShape
     if (j.version !== CACHE_VERSION || j.size !== SIZE) return null
-    const mk = (t: { l: string; m: string }): Template => ({
-      label: t.l,
-      class: "secondary",
-      mask: { size: SIZE, data: new Uint8Array(Buffer.from(t.m, "base64")) },
-    })
-    return { bare: j.bare.map(mk), ext: j.ext.map(mk) }
+    const mask = (m: string): Mask => ({ size: SIZE, data: new Uint8Array(Buffer.from(m, "base64")) })
+    const mk = (t: { l: string; m: string }): Template => ({ label: t.l, class: "secondary", mask: mask(t.m) })
+    const top = new Map<string, TopSet>()
+    for (const t of j.top) {
+      const set = top.get(t.c) ?? { none: mask(""), tops: [] }
+      if (t.x === "") set.none = mask(t.m)
+      else set.tops.push({ label: t.x, class: "top", mask: mask(t.m) })
+      top.set(t.c, set)
+    }
+    return { bare: j.bare.map(mk), ext: j.ext.map(mk), top }
   } catch {
     return null
   }
 }
 
-function saveCache(bare: Template[], ext: Template[]): void {
+function saveCache(bare: Template[], ext: Template[], top: Map<string, TopSet>): void {
   try {
     mkdirSync(dirname(CACHE_PATH), { recursive: true })
-    const ser = (t: Template) => ({ l: t.label, m: Buffer.from(t.mask.data).toString("base64") })
-    writeFileSync(
-      CACHE_PATH,
-      JSON.stringify({ version: CACHE_VERSION, size: SIZE, bare: bare.map(ser), ext: ext.map(ser) }),
-    )
+    const b64 = (m: Mask) => Buffer.from(m.data).toString("base64")
+    const ser = (t: Template) => ({ l: t.label, m: b64(t.mask) })
+    const topList: { c: string; x: string; m: string }[] = []
+    for (const [c, set] of top) {
+      topList.push({ c, x: "", m: b64(set.none) })
+      for (const t of set.tops) topList.push({ c, x: t.label, m: b64(t.mask) })
+    }
+    const j: CacheShape = { version: CACHE_VERSION, size: SIZE, bare: bare.map(ser), ext: ext.map(ser), top: topList }
+    writeFileSync(CACHE_PATH, JSON.stringify(j))
   } catch {
     /* best-effort cache */
   }
@@ -114,6 +170,7 @@ function ensureTemplates(): void {
   if (cached) {
     bareTemplates = cached.bare
     extTemplates = cached.ext
+    topByCore = cached.top
     return
   }
   bareTemplates = CONSONANTS.map((c) => mkTemplate(c, null, null))
@@ -124,7 +181,19 @@ function ensureTemplates(): void {
     }
   }
   extTemplates = ext
-  saveCache(bareTemplates, extTemplates)
+  // Core-conditioned top templates for 3-consonant clusters.
+  const top = new Map<string, TopSet>()
+  for (const core of CONSONANTS) {
+    const none = renderTopZone({ core: core as never })
+    const tops = CONSONANTS.map((x) => ({
+      label: x,
+      class: "top",
+      mask: renderTopZone({ core: core as never, top: x as never }),
+    }))
+    top.set(core, { none, tops })
+  }
+  topByCore = top
+  saveCache(bareTemplates, extTemplates, top)
 }
 
 /** Build/load the secondary template set now (call at server warmup so the first
@@ -166,22 +235,33 @@ export function decodeSecondary(
   grayImage?: RgbaImage,
 ): SecondaryDecode {
   ensureTemplates()
-  const baseMask = maskOfBox(bmp, region.base, SIZE)
+  // Read core+bottom from the lower portion (top excluded) so a 3-consonant cluster's
+  // top extension doesn't corrupt the match; templates are built the same way.
+  const baseMask = maskOfBox(bmp, lowerBox(region.base), SIZE)
   const bare = classifyMask(baseMask, bareTemplates!)
   const ext = classifyMask(baseMask, extTemplates!)
   // Accept an extension only if it clearly beats the best bare core.
   const chosen = ext.score > bare.score + EXTENSION_MARGIN ? ext : bare
   let [core] = JSON.parse(chosen.label) as [string, string | null, string | null]
-  const [, topExtension, bottomExtension] = JSON.parse(chosen.label) as [
-    string,
-    string | null,
-    string | null,
-  ]
+  const [, , bottomExtension] = JSON.parse(chosen.label) as [string, string | null, string | null]
 
   // The CNN was trained on BARE grayscale cores, so use it to refine the core only
   // when no extension is present (its input domain); template handles extended clusters.
-  if (cnn && grayImage && !topExtension && !bottomExtension) {
+  if (cnn && grayImage && !bottomExtension) {
     core = cnn.classifyImage(cropRgba(grayImage, region.base)).label
+  }
+
+  // Top extension (3-consonant cluster: top C1 + core C2 + bottom C3): read the top
+  // zone conditioned on the decoded core, gated by a margin so 2-consonant/bare bases
+  // don't gain a spurious top (0% spurious at TOP_MARGIN; real tops read ~81%).
+  let topExtension: string | null = null
+  const topSet = topByCore?.get(core)
+  if (topSet) {
+    const topMask = maskOfBox(bmp, topZoneBox(region.base), SIZE)
+    const best = classifyMask(topMask, topSet.tops)
+    if (best.score > chamferSimilarity(topMask, topSet.none) + TOP_MARGIN) {
+      topExtension = best.label
+    }
   }
 
   let superposedVowel: string | null = null
