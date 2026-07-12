@@ -16,10 +16,30 @@ import { decodePrimaryAligned } from "./primary.js"
 import { decodeSecondary } from "./secondary.js"
 import { diacriticsToCase } from "./case-vowel.js"
 import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
+import { loadCnnClassifier, type CnnClassifier } from "./cnn-classify.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
+import type { RgbaImage } from "./image-io.js"
 
 const templates = loadTemplates("dataset", 64)
 const diacriticTemplates = partitionTemplates(templates).diacritic
+
+// The consonant-core CNN, on by default once loaded — it beats the template on the
+// near-identical pairs (native 48px model: +CNN 90.7% vs template 85.0% in-pipeline).
+// It refines a bare core only when the grayscale image is available (its input domain);
+// if unloaded or no gray image, decoding falls back to the template with no change.
+let coreCnn: CnnClassifier | null = null
+
+/** Load the consonant-core CNN so subsequent decodes use it. Call at warmup. Returns
+ * false (and stays template-only) if the model isn't present. */
+export async function enableCoreCnn(dir = "models/consonant-cnn"): Promise<boolean> {
+  try {
+    coreCnn = await loadCnnClassifier(dir)
+    return true
+  } catch {
+    coreCnn = null
+    return false
+  }
+}
 
 /** Copy a region's bounding box into a standalone bitmap (for the primary aligner). */
 function cropRegionBitmap(bmp: Bitmap, region: SegmentedRegion): Bitmap {
@@ -47,8 +67,13 @@ export interface DecodedCharacter {
 /** Confidence below which the first character defaults to primary (see below). */
 const FIRST_CHAR_PRIMARY_THRESHOLD = 0.7
 
-/** Decode an explicit list of regions (one formative) into typed characters. */
-export function decodeRegions(bmp: Bitmap, regions: SegmentedRegion[]): DecodedCharacter[] {
+/** Decode an explicit list of regions (one formative) into typed characters. The
+ * optional `grayImage` (the source RGBA, same size as `bmp`) enables the core CNN. */
+export function decodeRegions(
+  bmp: Bitmap,
+  regions: SegmentedRegion[],
+  grayImage?: RgbaImage,
+): DecodedCharacter[] {
   return regions.map((region, i) => {
     const ct = classifyCharType(bmp, region)
     // Structural prior: a formative is primary-initial. The thin CTE primary blade
@@ -61,7 +86,7 @@ export function decodeRegions(bmp: Bitmap, regions: SegmentedRegion[]): DecodedC
     let decoded: Record<string, unknown> = {}
     switch (type) {
       case "secondary": {
-        const s = decodeSecondary(bmp, region, diacriticTemplates)
+        const s = decodeSecondary(bmp, region, diacriticTemplates, coreCnn ?? undefined, grayImage)
         const consonants = [s.topExtension, s.core, s.bottomExtension].filter(Boolean).join("")
         decoded = {
           consonants,
@@ -96,8 +121,8 @@ export function decodeRegions(bmp: Bitmap, regions: SegmentedRegion[]): DecodedC
 }
 
 /** Decode a whole single-formative image into typed characters. */
-export function decodeWord(bmp: Bitmap): DecodedCharacter[] {
-  return decodeRegions(bmp, segment(bmp))
+export function decodeWord(bmp: Bitmap, grayImage?: RgbaImage): DecodedCharacter[] {
+  return decodeRegions(bmp, segment(bmp), grayImage)
 }
 
 export interface WordDecode {
@@ -141,8 +166,8 @@ function charactersToFeatures(characters: DecodedCharacter[]): DecodedFeatures {
  * the features we can read — the rest default via @zsnout), and romanize.
  * Elision is handled implicitly: unread slots are simply left to their defaults.
  */
-export function decodeWordToText(bmp: Bitmap): WordDecode {
-  const characters = decodeWord(bmp)
+export function decodeWordToText(bmp: Bitmap, grayImage?: RgbaImage): WordDecode {
+  const characters = decodeWord(bmp, grayImage)
   const features = charactersToFeatures(characters)
   return { text: featuresToText(features), features, characters }
 }
@@ -168,7 +193,10 @@ export interface PhraseWord {
  * We scan regions, toggling into an alphabetic span at each Register glyph; regions
  * inside a span are decoded by `decodeAlphabeticSpan`, the rest grouped as formatives.
  */
-export function decodePhrase(bmp: Bitmap): { text: string; words: PhraseWord[] } {
+export function decodePhrase(
+  bmp: Bitmap,
+  grayImage?: RgbaImage,
+): { text: string; words: PhraseWord[] } {
   const all = segment(bmp)
   const sortedW = all.map((r) => r.bbox.w).sort((a, b) => a - b)
   const medianW = sortedW[sortedW.length >> 1] ?? 0
@@ -179,7 +207,7 @@ export function decodePhrase(bmp: Bitmap): { text: string; words: PhraseWord[] }
 
   const flushFormative = () => {
     if (!formative.length) return
-    const characters = decodeRegions(bmp, formative)
+    const characters = decodeRegions(bmp, formative, grayImage)
     const features = charactersToFeatures(characters)
     words.push({ text: featuresToText(features), kind: "formative", features, characters })
     formative = []

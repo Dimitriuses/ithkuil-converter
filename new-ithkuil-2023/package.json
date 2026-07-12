@@ -29,6 +29,7 @@
     "tricon-test": "tsx src/tricon-roundtrip.ts",
     "alphabetic": "tsx src/alphabetic-test.ts",
     "cnn": "tsx src/cnn.ts",
+    "cnn-primary": "tsx src/cnn-primary.ts",
     "cnn-infer": "tsx src/cnn-infer-test.ts",
     "secondary-cnn": "tsx src/secondary-cnn-test.ts"
   },

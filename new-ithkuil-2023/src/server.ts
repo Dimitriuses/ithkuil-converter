@@ -52,6 +52,7 @@ function warmDecode() {
       // build/load the cached template sets now, not on the first decode
       alpha.warmAlphabetic()
       secondary.warmSecondary()
+      await decode.enableCoreCnn() // consonant CNN on by default (no-op if model absent)
       decodeDone = true
       return { decode, seg, img }
     })()
@@ -126,7 +127,7 @@ async function handleDecode(body: Record<string, unknown>, res: ServerResponse):
   }
   const bmp = seg.binarize(rgba.data, rgba.width, rgba.height)
   const regions = seg.segment(bmp)
-  const { text, words } = decode.decodePhrase(bmp)
+  const { text, words } = decode.decodePhrase(bmp, rgba) // pass RGBA so the core CNN runs
   const overlay = img.renderSegmentationOverlay(rgba, regions)
   const overlayBase64 = img.encodePng(overlay).toString("base64")
   sendJson(res, 200, { ok: true, text, words, overlayBase64 })
