@@ -18,10 +18,16 @@ import { svgToPng } from "./raster.js"
 import { decodePng, cropRgba } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { toGrayNxN } from "./cnn-data.js"
+import { fileSaveHandler } from "./cnn-io.js"
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
+import { join } from "node:path"
 
 const SZ = 48
-const N = process.argv[2] ? Number(process.argv[2]) : 1400
-const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 30
+const N = process.argv[2] ? Number(process.argv[2]) : 3000
+const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
+const MODEL_DIR = "models/primary-cnn"
+const CACHE_PATH = "models/primary-cnn-data.json"
+const CACHE_VERSION = 1
 
 // Predicted features (the heads) — each a small closed set.
 const TARGETS = {
@@ -104,6 +110,59 @@ function generate(n: number): Sample[] {
   return out
 }
 
+// Rendering is ~260 ms/sample, so the generated set is cached (gray quantized to bytes)
+// and reused — lets training be re-run/tuned without re-rendering.
+function loadCache(): Sample[] | null {
+  try {
+    const j = JSON.parse(readFileSync(CACHE_PATH, "utf8")) as {
+      version: number
+      size: number
+      labels: number[][]
+      gray: string
+    }
+    if (j.version !== CACHE_VERSION || j.size !== SZ) return null
+    const bytes = new Uint8Array(Buffer.from(j.gray, "base64"))
+    const per = SZ * SZ
+    return j.labels.map((l, i) => {
+      const gray = new Float32Array(per)
+      for (let p = 0; p < per; p++) gray[p] = bytes[i * per + p] / 255
+      return { gray, labels: Object.fromEntries(KEYS.map((k, ki) => [k, l[ki]])) as Record<TargetKey, number> }
+    })
+  } catch {
+    return null
+  }
+}
+
+function saveCache(samples: Sample[]): void {
+  try {
+    mkdirSync("models", { recursive: true })
+    const per = SZ * SZ
+    const bytes = new Uint8Array(samples.length * per)
+    for (let i = 0; i < samples.length; i++)
+      for (let p = 0; p < per; p++) bytes[i * per + p] = Math.round(samples[i].gray[p] * 255)
+    const labels = samples.map((s) => KEYS.map((k) => s.labels[k]))
+    writeFileSync(
+      CACHE_PATH,
+      JSON.stringify({ version: CACHE_VERSION, size: SZ, labels, gray: Buffer.from(bytes).toString("base64") }),
+    )
+  } catch {
+    /* best-effort */
+  }
+}
+
+function loadOrGenerate(n: number): Sample[] {
+  const cached = loadCache()
+  if (cached && cached.length >= n) {
+    console.log(`loaded ${n} of ${cached.length} cached primaries (${CACHE_PATH})`)
+    return cached.slice(0, n)
+  }
+  console.log(`generating ${n} primaries (${SZ}px, all features + Ca randomized)…`)
+  const gen = generate(n)
+  saveCache(gen)
+  console.log(`cached ${gen.length} primaries → ${CACHE_PATH}`)
+  return gen
+}
+
 function stack(samples: Sample[]): tf.Tensor4D {
   const buf = new Float32Array(samples.length * SZ * SZ)
   for (let i = 0; i < samples.length; i++) buf.set(samples[i].gray, i * SZ * SZ)
@@ -113,8 +172,7 @@ const oneHots = (samples: Sample[], k: TargetKey) =>
   tf.oneHot(tf.tensor1d(samples.map((s) => s.labels[k]), "int32"), TARGETS[k].length)
 
 async function main(): Promise<void> {
-  console.log(`generating ${N} primaries (${SZ}px, all features + Ca randomized)…`)
-  const all = generate(N)
+  const all = loadOrGenerate(N)
   const nTest = Math.floor(all.length * 0.2)
   const test = all.slice(0, nTest)
   const train = all.slice(nTest)
@@ -165,6 +223,12 @@ async function main(): Promise<void> {
     const baseline: Record<string, string> = { specification: " (template ~65%)", perspective: " (template ~84%)", context: "", function: " (template ~50%)", version: " (template ~50%)", stem: " (template ~50%)" }
     console.log(`  ${k.padEnd(14)} ${((100 * ok) / test.length).toFixed(0)}%${baseline[k] ?? ""}`)
   })
+
+  // Persist the model + target label lists so it can later be wired into decodePrimaryAligned.
+  mkdirSync(MODEL_DIR, { recursive: true })
+  await model.save(fileSaveHandler(MODEL_DIR))
+  writeFileSync(join(MODEL_DIR, "targets.json"), JSON.stringify({ size: SZ, targets: TARGETS }))
+  console.log(`\nsaved model → ${MODEL_DIR}/ (model.json, weights.bin, targets.json)`)
 }
 
 main().catch((e) => {

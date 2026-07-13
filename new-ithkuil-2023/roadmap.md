@@ -413,6 +413,26 @@ The trained model is now **saved and reloadable** for inference — the plug-in 
   strict subset of the template's on the near-identical pairs (v→f, g→k, ḑ→ţ). On CLEAN cores the CNN is
   also ≥ template (96.4% vs 92.9%), so **`word-test` stays 48/48 with the CNN on** — no regression.
 
+### Primary-feature CNN — cracks the Vr/Vv entanglement (done; not yet wired into decode)
+
+The primary bakes specification, perspective, context, function, version, stem + nuisance Ca into ONE
+blob. Template matching reads spec/persp only when the rest are held at *defaults*; when they co-vary it
+collapses — spec 100%→65% (once context varies), and function/version/stem ~chance. Root cause (found by
+difference-imaging): context sits at the top (decoupled) but function/version/stem overlap in the
+bottom-right and the aligner shifts with them, and each per-feature template grid is built holding the
+others at defaults — covering the full space (spec×persp×config×context×function×version×stem) is a
+combinatorial wall. So this needs a **learned joint classifier, not more template grids** — feasible now
+that native training is fast.
+
+- **Model** ([`cnn-primary.ts`](src/cnn-primary.ts), `npm run cnn-primary`): render primaries over the
+  FULL feature space (all targets + Ca randomized), cache them (`models/primary-cnn-data.json`, so
+  re-training skips the ~13-min render), train a multi-task CNN (shared conv trunk → one softmax head per
+  feature). 3000 samples / 60 epochs, native ~7 s/epoch.
+- **Held-out, everything co-varying** (the regime template collapses on): **specification 100%, context
+  99%, perspective 96%, stem 90%, version 87%, function 84%** — vs template ~50-65%. Cracks the entanglement.
+- Model saved to `models/primary-cnn/`. **Not yet wired into `decodePrimaryAligned`** — that's the next
+  step and would finally decode **Vr/Vv** for non-default-Ca formatives (see Next up).
+
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
 Investigating multi-word decode failures ("saläha mela" dropping the 2nd word) disproved
@@ -586,42 +606,24 @@ tooling — none of it blocks the tool being usable today.
 | 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
-| Primary-feature CNN (entanglement) — **started** | ◑ spec 100% / context 97% / persp 86%; fn/ver/stem 65-74% (vs ~50%) |
+| Primary-feature CNN (entanglement) — trained | ✅ spec 100% · context 99% · persp 96% · stem 90% · version 87% · function 84% (vs template ~50-65%); not yet wired into decode |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
 
 - **Alphabetic — remaining bits** (now 94.6% char-level): separate the last near-identical extension
-  pairs (`n↔ż`, `d↔ļ`) — likely a higher frame resolution or a targeted tie-break; read `left`/tone
-  diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Scale the CNN — DONE (native, beats template).** Switched `cnn.ts`/`cnn-classify.ts`/`cnn-io.ts`
-  to `@tensorflow/tfjs-node`, bumped to 48px + 16/32/32-filter, trained on all samples in ~1 min: CNN
-  **100%** on its held-out noisy test, and **+CNN core 90.7% vs template 85.0%** in the pipeline
-  head-to-head — it now wins. Wired into the web tool's **Train CNN** job (native, full-config defaults).
-  ✅ (1) consonant CNN now on by default (see "Consonant CNN" above). ◑ (2) **entanglement-limited
-  classifiers — STARTED** ([`cnn-primary.ts`](src/cnn-primary.ts), `npm run cnn-primary`): renders
-  primaries over the FULL feature space (all targets + Ca randomized) and trains a multi-task CNN
-  (shared conv trunk → per-feature heads). Held-out, with everything co-varying — the case template
-  matching *collapses* on — it gets **specification 100% (vs template ~65%), context 97%, perspective
-  86%**, and **function/version/stem 65-74% (vs ~50% chance)**. So the CNN clearly cracks the
-  entanglement; fn/ver/stem just need more data/epochs (loss was still dropping at 1400 samples/30 ep)
-  and then wiring into `decodePrimaryAligned`. Remaining follow-ups:
-  — primary Vr/Vv and the 3-consonant top-vs-none detector; (3) a learned extension classifier for
-  alphabetic mode.
-- **Primary Vr/Vv slots — investigated, blocked by entanglement (not shipped).** Vr = function +
-  context, Vv = stem + version, all in the primary (specification already decoded). Difference-imaging:
-  **context** sits at the top (decoupled), **function/version/stem** overlap in the bottom-right.
-  Findings: context reads 95% in isolation via a whole-shape grid, but **function/version/stem are
-  near-chance** (they entangle in the bottom-right and the aligner shifts with them — bottom-right joint
-  only 41% all-three); worse, **any non-default primary feature degrades the others** — e.g. spec drops
-  100%→65% when context varies, because each per-feature grid is built holding the rest at defaults, and
-  covering the full space (spec×persp×config×context×function×version×stem) is a combinatorial wall. So
-  robust primary decode needs a **learned classifier over the joint feature space (the parked M9 CNN)**
-  or a feature-invariant structural decomposition — not more template grids. Current primary decode is
-  validated only at *default* Vr/Vv (spec 98% / persp 84% there).
-- **Other polish:** push 3-consonant past 48% with a cleaner top-vs-none detector (the margin caps it);
-  optionally push aligned perspective past 84% (affiliation axis on the primary grid); recover the
-  `s`-on-k/t/p bottom extension (extension-margin tuning).
+  pairs (`n↔ż`, `d↔ļ`) — a higher frame resolution, a targeted tie-break, or a learned extension
+  classifier (like the primary CNN); read `left`/tone diacritics + geminate markers, and stress
+  (`STRESSED_SYLLABLE_PLACEHOLDER`).
+- **Wire the primary-feature CNN into `decodePrimaryAligned`** (the trained model is ready): warm-load
+  it, run it on the primary crop, fill spec/perspective/context/function/version/stem → this finally
+  decodes **Vr/Vv** so non-default-Ca formatives round-trip. Guard against clean-default regression the
+  way the consonant CNN did, and re-verify `word-test`.
+- **Push the primary CNN's `function` head** (84%, the laggard) with more data/epochs — the dataset
+  cache makes re-training cheap.
+- **A CNN top-vs-none detector** to push 3-consonant clusters past the 48% the margin caps them at.
+- **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
+  the `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
 
 **Web-tool (M8) polish ideas — design & functionality:**
