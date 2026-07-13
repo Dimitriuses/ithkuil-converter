@@ -32,6 +32,7 @@
     "cnn": "tsx src/cnn.ts",
     "cnn-primary": "tsx src/cnn-primary.ts",
     "cnn-top": "tsx src/cnn-top.ts",
+    "cnn-alpha": "tsx src/cnn-alpha.ts",
     "cnn-infer": "tsx src/cnn-infer-test.ts",
     "secondary-cnn": "tsx src/secondary-cnn-test.ts"
   },

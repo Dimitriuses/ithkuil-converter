@@ -16,6 +16,7 @@ import { decodePrimaryAligned } from "./primary.js"
 import { decodeSecondary } from "./secondary.js"
 import { diacriticsToCase } from "./case-vowel.js"
 import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
+import { loadAlphabeticCnn, type AlphabeticCnn } from "./alphabetic-cnn.js"
 import { loadCnnClassifier, type CnnClassifier } from "./cnn-classify.js"
 import { loadPrimaryCnn, type PrimaryCnn } from "./primary-cnn.js"
 import { loadTopCnn, type TopCnn } from "./top-cnn.js"
@@ -72,6 +73,22 @@ export async function enableTopCnn(dir = "models/top-cnn"): Promise<boolean> {
     return true
   } catch {
     topCnn = null
+    return false
+  }
+}
+
+// The alphabetic-base CNN — reads a phonetically-spelt syllable's core/top/bottom
+// consonants, replacing the joint chamfer match (which confused n↔ż, d↔ļ via slot
+// trade-offs). Used only when a grayscale image is available (its input domain).
+let alphaCnn: AlphabeticCnn | null = null
+
+/** Load the alphabetic-base CNN so alphabetic spans read their consonants via CNN. */
+export async function enableAlphabeticCnn(dir = "models/alpha-cnn"): Promise<boolean> {
+  try {
+    alphaCnn = await loadAlphabeticCnn(dir)
+    return true
+  } catch {
+    alphaCnn = null
     return false
   }
 }
@@ -269,7 +286,7 @@ export function decodePhrase(
     if (isRegister(bmp, region)) {
       if (alphabetic) {
         // closing register — decode the accumulated span
-        words.push({ text: decodeAlphabeticSpan(bmp, alphabetic), kind: "alphabetic" })
+        words.push({ text: decodeAlphabeticSpan(bmp, alphabetic, alphaCnn ?? undefined), kind: "alphabetic" })
         alphabetic = null
       } else {
         flushFormative()

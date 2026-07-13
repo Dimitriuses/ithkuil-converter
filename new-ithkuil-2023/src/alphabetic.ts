@@ -74,9 +74,12 @@ function baseBoxOf(bmp: Bitmap): BBox {
     .reduce((a, b) => (a.w * a.h >= b.w * b.h ? a : b))
 }
 
-/** Stretch a base box's ink to a FRAME×FRAME square mask (nearest-neighbour, no
- * padding) so the same (core,top,bottom) always frames identically. */
-function frameSquare(bmp: Bitmap, box: BBox): Mask {
+/** Stretch a base box's ink to a `size`×`size` square mask (nearest-neighbour, no
+ * padding) so the same (core,top,bottom) always frames identically. Exported so the
+ * alphabetic-base CNN can consume the SAME normalized shape representation as the chamfer
+ * match — that's what makes it robust to the isolated-vs-pipeline rendering gap (an
+ * aspect-preserving grayscale crop is not; a stretched binary mask is). */
+export function frameSquare(bmp: Bitmap, box: BBox, size: number = FRAME): Mask {
   const { ink, width, height } = cropInk(bmp, box)
   let minx = width, maxx = -1, miny = height, maxy = -1
   for (let y = 0; y < height; y++) {
@@ -89,18 +92,18 @@ function frameSquare(bmp: Bitmap, box: BBox): Mask {
       }
     }
   }
-  const data = new Uint8Array(FRAME * FRAME)
-  if (maxx < 0) return { size: FRAME, data }
+  const data = new Uint8Array(size * size)
+  if (maxx < 0) return { size, data }
   const w = maxx - minx + 1
   const h = maxy - miny + 1
-  for (let ty = 0; ty < FRAME; ty++) {
-    const sy = miny + Math.floor((ty * h) / FRAME)
-    for (let tx = 0; tx < FRAME; tx++) {
-      const sx = minx + Math.floor((tx * w) / FRAME)
-      if (ink[sy * width + sx]) data[ty * FRAME + tx] = 1
+  for (let ty = 0; ty < size; ty++) {
+    const sy = miny + Math.floor((ty * h) / size)
+    for (let tx = 0; tx < size; tx++) {
+      const sx = minx + Math.floor((tx * w) / size)
+      if (ink[sy * width + sx]) data[ty * size + tx] = 1
     }
   }
-  return { size: FRAME, data }
+  return { size, data }
 }
 
 // ---- Lazily-built reference templates (rendered once). ------------------------
@@ -150,7 +153,7 @@ function baseTemplate(core: string, top: string, bottom: string, bmp: Bitmap): B
 // Rendering each reference costs ~260ms (resvg), and there are ~1200 of them, so the
 // set is built once and cached to disk (masks only; the distance transform is cheap
 // to recompute on load). Bump CACHE_VERSION when the render or consonant set changes.
-const CACHE_VERSION = 1
+const CACHE_VERSION = 4 // rebuild after reverting the placeholder experiment to ALPHABETIC_PLACEHOLDER
 const CACHE_PATH = fileURLToPath(new URL("../models/alphabetic-base.json", import.meta.url))
 
 function loadBaseCache(): BaseTemplate[] | null {
@@ -281,6 +284,18 @@ export function isRegister(bmp: Bitmap, region: SegmentedRegion): boolean {
   return chamferSimilarity(maskOfBox(bmp, region.base, SIZE), t.register) > REGISTER_THRESHOLD
 }
 
+/**
+ * Optional learned base-slot classifier (the alphabetic-base CNN, cnn-alpha.ts). Reads
+ * the core/top/bottom consonants ("" = empty) from the SAME `frameSquare` binary mask the
+ * chamfer match uses — reading each slot independently fixes the joint match's n↔ż / d↔ļ
+ * slot trade-offs, and the shared normalized representation keeps it robust to the
+ * isolated-vs-pipeline rendering gap. Structural type so this module stays tfjs-free;
+ * `loadAlphabeticCnn()` satisfies it. `size` is the frame side the model expects. */
+export interface BaseClassifier {
+  size: number
+  classifyBase(mask: Mask): { core: string; top: string; bottom: string }
+}
+
 interface AlphaChar {
   base: BBox
   vowels: { role: "superposed" | "underposed" | "right"; box: BBox }[]
@@ -310,9 +325,13 @@ function groupChars(span: SegmentedRegion[]): AlphaChar[] {
   return chars
 }
 
-/** Decode one alphabetic character to its romanized letters, in reading order. */
-function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates): string {
-  const { core, top, bottom } = matchBase(frameSquare(bmp, ch.base), t.base)
+/** Decode one alphabetic character to its romanized letters, in reading order. The
+ * base consonants come from the CNN when available (it reads each slot independently,
+ * fixing the joint match's n↔ż / d↔ļ slot trade-offs), else the joint chamfer match.
+ * Both consume the same `frameSquare` mask. */
+function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates, baseCnn?: BaseClassifier): string {
+  const frame = frameSquare(bmp, ch.base, baseCnn?.size)
+  const { core, top, bottom } = baseCnn ? baseCnn.classifyBase(frame) : matchBase(frame, t.base)
   let superposed = ""
   let underposed = ""
   let right = ""
@@ -330,9 +349,9 @@ function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates): string {
  * Decode an alphabetic span (the regions strictly between the opening and closing
  * Register glyphs) into a romanized word.
  */
-export function decodeAlphabeticSpan(bmp: Bitmap, span: SegmentedRegion[]): string {
+export function decodeAlphabeticSpan(bmp: Bitmap, span: SegmentedRegion[], baseCnn?: BaseClassifier): string {
   const t = ensureTemplates()
   return groupChars(span)
-    .map((ch) => decodeChar(bmp, ch, t))
+    .map((ch) => decodeChar(bmp, ch, t, baseCnn))
     .join("")
 }

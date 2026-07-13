@@ -12,7 +12,13 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodePhrase } from "./decode-word.js"
+import { decodePhrase, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableAlphabeticCnn } from "./decode-word.js"
+
+// Warm the same CNNs the server uses, so the phrase test reflects the deployed pipeline.
+await enableCoreCnn()
+await enablePrimaryCnn()
+await enableTopCnn()
+await enableAlphabeticCnn()
 
 // A small pool of formatives whose features the reverse pipeline models.
 const POOL: Record<string, unknown>[] = [
@@ -49,7 +55,7 @@ for (const formatives of phrases) {
     continue
   }
   const img = decodePng(svgToPng(r.svg, { width: 300 * formatives.length }))
-  const { text, words: got } = decodePhrase(binarize(img.data, img.width, img.height))
+  const { text, words: got } = decodePhrase(binarize(img.data, img.width, img.height), img)
 
   total++
   if (text === expected) ok++

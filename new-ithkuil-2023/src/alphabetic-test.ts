@@ -12,7 +12,10 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodePhrase } from "./decode-word.js"
+import { decodePhrase, enableAlphabeticCnn } from "./decode-word.js"
+
+const alphaOn = await enableAlphabeticCnn()
+console.log(`alphabetic-base CNN: ${alphaOn ? "on" : "off (chamfer match)"}`)
 
 // A spread of CVCV / CV / VCV shapes exercising each slot (top/core/bottom/vowels).
 const WORDS = [
@@ -32,7 +35,7 @@ for (const word of WORDS) {
     continue
   }
   const img = decodePng(svgToPng(r.svg, { width: 1000 }))
-  const { words } = decodePhrase(binarize(img.data, img.width, img.height))
+  const { words } = decodePhrase(binarize(img.data, img.width, img.height), img)
   const alpha = words.find((w) => w.kind === "alphabetic")
   const got = alpha?.text ?? "(none)"
   if (got === word) ok++

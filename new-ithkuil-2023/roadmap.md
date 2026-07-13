@@ -474,8 +474,22 @@ the side (`right`) diacritics.
   `{core, top, bottom}` references at once. Because each render costs ~260 ms (resvg), the reference
   set is **built once and cached to `models/alphabetic-base.json`** (masks only; distance transforms
   recomputed on load) — warmed at server startup so the first decode doesn't pay the build.
-  - Remaining 2 misses are the near-identical extension pair `n↔ż` / `d↔ļ` at this frame resolution;
-    `left`/tone diacritics + geminate markers + stress are still unread.
+- **Alphabetic-base CNN — fixes n↔ż / d↔ļ** ([`cnn-alpha.ts`](src/cnn-alpha.ts) → [`alphabetic-cnn.ts`](src/alphabetic-cnn.ts),
+  `npm run cnn-alpha`; warm-loaded via `enableAlphabeticCnn()`). The chamfer joint match confused those
+  two pairs, and the fix took a real investigation. Ruled out along the way: **higher frame resolution**
+  (no effect — the pipeline query genuinely matches the wrong template even at 96px) and a CNN on
+  **isolated-render** crops (99% held-out but collapsed in-pipeline — it *drops/adds* consonants). The
+  root cause: the pipeline (`textToScript`) renders an alphabetic base **subtly differently** from
+  `renderGlyphToSvg(Secondary(spec))`, enough to flip these near-identical pairs — and BOTH the chamfer
+  templates and the first CNN inherited that isolated-render gap. `textToSecondaries` confirmed the true
+  slots (and that the encoder core is `STANDARD_PLACEHOLDER`, though rendering *that* in isolation looks
+  nothing like the pipeline — the gap is in how the pipeline draws it, not the spec). **Fix:** train the
+  multi-task CNN (core/top/bottom heads, on the shared `frameSquare` binary mask) on data rendered
+  through the **actual `encode()` pipeline** and labelled by `textToSecondaries` — so training and
+  inference share one exact domain. Held-out (pipeline domain): core 98% / top 93% / bottom 92%.
+  **In-pipeline `npm run alphabetic`: 14/15 exact, 98.2% char** (was 13/15, 94.6%) — n↔ż and d↔ļ resolved;
+  `phrase-test` **7/7**, `word-test` unaffected. Residual: one p↔v (top slot); `left`/tone/geminate/stress
+  still unread.
 
 ### Robust primary detection (CTE) — done
 
@@ -620,7 +634,7 @@ tooling — none of it blocks the tool being usable today.
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
 | **M9** CNN — native training (tfjs-node), 48px | ✅ done — **beats template 90.7% vs 85.0%** in-pipeline |
-| Alphabetic-register decoding | ✅ done — 94.6% char-level / 87% exact (joint base match + cache) |
+| Alphabetic-register decoding — **base CNN** | ✅ done — **98.2% char / 93% exact** (was 94.6%/87%); n↔ż, d↔ļ fixed via pipeline-domain CNN |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
@@ -632,10 +646,9 @@ tooling — none of it blocks the tool being usable today.
 
 ### Next up (planned — nothing below is built yet)
 
-- **Alphabetic — remaining bits** (now 94.6% char-level): separate the last near-identical extension
-  pairs (`n↔ż`, `d↔ļ`) — a higher frame resolution, a targeted tie-break, or a learned extension
-  classifier (like the primary CNN); read `left`/tone diacritics + geminate markers, and stress
-  (`STRESSED_SYLLABLE_PLACEHOLDER`).
+- **Alphabetic — remaining bits** (now 98.2% char-level; n↔ż, d↔ļ fixed by the pipeline-domain base CNN):
+  the residual **p↔v** (top slot, ~93% held-out) could yield to more pipeline-domain samples / epochs; read
+  `left`/tone diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`) — still unread.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
