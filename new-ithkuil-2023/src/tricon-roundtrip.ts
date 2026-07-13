@@ -18,16 +18,19 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeSecondary } from "./secondary.js"
+import { loadTopCnn } from "./top-cnn.js"
 import { encode } from "./forward.js"
-import { decodeWordToText } from "./decode-word.js"
+import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn } from "./decode-word.js"
 import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
 
 const diac = partitionTemplates(loadTemplates("dataset", 64)).diacritic
+const topCnn = await loadTopCnn().catch(() => null)
+console.log(`top CNN: ${topCnn ? "on" : "off (template gate)"}`)
 
 function decodeGlyph(spec: Record<string, unknown>) {
   const img = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec as never), {}, { canvas: 128 }), { width: 128 }))
   const bmp = binarize(img.data, img.width, img.height)
-  return decodeSecondary(bmp, segment(bmp)[0], diac)
+  return decodeSecondary(bmp, segment(bmp)[0], diac, undefined, img, topCnn ?? undefined)
 }
 
 const cores = ["t", "l", "s", "k", "r", "p", "m", "d"]
@@ -63,7 +66,10 @@ for (const core of cores) {
 }
 console.log(`no spurious top on bare/2-consonant: ${clean}/${cn} = ${((100 * clean) / cn).toFixed(0)}%`)
 
-// (3) full word round-trip for triconsonantal roots
+// (3) full word round-trip for triconsonantal roots (full pipeline, CNNs on)
+await enableCoreCnn()
+await enablePrimaryCnn()
+await enableTopCnn()
 let wr = 0
 let wn = 0
 const misses: string[] = []
@@ -72,7 +78,7 @@ for (const root of ["str", "mlk", "ksp", "prt", "ndr", "skr"]) {
   const r = encode(exp, { margin: 10 })
   if (!r.ok) continue
   const img = decodePng(svgToPng(r.svg, { width: 400 }))
-  const got = decodeWordToText(binarize(img.data, img.width, img.height)).text
+  const got = decodeWordToText(binarize(img.data, img.width, img.height), img).text
   wn++
   if (got === exp) wr++
   else misses.push(`${exp}→${got}`)

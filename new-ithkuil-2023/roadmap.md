@@ -532,7 +532,7 @@ at server startup — same pattern as the alphabetic/primary caches.
 - No regression: `word-test` 48/48; **bare cores 28/28 clean** (the margin still blocks spurious
   extensions).
 
-### 3-consonant clusters (top+core+bottom) — decompose reader (partial)
+### 3-consonant clusters (top+core+bottom) — decompose reader + top-extension CNN
 
 A triconsonantal root C1-C2-C3 renders as top:C1 + core:C2 + bottom:C3 in one base; a full joint is 28³.
 So it's decomposed ([`secondary.ts`](src/secondary.ts)):
@@ -540,15 +540,21 @@ So it's decomposed ([`secondary.ts`](src/secondary.ts)):
 - **Read core+bottom from the LOWER portion** (top 35% excluded). With the top included, the core+bottom
   match collapses (97%→24%); excluding it restores **93%** on 3-consonant bases — and it's a *pure win*
   for the common case too (2-consonant 97%→**100%**, so `secondary-test` rose 94.8%→**97%**).
-- **Read the top separately, conditioned on the decoded core** (28×29 = 812 cached top-zone templates):
-  the naive core-independent top read is 37% (the core's own top interferes); conditioning on the core
-  lifts it to ~68-81%. A margin (`TOP_MARGIN=0.14`) keeps 2-consonant/bare bases from gaining a spurious
-  top (**98% no-spurious**).
-- **Result:** 3-consonant full (top+core+bottom) **0% → 48%** (`npm run tricon-test`), whole-word
-  round-trip 2/6. No regression: `word-test` **48/48**, `secondary-test` **97%**.
-- **Partial by nature:** the top-detection margin trades recovery vs spurious (0.09 → ~52% full but 89%
-  no-spurious; 0.14 → 48% full, 98% no-spurious — chose safety since 2-consonant is far more common).
-  Pushing further would need a cleaner top-vs-none detector (e.g. the CNN).
+- **Read the top with the top-extension CNN** ([`cnn-top.ts`](src/cnn-top.ts) → [`top-cnn.ts`](src/top-cnn.ts),
+  `npm run cnn-top`). The old margin-gated top-zone template capped at ~68% top / 48% full — it both
+  **missed** real tops (19%, the `TOP_MARGIN` gate said "none") and **mis-IDed** them (13%, it conditioned
+  on a possibly-wrong core). A single CNN over the whole base crop classifies the top as `{NONE} ∪ consonants`,
+  so the **NONE class is the top-vs-none detector** and the consonant classes fix identity — in one model,
+  learning the core conditioning implicitly. 6000 secondaries (realistic bare/+bottom/+top+bottom mix,
+  64px), native ~17 s/epoch. **Held-out: presence (top vs none) 99%, identity | top 93%, spurious-on-NONE 0%.**
+  0% spurious means no confidence guard is needed — it never invents a top on bare/2-consonant bases.
+- **Result:** 3-consonant **top 68%→93%**, **full (top+core+bottom) 48%→65%** (`npm run tricon-test`),
+  no-spurious **98%→100%**, whole-word round-trip 2/6→3/6. No regression: `word-test` **48/48** (all three
+  CNNs on), `secondary-test` **97%**.
+- **Next bottleneck is now core+bottom, not the top.** With top at 93%, `full` is capped by the core+bottom
+  template in the 3-consonant regime (~12% coreWrong); the remaining word misses (`strala→sprala`,
+  `kspala→ksmala`, `aprtala→avrtala`) are all core/bottom, not top. Lifting `full` further means a core+bottom
+  classifier (or extending the secondary CNN), separate work.
 
 ### Case (Vc) decoding — all 68 cases (done)
 
@@ -618,7 +624,7 @@ tooling — none of it blocks the tool being usable today.
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
-| 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
+| 3-consonant clusters (top+core+bottom) — **top-extension CNN** | ✅ top 68%→**93%**, full 48%→**65%** (was 0%); no-spurious **100%**, word-test 48/48. Cap now core+bottom, not top |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
 | Primary-feature CNN (entanglement) — trained + wired (80px) | ✅ decodes Vr **context + function** + Vv **stem** (100% round-trip, was 0%; word-test 48/48). **version** guarded (~0.97 conf, 83% round-trip) |
@@ -635,7 +641,9 @@ tooling — none of it blocks the tool being usable today.
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **A CNN top-vs-none detector** to push 3-consonant clusters past the 48% the margin caps them at.
+- **Core+bottom classifier for 3-consonant clusters.** The top-extension CNN lifted `full` to 65% and the
+  cap is now the core+bottom template in the cluster regime (~12% coreWrong) — the remaining word misses are
+  all core/bottom, not top. A core+bottom CNN (or extending the secondary CNN to those heads) would push it further.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.

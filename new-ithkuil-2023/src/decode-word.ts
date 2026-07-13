@@ -18,6 +18,7 @@ import { diacriticsToCase } from "./case-vowel.js"
 import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
 import { loadCnnClassifier, type CnnClassifier } from "./cnn-classify.js"
 import { loadPrimaryCnn, type PrimaryCnn } from "./primary-cnn.js"
+import { loadTopCnn, type TopCnn } from "./top-cnn.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
 import { cropRgba, type RgbaImage } from "./image-io.js"
 
@@ -55,6 +56,22 @@ export async function enablePrimaryCnn(dir = "models/primary-cnn"): Promise<bool
     return true
   } catch {
     primaryCnn = null
+    return false
+  }
+}
+
+// The top-extension CNN — reads a 3-consonant cluster's top consonant (or NONE) from the
+// secondary base crop, replacing the margin-gated top-zone template (which capped clusters
+// at ~68% top / 48% full). Used only when a grayscale image is available (its input domain).
+let topCnn: TopCnn | null = null
+
+/** Load the top-extension CNN so subsequent secondary decodes read the top via CNN. */
+export async function enableTopCnn(dir = "models/top-cnn"): Promise<boolean> {
+  try {
+    topCnn = await loadTopCnn(dir)
+    return true
+  } catch {
+    topCnn = null
     return false
   }
 }
@@ -104,7 +121,7 @@ export function decodeRegions(
     let decoded: Record<string, unknown> = {}
     switch (type) {
       case "secondary": {
-        const s = decodeSecondary(bmp, region, diacriticTemplates, coreCnn ?? undefined, grayImage)
+        const s = decodeSecondary(bmp, region, diacriticTemplates, coreCnn ?? undefined, grayImage, topCnn ?? undefined)
         const consonants = [s.topExtension, s.core, s.bottomExtension].filter(Boolean).join("")
         decoded = {
           consonants,

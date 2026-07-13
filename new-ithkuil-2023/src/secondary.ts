@@ -225,6 +225,16 @@ export interface CoreClassifier {
   classifyImage(img: RgbaImage): { label: string }
 }
 
+/**
+ * Optional learned top-extension classifier (the top-vs-none CNN, cnn-top.ts). Reads a
+ * 3-consonant cluster's top consonant, or null for NONE, from the grayscale base crop —
+ * replacing the margin-gated top-zone template. Structural type so this module stays
+ * tfjs-free; `loadTopCnn()` satisfies it.
+ */
+export interface TopClassifier {
+  classifyImage(img: RgbaImage): { top: string | null }
+}
+
 /** Decode a segmented secondary character into consonant(s) + vowels. */
 export function decodeSecondary(
   bmp: Bitmap,
@@ -233,6 +243,8 @@ export function decodeSecondary(
   cnn?: CoreClassifier,
   /** Grayscale source image (same dimensions as `bmp`); required to use the CNN. */
   grayImage?: RgbaImage,
+  /** Optional top-extension CNN; when present (with grayImage) it reads the top. */
+  topCnn?: TopClassifier,
 ): SecondaryDecode {
   ensureTemplates()
   // Read core+bottom from the lower portion (top excluded) so a 3-consonant cluster's
@@ -255,12 +267,19 @@ export function decodeSecondary(
   // zone conditioned on the decoded core, gated by a margin so 2-consonant/bare bases
   // don't gain a spurious top (0% spurious at TOP_MARGIN; real tops read ~81%).
   let topExtension: string | null = null
-  const topSet = topByCore?.get(core)
-  if (topSet) {
-    const topMask = maskOfBox(bmp, topZoneBox(region.base), SIZE)
-    const best = classifyMask(topMask, topSet.tops)
-    if (best.score > chamferSimilarity(topMask, topSet.none) + TOP_MARGIN) {
-      topExtension = best.label
+  if (topCnn && grayImage) {
+    // The CNN reads presence + identity from the whole base crop (learning the core
+    // conditioning implicitly), beating the margin-gated top-zone template on both the
+    // 19% it used to miss and the 13% it mis-IDed.
+    topExtension = topCnn.classifyImage(cropRgba(grayImage, region.base)).top
+  } else {
+    const topSet = topByCore?.get(core)
+    if (topSet) {
+      const topMask = maskOfBox(bmp, topZoneBox(region.base), SIZE)
+      const best = classifyMask(topMask, topSet.tops)
+      if (best.score > chamferSimilarity(topMask, topSet.none) + TOP_MARGIN) {
+        topExtension = best.label
+      }
     }
   }
 

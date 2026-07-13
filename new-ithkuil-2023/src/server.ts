@@ -54,6 +54,7 @@ function warmDecode() {
       secondary.warmSecondary()
       await decode.enableCoreCnn() // consonant CNN on by default (no-op if model absent)
       await decode.enablePrimaryCnn() // primary-feature CNN → decodes Vr/Vv
+      await decode.enableTopCnn() // top-extension CNN → decodes 3-consonant cluster tops
       decodeDone = true
       return { decode, seg, img }
     })()
