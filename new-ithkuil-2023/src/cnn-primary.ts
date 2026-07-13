@@ -22,11 +22,15 @@ import { fileSaveHandler } from "./cnn-io.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { join } from "node:path"
 
-const SZ = 48
 const N = process.argv[2] ? Number(process.argv[2]) : 3000
 const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
-const MODEL_DIR = "models/primary-cnn"
-const CACHE_PATH = "models/primary-cnn-data.json"
+// Input resolution (arg 4). 80 is the deployed model (higher res resolves the subtle
+// function/version marks that 48px lost); other sizes get their own paths so an
+// experiment never clobbers the deployed model.
+const SZ = process.argv[4] ? Number(process.argv[4]) : 80
+const SUFFIX = SZ === 80 ? "" : `-${SZ}`
+const MODEL_DIR = `models/primary-cnn${SUFFIX}`
+const CACHE_PATH = `models/primary-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 2 // bumped: nuisance Ca now biased toward defaults (v1 was always-random)
 
 // Predicted features (the heads) — each a small closed set.

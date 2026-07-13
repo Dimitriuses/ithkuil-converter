@@ -42,9 +42,11 @@ export async function enableCoreCnn(dir = "models/consonant-cnn"): Promise<boole
   }
 }
 
-// The primary-feature CNN — reads specification/context/stem reliably (it decodes the
-// Vr context and Vv stem, which template matching can't under Ca co-variation).
+// The primary-feature CNN (80px) — decodes the Vr context/function and Vv stem, which
+// template matching can't under Ca co-variation. context/stem/function read 100% on
+// clean/default primaries; version only ~75%, so it's taken only when very confident.
 let primaryCnn: PrimaryCnn | null = null
+const PRIMARY_VER_CONF = 0.97
 
 /** Load the primary-feature CNN so subsequent decodes read Vr/Vv. Call at warmup. */
 export async function enablePrimaryCnn(dir = "models/primary-cnn"): Promise<boolean> {
@@ -129,17 +131,17 @@ export function decodeRegions(
       case "primary": {
         const p = decodePrimaryAligned(cropRegionBitmap(bmp, region))
         decoded = { specification: p.specification, perspective: p.perspective }
-        // The CNN reads the Vr/Vv features the template can't — context (Vr) and stem
-        // (Vv) — plus a more Ca-robust specification. These read ~100% on clean/default
-        // primaries so they don't regress default words. function/version are NOT taken:
-        // they're weak on default-Ca minimal primaries and mis-fire *confidently* (a
-        // confidence guard doesn't save them) — they need a CNN retrained with realistic
-        // (default-heavy) Ca sampling. See roadmap.
+        // The CNN reads the Vr/Vv features the template can't — context + function (Vr),
+        // stem (Vv) — plus a more Ca-robust specification. These read 100% on clean/default
+        // primaries at 80px, so they don't regress default words. version is only ~75% on
+        // clean primaries (its mark is even subtler), so it's taken only when very confident.
         if (primaryCnn && grayImage) {
           const pf = primaryCnn.classifyImage(cropRgba(grayImage, region.bbox))
           decoded.specification = pf.specification
           decoded.context = pf.context
+          decoded.function = pf.function
           decoded.stem = pf.stem
+          if (pf.confidence.version >= PRIMARY_VER_CONF) decoded.version = pf.version
         }
         break
       }

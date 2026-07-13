@@ -413,7 +413,7 @@ The trained model is now **saved and reloadable** for inference — the plug-in 
   strict subset of the template's on the near-identical pairs (v→f, g→k, ḑ→ţ). On CLEAN cores the CNN is
   also ≥ template (96.4% vs 92.9%), so **`word-test` stays 48/48 with the CNN on** — no regression.
 
-### Primary-feature CNN — cracks the Vr/Vv entanglement (done; not yet wired into decode)
+### Primary-feature CNN — cracks the Vr/Vv entanglement (done + wired; 80px)
 
 The primary bakes specification, perspective, context, function, version, stem + nuisance Ca into ONE
 blob. Template matching reads spec/persp only when the rest are held at *defaults*; when they co-vary it
@@ -424,26 +424,29 @@ others at defaults — covering the full space (spec×persp×config×context×fu
 combinatorial wall. So this needs a **learned joint classifier, not more template grids** — feasible now
 that native training is fast.
 
-- **Model** ([`cnn-primary.ts`](src/cnn-primary.ts), `npm run cnn-primary`): render primaries over the
-  FULL feature space (all targets + Ca randomized), cache them (`models/primary-cnn-data.json`, so
-  re-training skips the ~13-min render), train a multi-task CNN (shared conv trunk → one softmax head per
-  feature). 3000 samples / 60 epochs, native ~7 s/epoch.
+- **Model** ([`cnn-primary.ts`](src/cnn-primary.ts), `npm run cnn-primary -- [nSamples] [epochs] [size]`):
+  render primaries over the FULL feature space (all targets + nuisance Ca randomized, Ca biased toward
+  its defaults so default-Ca minimal primaries are in-distribution), cache them (`models/primary-cnn-data.json`,
+  so re-training skips the ~13-min render), train a multi-task CNN (shared conv trunk → one softmax head
+  per feature). 3000 samples / 60 epochs, **80px input**, native ~16 s/epoch.
 - **Held-out, everything co-varying** (the regime template collapses on): **specification 100%, context
-  99%, perspective 96%, stem 90%, version 87%, function 84%** — vs template ~50-65%. Cracks the entanglement.
-- Model saved to `models/primary-cnn/`.
+  ~99%, perspective ~97%, stem ~97%, version ~96%, function ~95%** — vs template ~50-65%. Cracks the entanglement.
+- Model saved to `models/primary-cnn/` (`targets.json` records `size: 80`). Other sizes get suffixed paths
+  (`models/primary-cnn-48/…`) so an experiment never clobbers the deployed model.
 - **Wired into decode (`decode-word.ts`, [`primary-cnn.ts`](src/primary-cnn.ts)):** `enablePrimaryCnn()`
   warm-loads it (server + tests), and the primary case runs it on the grayscale crop to fill the Vr
-  **context** and Vv **stem** (plus a more Ca-robust specification). **`vrvv-test`: non-default
-  context × stem round-trip 97%** (was 0% — completely undecoded), and **`word-test` stays 48/48** (these
-  features read 100% on clean/default primaries, so default words don't regress).
-- **function/version still NOT wired — retraining didn't crack them.** The generator now biases nuisance
-  Ca toward its defaults so default-Ca minimal primaries are in-distribution (v1 was always-random). That
-  helped version on clean defaults (25%→71%) and lifted the context×stem round-trip to 97%, but **function
-  stayed at ~chance (52%)** and version short of the ~100% needed to wire without regressing clean words.
-  Root cause is deeper than training data: function reads **83% when Ca co-varies but ~52% on *minimal*
-  (default-Ca) primaries** — it's **near-invisible on them**, an encoding-subtlety limit at this fidelity,
-  not a distribution one. Decoding function/version would likely need higher-res input and/or real
-  (non-synthetic) scans — deferred.
+  **context** + **function** and Vv **stem** (plus a more Ca-robust specification). **`vrvv-test`: non-default
+  context × function × stem round-trip 32/32 = 100%** (was 0% — completely undecoded), and **`word-test`
+  stays 48/48** (these read 100% on clean/default primaries, so default words don't regress).
+- **The 80px bump was what cracked function.** At 48px, function read **83% co-varying but only ~52% on
+  *minimal* (default-Ca) primaries** — near-invisible, so wiring it regressed clean words. Its mark is a
+  subtle bottom-right detail that 48px throws away; **at 80px it survives — function reads 100% on clean
+  defaults** and round-trips end-to-end.
+- **version is decoded but guarded.** Even at 80px version reads only ~75% on clean defaults (its mark is
+  subtler still), so `decode-word.ts` takes it **only when the CNN is ≥0.97 confident** (`PRIMARY_VER_CONF`)
+  — enough to add non-default version where it's sure without misfiring on clean words. `vrvv-test`'s
+  version × stem sweep round-trips **5/6 = 83%**. Closing the last gap likely needs real (non-synthetic)
+  scans or a version-specialized head.
 
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
@@ -618,7 +621,7 @@ tooling — none of it blocks the tool being usable today.
 | 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
-| Primary-feature CNN (entanglement) — trained + wired | ✅ decodes Vr **context** + Vv **stem** (97% round-trip, was 0%; word-test 48/48). fn/ver near-invisible on minimal primaries — deferred |
+| Primary-feature CNN (entanglement) — trained + wired (80px) | ✅ decodes Vr **context + function** + Vv **stem** (100% round-trip, was 0%; word-test 48/48). **version** guarded (~0.97 conf, 83% round-trip) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -627,10 +630,11 @@ tooling — none of it blocks the tool being usable today.
   pairs (`n↔ż`, `d↔ļ`) — a higher frame resolution, a targeted tie-break, or a learned extension
   classifier (like the primary CNN); read `left`/tone diacritics + geminate markers, and stress
   (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Vr/Vv `function` + `version`** (context + stem wired, 97%). A default-heavy-Ca retrain got version to
-  71% but `function` to only ~52% (≈chance) on minimal primaries — it's near-invisible when Ca is default.
-  Likely needs **higher-res primary input** (64-80px, so the subtle bottom-right mark survives) and/or
-  **real scanned data**; deferred as an encoding-subtlety limit, not a quick tuning win.
+- **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
+  function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
+  even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
+  round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
+  resolution.
 - **A CNN top-vs-none detector** to push 3-consonant clusters past the 48% the margin caps them at.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
