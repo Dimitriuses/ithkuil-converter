@@ -27,7 +27,7 @@ const N = process.argv[2] ? Number(process.argv[2]) : 3000
 const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
 const MODEL_DIR = "models/primary-cnn"
 const CACHE_PATH = "models/primary-cnn-data.json"
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2 // bumped: nuisance Ca now biased toward defaults (v1 was always-random)
 
 // Predicted features (the heads) — each a small closed set.
 const TARGETS = {
@@ -41,7 +41,10 @@ const TARGETS = {
 type TargetKey = keyof typeof TARGETS
 const KEYS = Object.keys(TARGETS) as TargetKey[]
 
-// Nuisance Ca the CNN must be invariant to (rendered, not predicted).
+// Nuisance Ca the CNN must be invariant to (rendered, not predicted). The FIRST value
+// of each is its default; real formatives are mostly default-Ca, so we bias sampling
+// toward the default — otherwise the always-random distribution leaves default-Ca minimal
+// primaries out-of-distribution and the CNN mis-reads function/version on them (v1 flaw).
 const CONFIGS = ["UPX", "MSS", "MSC", "MDS", "DPX", "DSS"]
 const AFFILIATIONS = ["CSL", "ASO", "COA", "VAR"]
 const EXTENSIONS = ["DEL", "PRX", "ICP", "ATV", "GRA"]
@@ -55,6 +58,8 @@ const rand = () => {
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296
 }
 const pick = <T>(a: readonly T[]): T => a[(rand() * a.length) | 0]!
+/** Nuisance-Ca pick biased toward the default (a[0]) so default-Ca is in-distribution. */
+const pickCa = <T>(a: readonly T[]): T => (rand() < 0.5 ? a[0]! : pick(a))
 
 interface Sample {
   gray: Float32Array
@@ -81,11 +86,11 @@ function generate(n: number): Sample[] {
       stem: Number(choice.stem),
       context: choice.context,
       ca: {
-        perspective: choice.perspective,
-        configuration: pick(CONFIGS),
-        affiliation: pick(AFFILIATIONS),
-        extension: pick(EXTENSIONS),
-        essence: pick(ESSENCES),
+        perspective: choice.perspective, // a predicted target → keep uniform
+        configuration: pickCa(CONFIGS),
+        affiliation: pickCa(AFFILIATIONS),
+        extension: pickCa(EXTENSIONS),
+        essence: pickCa(ESSENCES),
       },
     }
     let text: string

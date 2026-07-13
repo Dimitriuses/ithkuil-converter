@@ -434,12 +434,16 @@ that native training is fast.
 - **Wired into decode (`decode-word.ts`, [`primary-cnn.ts`](src/primary-cnn.ts)):** `enablePrimaryCnn()`
   warm-loads it (server + tests), and the primary case runs it on the grayscale crop to fill the Vr
   **context** and Vv **stem** (plus a more Ca-robust specification). **`vrvv-test`: non-default
-  context × stem round-trip 94%** (was 0% — completely undecoded), and **`word-test` stays 48/48** (these
-  features read ~100% on clean/default primaries, so default words don't regress).
-- **function/version NOT wired:** they mis-read confidently on default-Ca minimal primaries (version
-  reads the default PRC at only ~25%, a confidence guard doesn't help), because the training sampled Ca
-  *always-random* — those minimal primaries are out-of-distribution. Fix = **retrain with realistic
-  (default-heavy) Ca sampling**; the dataset cache makes iterating cheap.
+  context × stem round-trip 97%** (was 0% — completely undecoded), and **`word-test` stays 48/48** (these
+  features read 100% on clean/default primaries, so default words don't regress).
+- **function/version still NOT wired — retraining didn't crack them.** The generator now biases nuisance
+  Ca toward its defaults so default-Ca minimal primaries are in-distribution (v1 was always-random). That
+  helped version on clean defaults (25%→71%) and lifted the context×stem round-trip to 97%, but **function
+  stayed at ~chance (52%)** and version short of the ~100% needed to wire without regressing clean words.
+  Root cause is deeper than training data: function reads **83% when Ca co-varies but ~52% on *minimal*
+  (default-Ca) primaries** — it's **near-invisible on them**, an encoding-subtlety limit at this fidelity,
+  not a distribution one. Decoding function/version would likely need higher-res input and/or real
+  (non-synthetic) scans — deferred.
 
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
@@ -614,7 +618,7 @@ tooling — none of it blocks the tool being usable today.
 | 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
-| Primary-feature CNN (entanglement) — trained + wired | ✅ decodes Vr **context** + Vv **stem** (94% round-trip, was 0%; word-test 48/48). fn/ver pending Ca-sampling retrain |
+| Primary-feature CNN (entanglement) — trained + wired | ✅ decodes Vr **context** + Vv **stem** (97% round-trip, was 0%; word-test 48/48). fn/ver near-invisible on minimal primaries — deferred |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -623,11 +627,10 @@ tooling — none of it blocks the tool being usable today.
   pairs (`n↔ż`, `d↔ļ`) — a higher frame resolution, a targeted tie-break, or a learned extension
   classifier (like the primary CNN); read `left`/tone diacritics + geminate markers, and stress
   (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Finish Vr/Vv — decode `function` + `version`** (context + stem already wired, 94%). Both mis-read
-  *confidently* on default-Ca minimal primaries → regress clean words. Fix: **retrain the primary CNN
-  with realistic (default-heavy) Ca sampling** so minimal primaries are in-distribution, then wire the
-  two heads with the same non-default-only guard. Also push `function` (84%) with more data/epochs — the
-  dataset cache makes re-training cheap.
+- **Vr/Vv `function` + `version`** (context + stem wired, 97%). A default-heavy-Ca retrain got version to
+  71% but `function` to only ~52% (≈chance) on minimal primaries — it's near-invisible when Ca is default.
+  Likely needs **higher-res primary input** (64-80px, so the subtle bottom-right mark survives) and/or
+  **real scanned data**; deferred as an encoding-subtlety limit, not a quick tuning win.
 - **A CNN top-vs-none detector** to push 3-consonant clusters past the 48% the margin caps them at.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
