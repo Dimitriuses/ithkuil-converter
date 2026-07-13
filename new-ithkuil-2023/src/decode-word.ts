@@ -17,8 +17,9 @@ import { decodeSecondary } from "./secondary.js"
 import { diacriticsToCase } from "./case-vowel.js"
 import { isRegister, decodeAlphabeticSpan } from "./alphabetic.js"
 import { loadCnnClassifier, type CnnClassifier } from "./cnn-classify.js"
+import { loadPrimaryCnn, type PrimaryCnn } from "./primary-cnn.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
-import type { RgbaImage } from "./image-io.js"
+import { cropRgba, type RgbaImage } from "./image-io.js"
 
 const templates = loadTemplates("dataset", 64)
 const diacriticTemplates = partitionTemplates(templates).diacritic
@@ -37,6 +38,21 @@ export async function enableCoreCnn(dir = "models/consonant-cnn"): Promise<boole
     return true
   } catch {
     coreCnn = null
+    return false
+  }
+}
+
+// The primary-feature CNN — reads specification/context/stem reliably (it decodes the
+// Vr context and Vv stem, which template matching can't under Ca co-variation).
+let primaryCnn: PrimaryCnn | null = null
+
+/** Load the primary-feature CNN so subsequent decodes read Vr/Vv. Call at warmup. */
+export async function enablePrimaryCnn(dir = "models/primary-cnn"): Promise<boolean> {
+  try {
+    primaryCnn = await loadPrimaryCnn(dir)
+    return true
+  } catch {
+    primaryCnn = null
     return false
   }
 }
@@ -113,6 +129,18 @@ export function decodeRegions(
       case "primary": {
         const p = decodePrimaryAligned(cropRegionBitmap(bmp, region))
         decoded = { specification: p.specification, perspective: p.perspective }
+        // The CNN reads the Vr/Vv features the template can't — context (Vr) and stem
+        // (Vv) — plus a more Ca-robust specification. These read ~100% on clean/default
+        // primaries so they don't regress default words. function/version are NOT taken:
+        // they're weak on default-Ca minimal primaries and mis-fire *confidently* (a
+        // confidence guard doesn't save them) — they need a CNN retrained with realistic
+        // (default-heavy) Ca sampling. See roadmap.
+        if (primaryCnn && grayImage) {
+          const pf = primaryCnn.classifyImage(cropRgba(grayImage, region.bbox))
+          decoded.specification = pf.specification
+          decoded.context = pf.context
+          decoded.stem = pf.stem
+        }
         break
       }
     }
@@ -141,6 +169,11 @@ function charactersToFeatures(characters: DecodedCharacter[]): DecodedFeatures {
     switch (c.type) {
       case "primary":
         if (c.decoded.specification) features.specification = c.decoded.specification as string
+        // Vr/Vv (only when non-default, so unread/default slots elide identically).
+        if (c.decoded.context && c.decoded.context !== "EXS") features.context = c.decoded.context as string
+        if (c.decoded.function && c.decoded.function !== "STA") features.function = c.decoded.function as string
+        if (c.decoded.version && c.decoded.version !== "PRC") features.version = c.decoded.version as string
+        if (c.decoded.stem && c.decoded.stem !== "1") features.stem = Number(c.decoded.stem)
         break
       case "secondary":
         if (c.decoded.consonants) rootParts.push(c.decoded.consonants as string)

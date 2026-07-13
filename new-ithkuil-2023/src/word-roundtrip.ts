@@ -13,15 +13,16 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodeWordToText, enableCoreCnn } from "./decode-word.js"
+import { decodeWordToText, enableCoreCnn, enablePrimaryCnn } from "./decode-word.js"
 
 const ROOTS = ["l", "s", "kt", "sm"] // single + cluster roots
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"]
 const VNS = ["none", "PRL", "CPL"]
 
-// Exercise the consonant CNN (on by default in the pipeline) so this also guards
-// against the CNN regressing clean full-word decoding.
+// Exercise both CNNs (on by default in the pipeline) so this guards against the CNN
+// regressing clean full-word decoding.
 const cnnOn = await enableCoreCnn()
+const primOn = await enablePrimaryCnn()
 
 let total = 0
 let ok = 0
@@ -46,6 +47,6 @@ for (const root of ROOTS) {
   }
 }
 
-console.log(`composed word → text: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%  (core CNN ${cnnOn ? "on" : "off — model absent"})`)
+console.log(`composed word → text: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%  (core CNN ${cnnOn ? "on" : "off"}, primary CNN ${primOn ? "on" : "off"})`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
 else console.log("  every rendered formative decoded back to its exact romanization.")

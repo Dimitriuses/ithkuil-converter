@@ -430,8 +430,16 @@ that native training is fast.
   feature). 3000 samples / 60 epochs, native ~7 s/epoch.
 - **Held-out, everything co-varying** (the regime template collapses on): **specification 100%, context
   99%, perspective 96%, stem 90%, version 87%, function 84%** — vs template ~50-65%. Cracks the entanglement.
-- Model saved to `models/primary-cnn/`. **Not yet wired into `decodePrimaryAligned`** — that's the next
-  step and would finally decode **Vr/Vv** for non-default-Ca formatives (see Next up).
+- Model saved to `models/primary-cnn/`.
+- **Wired into decode (`decode-word.ts`, [`primary-cnn.ts`](src/primary-cnn.ts)):** `enablePrimaryCnn()`
+  warm-loads it (server + tests), and the primary case runs it on the grayscale crop to fill the Vr
+  **context** and Vv **stem** (plus a more Ca-robust specification). **`vrvv-test`: non-default
+  context × stem round-trip 94%** (was 0% — completely undecoded), and **`word-test` stays 48/48** (these
+  features read ~100% on clean/default primaries, so default words don't regress).
+- **function/version NOT wired:** they mis-read confidently on default-Ca minimal primaries (version
+  reads the default PRC at only ~25%, a confidence guard doesn't help), because the training sampled Ca
+  *always-random* — those minimal primaries are out-of-distribution. Fix = **retrain with realistic
+  (default-heavy) Ca sampling**; the dataset cache makes iterating cheap.
 
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
@@ -606,7 +614,7 @@ tooling — none of it blocks the tool being usable today.
 | 3-consonant clusters (top+core+bottom) | ◑ partial — full 48% (was 0%); 2-consonant lifted to 100%, no regression |
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
-| Primary-feature CNN (entanglement) — trained | ✅ spec 100% · context 99% · persp 96% · stem 90% · version 87% · function 84% (vs template ~50-65%); not yet wired into decode |
+| Primary-feature CNN (entanglement) — trained + wired | ✅ decodes Vr **context** + Vv **stem** (94% round-trip, was 0%; word-test 48/48). fn/ver pending Ca-sampling retrain |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
 ### Next up (planned — nothing below is built yet)
@@ -615,12 +623,11 @@ tooling — none of it blocks the tool being usable today.
   pairs (`n↔ż`, `d↔ļ`) — a higher frame resolution, a targeted tie-break, or a learned extension
   classifier (like the primary CNN); read `left`/tone diacritics + geminate markers, and stress
   (`STRESSED_SYLLABLE_PLACEHOLDER`).
-- **Wire the primary-feature CNN into `decodePrimaryAligned`** (the trained model is ready): warm-load
-  it, run it on the primary crop, fill spec/perspective/context/function/version/stem → this finally
-  decodes **Vr/Vv** so non-default-Ca formatives round-trip. Guard against clean-default regression the
-  way the consonant CNN did, and re-verify `word-test`.
-- **Push the primary CNN's `function` head** (84%, the laggard) with more data/epochs — the dataset
-  cache makes re-training cheap.
+- **Finish Vr/Vv — decode `function` + `version`** (context + stem already wired, 94%). Both mis-read
+  *confidently* on default-Ca minimal primaries → regress clean words. Fix: **retrain the primary CNN
+  with realistic (default-heavy) Ca sampling** so minimal primaries are in-distribution, then wire the
+  two heads with the same non-default-only guard. Also push `function` (84%) with more data/epochs — the
+  dataset cache makes re-training cheap.
 - **A CNN top-vs-none detector** to push 3-consonant clusters past the 48% the margin caps them at.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).

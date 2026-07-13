@@ -53,6 +53,7 @@ function warmDecode() {
       alpha.warmAlphabetic()
       secondary.warmSecondary()
       await decode.enableCoreCnn() // consonant CNN on by default (no-op if model absent)
+      await decode.enablePrimaryCnn() // primary-feature CNN → decodes Vr/Vv
       decodeDone = true
       return { decode, seg, img }
     })()

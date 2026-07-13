@@ -15,6 +15,12 @@ export interface DecodedFeatures {
   /** Root consonant string (Cr), e.g. "kt". */
   root?: string
   specification?: string
+  /** Vr context (EXS default), function (STA default). */
+  context?: string
+  function?: string
+  /** Vv version (PRC default) + stem (1 default). */
+  version?: string
+  stem?: number
   /** Slot-VIII value (valence/aspect/phase/level/effect). */
   vn?: string
   case?: string
