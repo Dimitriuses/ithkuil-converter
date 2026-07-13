@@ -7,6 +7,8 @@
   "scripts": {
     "postinstall": "node scripts/fix-tfjs-node.mjs",
     "fix-tfjs-node": "node scripts/fix-tfjs-node.mjs",
+    "setup": "node scripts/setup.mjs",
+    "doctor": "node scripts/setup.mjs --check",
     "spike": "tsx src/spike-forward.ts",
     "encode": "tsx src/cli.ts",
     "serve": "tsx src/server.ts",
