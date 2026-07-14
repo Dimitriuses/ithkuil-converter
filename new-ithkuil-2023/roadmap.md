@@ -649,8 +649,16 @@ tooling — none of it blocks the tool being usable today.
 
 ### Next up (planned — nothing below is built yet)
 
-- **Alphabetic — remaining bits**: still unread are `left`/tone diacritics, geminate markers, and stress
-  (`STRESSED_SYLLABLE_PLACEHOLDER`).
+- **Alphabetic — stress + gemination** (in progress): probing `textToSecondaries` showed these are *not*
+  cosmetic gaps — before this the inputs **actively mis-decoded** (`kalá → kalla`, `atta → ačla`), and
+  they're the natural input class for alphabetic mode (names/loanwords carry non-default stress and
+  gemination). The encoder marks them with distinct glyphs — a `STRESSED_SYLLABLE_PLACEHOLDER` core and a
+  `CORE_GEMINATE` bottom mark — so the base CNN now learns them as two extra classes (`STRESS` on the core
+  head → acute-accent the syllable's vowel; `GEM` on the bottom head → double the core consonant), trained
+  on pipeline-rendered accented/geminated words. See the alphabetic section above for results.
+- **Alphabetic — tone (`left` diacritic): likely a dead entry.** No phonetic input tested emits a `left`
+  slot — tone appears to be a formative-level feature that doesn't surface in alphabetic spelling. Confirm
+  it's reachable at all before spending any effort; otherwise drop.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
