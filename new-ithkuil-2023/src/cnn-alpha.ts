@@ -37,8 +37,10 @@ const textToSecondaries = (fromText as Record<string, unknown>).textToSecondarie
   o: unknown,
 ) => Record<string, string>[]
 
-const N = process.argv[2] ? Number(process.argv[2]) : 8000
-const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 50
+// 12000/60 is the deployed config: the label space is 36 classes (33 letters + STRESS + GEM),
+// and 8000 samples spread that thin enough to regress the common letters (bottom head 96→92%).
+const N = process.argv[2] ? Number(process.argv[2]) : 12000
+const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
 // Frame side (arg 4). The base is stretched to SZ×SZ via `frameSquare` — the SAME
 // normalized binary representation the chamfer match and in-pipeline decode use, so there
 // is no train/inference domain gap (an aspect-preserving grayscale crop had one: 99%
@@ -48,17 +50,23 @@ const SZ = process.argv[4] ? Number(process.argv[4]) : 80
 const SUFFIX = SZ === 80 ? "" : `-${SZ}`
 const MODEL_DIR = `models/alpha-cnn${SUFFIX}`
 const CACHE_PATH = `models/alpha-cnn-data${SUFFIX}.json`
-const CACHE_VERSION = 4 // bumped: added STRESS (stressed placeholder) + GEM (geminate) classes
+const CACHE_VERSION = 5 // bumped: ext-only letters (w y ' " ¿) + GEM allowed on the top slot
 
-// The consonant inventory that can fill a core/top/bottom slot (matches alphabetic.ts).
-const CONS = "pbtdkgfvţḑszšžçxhļcżčjmnňrlř".split("")
+// Letter inventories, mirroring @zsnout's from-text.js:
+//   CORE_CONS — the 28 letters that can be a *core*;
+//   EXT_ONLY  — letters that can ONLY be an extension (top/bottom), never a core;
+//   EXT_CONS  — the full top/bottom inventory. Words using w/y/'/"/¿ were previously
+//               unreadable because the label space held only CORE_CONS.
+const CORE_CONS = "pbtdkgfvţḑszšžçxhļcżčjmnňrlř".split("")
+const EXT_ONLY = ["w", "y", "'", '"', "¿"]
+const EXT_CONS = [...CORE_CONS, ...EXT_ONLY]
 const VOWS = ["a", "e", "i", "o", "u"]
-// Acute-accented forms — a stressed syllable's vowel carries the accent in romanization.
+// Stressed vowel forms (inverse of @zsnout's STRESSED_TO_UNSTRESSED_VOWEL_MAP).
 const ACC: Record<string, string> = { a: "á", e: "é", i: "í", o: "ó", u: "ú" }
-// Slot label set: NONE + every consonant + two special glyphs — STRESS (the
-// STRESSED_SYLLABLE_PLACEHOLDER core) and GEM (the CORE_GEMINATE bottom mark). One shared
-// set across the three heads; only the core head ever sees STRESS, only bottom sees GEM.
-const LABELS = ["NONE", ...CONS, "STRESS", "GEM"]
+// Shared label set across the three heads: NONE + every letter that can fill any slot +
+// two special glyphs — STRESS (the STRESSED_SYLLABLE_PLACEHOLDER core, core head only) and
+// GEM (the CORE_GEMINATE mark, which the encoder emits in EITHER top or bottom).
+const LABELS = ["NONE", ...EXT_CONS, "STRESS", "GEM"]
 const SLOTS = ["core", "top", "bottom"] as const
 type Slot = (typeof SLOTS)[number]
 // Encoder cores that mean "no consonant core" (a bare, *unstressed* placeholder base).
@@ -87,13 +95,20 @@ function randWord(): string {
   let w = ""
   for (let s = 0; s < nSyl; s++) {
     const f = rand()
-    if (f < 0.16) {
-      // geminate syllable VCCV (same consonant, intervocalic) → CORE_GEMINATE
-      const c = pick(CONS)
+    if (f < 0.12) {
+      // VCCV, same core consonant → geminate in the BOTTOM slot ("atta")
+      const c = pick(CORE_CONS)
       w += pick(VOWS) + c + c + pick(VOWS)
-    } else if (f < 0.58) w += pick(CONS) + pick(VOWS) + pick(CONS) // CVC → top+right+bottom
-    else if (f < 0.8) w += pick(CONS) + pick(VOWS) // CV → top+right / core
-    else w += pick(VOWS) + pick(CONS) + pick(CONS) // VCC → core+bottom
+    } else if (f < 0.22) {
+      // V C C X V, first two the same → 3-letter core ⇒ geminate in the TOP slot ("attka")
+      const c = pick(CORE_CONS)
+      w += pick(VOWS) + c + c + pick(EXT_CONS) + pick(VOWS)
+    } else if (f < 0.34) {
+      // V + ext-only + core + V → an ext-only letter in the TOP slot ("awka")
+      w += pick(VOWS) + pick(EXT_ONLY) + pick(CORE_CONS) + pick(VOWS)
+    } else if (f < 0.66) w += pick(EXT_CONS) + pick(VOWS) + pick(EXT_CONS) // CVC → top+right+bottom
+    else if (f < 0.84) w += pick(CORE_CONS) + pick(VOWS) // CV → top+right / core
+    else w += pick(VOWS) + pick(CORE_CONS) + pick(EXT_CONS) // VCC → core+bottom
   }
   // ~22% of words: stress one syllable by accenting a random (plain) vowel.
   if (rand() < 0.22) {
@@ -159,15 +174,16 @@ function generate(n: number): Sample[] {
     for (let ci = 0; ci < bases.length; ci++) {
       const spec = specs[ci]
       const coreRaw = spec.core ?? ""
-      // core: a consonant, "" (bare placeholder), or STRESS (stressed-syllable placeholder).
+      // core: a core consonant, "" (bare placeholder), or STRESS (stressed-syllable placeholder).
       const core = coreRaw === "STRESSED_SYLLABLE_PLACEHOLDER" ? "STRESS" : PLACEHOLDERS.has(coreRaw) ? "" : coreRaw
-      const top = spec.top ?? ""
-      // bottom: a consonant, "", or GEM (the CORE_GEMINATE doubling mark).
-      const bottom = (spec.bottom ?? "") === "CORE_GEMINATE" ? "GEM" : spec.bottom ?? ""
+      // top/bottom: an EXT letter, "", or GEM — the encoder emits CORE_GEMINATE in either slot.
+      const gem = (v: string) => (v === "CORE_GEMINATE" ? "GEM" : v)
+      const top = gem(spec.top ?? "")
+      const bottom = gem(spec.bottom ?? "")
       // Skip labels outside our inventory (defensive).
-      const okCore = core === "" || core === "STRESS" || CONS.includes(core)
-      const okBottom = bottom === "" || bottom === "GEM" || CONS.includes(bottom)
-      if (!okCore || (top && !CONS.includes(top)) || !okBottom) continue
+      const okExt = (v: string) => v === "" || v === "GEM" || EXT_CONS.includes(v)
+      const okCore = core === "" || core === "STRESS" || CORE_CONS.includes(core)
+      if (!okCore || !okExt(top) || !okExt(bottom)) continue
       const mask = frameSquare(bmp, bases[ci].base, SZ)
       const gray = new Float32Array(SZ * SZ)
       for (let p = 0; p < gray.length; p++) gray[p] = mask.data[p] ? 1 : 0
@@ -296,8 +312,10 @@ async function main(): Promise<void> {
     for (let i = 0; i < test.length; i++) if (preds[ki][i] === test[i].labels[k]) ok++
     console.log(`  ${k.padEnd(8)} ${((100 * ok) / test.length).toFixed(1)}%`)
   })
-  // Per-class recall for the near-identical letters + the two special glyphs (all slots).
-  const idx = Object.fromEntries(["n", "ż", "d", "ļ", "p", "v", "STRESS", "GEM"].map((c) => [c, LABELS.indexOf(c)]))
+  // Per-class recall: the near-identical letters, the ext-only letters, and the special glyphs.
+  const idx = Object.fromEntries(
+    ["n", "ż", "d", "ļ", "p", "v", "w", "y", "'", "STRESS", "GEM"].map((c) => [c, LABELS.indexOf(c)]),
+  )
   const rec: Record<string, [number, number]> = {}
   for (const c of Object.keys(idx)) rec[c] = [0, 0]
   for (let i = 0; i < test.length; i++)

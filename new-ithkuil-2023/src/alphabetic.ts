@@ -345,11 +345,11 @@ function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates, baseCnn?: Bas
   const frame = frameSquare(bmp, ch.base, baseCnn?.size)
   const raw = baseCnn ? baseCnn.classifyBase(frame) : matchBase(frame, t.base)
   const stressed = raw.core === "STRESS"
-  const geminate = raw.bottom === "GEM"
   const plain = (s: string) => (s === "STRESS" || s === "GEM" ? "" : s)
   const core = plain(raw.core)
-  const top = plain(raw.top)
-  const bottom = geminate ? core : plain(raw.bottom) // GEM doubles the core consonant
+  // GEM = CORE_GEMINATE, which the encoder emits in EITHER slot — it repeats the core there.
+  const top = raw.top === "GEM" ? core : plain(raw.top)
+  const bottom = raw.bottom === "GEM" ? core : plain(raw.bottom)
 
   let superposed = ""
   let underposed = ""
@@ -365,8 +365,11 @@ function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates, baseCnn?: Bas
     right = STRESS_ACCENT[right] ?? right
     underposed = STRESS_ACCENT[underposed] ?? underposed
   }
-  // Reading order within a character.
-  return top + superposed + core + right + bottom + underposed
+  // Reading order within a character. The encoder consumes the superposed vowel BEFORE the
+  // letter-core, so `superposed` precedes `top` — it only differs from the old
+  // `top → superposed` order when both are present (needs an ext-only letter, e.g. "awka"),
+  // which is why the earlier test words never distinguished them.
+  return superposed + top + core + right + bottom + underposed
 }
 
 /**

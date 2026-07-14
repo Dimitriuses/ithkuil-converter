@@ -501,10 +501,25 @@ the side (`right`) diacritics.
   STRESS 167/167, GEM 241/242 (they're visually distinct → near-perfect). **In-pipeline stress 0→10/10,
   gemination 0→8/8, zero regression** (plain 15/15, p/v 9/9). Stressed **diaeresis** vowels take a
   circumflex, not an acute (`ä→â`, per @zsnout's `STRESSED_TO_UNSTRESSED_VOWEL_MAP`) — handled.
-  - **Scope caveat:** this covers **bottom-slot** gemination (`atta`). The encoder also emits the geminate
-    in the **top** slot when `core == top` (`attka`), which is still dropped; and the ext-only letters
-    `w y ' " ¿` are absent from the CNN's label space entirely. Both are tracked in *Next up* — they need a
-    retrain, not just decode logic.
+- **Extension letters, top-slot gemination, reading order** (found by *reading* @zsnout's `from-text.js`
+  rather than probing it — the lesson: read the encoder, don't guess from samples). Three real gaps, fixed
+  together in one retrain:
+  - **`w y ' " ¿`** — @zsnout's `EXT` set admits these in top/bottom, but the label space held only the 28
+    **core** consonants, so any word using them was unreadable (`awka → baa`). Label space now mirrors the
+    encoder: core ∈ `CORE_CONS`, top/bottom ∈ `EXT_CONS` (= CORE_CONS + the 5 ext-only letters) → **36 classes**.
+  - **Top-slot gemination** — the encoder emits `CORE_GEMINATE` in `top` when `core == top` (`attka`), not
+    only in `bottom`; ~40% of geminates in a random corpus are top-slot. The label guard had been *skipping*
+    those samples. `GEM` is now allowed on the top head and repeats the core into whichever slot carries it.
+  - **Reading order** — the encoder consumes the superposed vowel *before* the letter-core, so the true
+    order is `superposed → top → core → right → bottom → underposed` (we had `top → superposed`). It only
+    differs when both are present, which needs an ext-only letter — so no earlier test could catch it.
+  - **Sizing matters:** at 8000 samples the 36-class space thinned per-class density (bottom head 96→92%)
+    and regressed the common letters (`tuni→tuzi`, `tapi→tavi`). **12000 samples / 60 epochs** restored it
+    (bottom 95.5%, w 98% / y 99% / `'` 97%, STRESS 259/259, GEM 498/503) — that's the deployed config.
+  - **Result:** ext letters **0→8/8**, top-slot gemination **0→4/6**, with **zero regression** (plain 15/15,
+    p/v 9/9, stress 10/10, bottom-gem 8/8; `alphabetic` 15/15, `phrase` 7/7, `word` 48/48). Combined
+    alphabetic probe suite **42/56 → 54/56**. Residual: 2 top-gem misses (`attka→attxa`) are bottom-*letter*
+    errors in the dense 3-letter-core context, not gemination failures.
 
 ### Robust primary detection (CTE) — done
 
@@ -649,7 +664,7 @@ tooling — none of it blocks the tool being usable today.
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
 | **M9** CNN — native training (tfjs-node), 48px | ✅ done — **beats template 90.7% vs 85.0%** in-pipeline |
-| Alphabetic-register decoding — **base CNN** | ✅ done — **100% char / 100% exact** (was 94.6%/87%); n↔ż, d↔ļ, p↔v fixed + **stress & gemination** decoded, via pipeline-domain 80px CNN |
+| Alphabetic-register decoding — **base CNN** | ✅ done — **100% char / 100% exact** (was 94.6%/87%); n↔ż, d↔ļ, p↔v fixed + **stress, gemination (both slots), ext letters `w y ' " ¿`** decoded. Pipeline-domain 80px CNN, 36 classes, 12k/60. Probe suite 42/56→**54/56** |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
@@ -665,18 +680,10 @@ tooling — none of it blocks the tool being usable today.
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
   random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
   formative-level feature that does not surface in alphabetic spelling. Nothing to build.
-- **Alphabetic — extension letters `w y ' " ¿` (real gap, found while checking tone).** @zsnout's `EXT` set
-  admits these in top/bottom slots, but the base CNN's label space only holds the 28 **core** consonants —
-  so any word using them is unreadable (`awka → baa`, `ayka → aka`). The roadmap's own example
-  *"Wattunkí ruyün"* hits this. Needs them added to the top/bottom label space + a retrain.
-- **Alphabetic — top-slot gemination (real gap).** The encoder marks a geminate in **`top`** when
-  `core == top` (`attka`), not only in `bottom` — ~40% of geminates in a random corpus are top-slot. The
-  training guard currently *skips* those samples and decode drops the marker (`attka → ata`). Needs `GEM`
-  allowed on the top head + a retrain. (Bottom-slot gemination — the common `atta` case — already works.)
-- **Alphabetic — reading order when `superposed` + `top` co-occur.** The encoder consumes the superposed
-  vowel *before* the letter-core, so romanization order is `superposed → top → core → …`, but our
-  reconstruction uses `top → superposed → …`. It only differs when both are present (reachable via the
-  ext-only letters above), which is why the current test words never caught it.
+- **Alphabetic — residual top-slot gemination misses (2/6).** `attka → attxa`, `ollka → ollva`: the
+  gemination itself reads correctly; the *bottom letter* is misread in the dense 3-letter-core context
+  (top-GEM + core + bottom in one base). Bottom head is 95.5% held-out, so these are ordinary letter
+  errors — more samples/epochs or a bottom-slot-focused head would close them.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
