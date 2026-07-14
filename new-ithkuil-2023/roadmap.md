@@ -491,8 +491,16 @@ the side (`right`) diacritics.
   **In-pipeline `npm run alphabetic`: 15/15 exact, 100% char** (was 13/15, 94.6%) — n↔ż, d↔ļ **and p↔v**
   resolved; `phrase-test` **7/7**, `word-test` unaffected. p↔v (the last miss at 64px) needed the 80px
   bump: the top/bottom extension marks are small, and 64px left the top slot weakest — raising resolution
-  lifted bottom 92→95% and cleared both p↔v cases (`peka`, `pika`) with zero regression. `left`/tone/
-  geminate/stress still unread.
+  lifted bottom 92→95% and cleared both p↔v cases (`peka`, `pika`) with zero regression.
+- **Stress + gemination** (added on top of the above; same 80px pipeline-domain CNN). `textToSecondaries`
+  marks a stressed syllable with a distinct `STRESSED_SYLLABLE_PLACEHOLDER` core and an intervocalic
+  geminate with a `CORE_GEMINATE` bottom mark — glyphs the templates never modelled, so **before this
+  those inputs actively mis-decoded** (`kalá → kalla`, `atta → ačla`). Added as two classes: **`STRESS`**
+  on the core head (→ acute-accent the syllable's vowel) and **`GEM`** on the bottom head (→ double the
+  core consonant); the generator now renders accented/geminated words so both are trained. Held-out
+  STRESS 167/167, GEM 241/242 (they're visually distinct → near-perfect). **In-pipeline stress 0→10/10,
+  gemination 0→8/8, zero regression** (plain 15/15, p/v 9/9). Still unread: `left`/tone diacritics — see
+  Next up (likely unreachable via alphabetic mode).
 
 ### Robust primary detection (CTE) — done
 
@@ -637,7 +645,7 @@ tooling — none of it blocks the tool being usable today.
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
 | **M9** CNN — native training (tfjs-node), 48px | ✅ done — **beats template 90.7% vs 85.0%** in-pipeline |
-| Alphabetic-register decoding — **base CNN** | ✅ done — **100% char / 100% exact** (was 94.6%/87%); n↔ż, d↔ļ, p↔v fixed via pipeline-domain 80px CNN |
+| Alphabetic-register decoding — **base CNN** | ✅ done — **100% char / 100% exact** (was 94.6%/87%); n↔ż, d↔ļ, p↔v fixed + **stress & gemination** decoded, via pipeline-domain 80px CNN |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
@@ -649,16 +657,10 @@ tooling — none of it blocks the tool being usable today.
 
 ### Next up (planned — nothing below is built yet)
 
-- **Alphabetic — stress + gemination** (in progress): probing `textToSecondaries` showed these are *not*
-  cosmetic gaps — before this the inputs **actively mis-decoded** (`kalá → kalla`, `atta → ačla`), and
-  they're the natural input class for alphabetic mode (names/loanwords carry non-default stress and
-  gemination). The encoder marks them with distinct glyphs — a `STRESSED_SYLLABLE_PLACEHOLDER` core and a
-  `CORE_GEMINATE` bottom mark — so the base CNN now learns them as two extra classes (`STRESS` on the core
-  head → acute-accent the syllable's vowel; `GEM` on the bottom head → double the core consonant), trained
-  on pipeline-rendered accented/geminated words. See the alphabetic section above for results.
 - **Alphabetic — tone (`left` diacritic): likely a dead entry.** No phonetic input tested emits a `left`
   slot — tone appears to be a formative-level feature that doesn't surface in alphabetic spelling. Confirm
-  it's reachable at all before spending any effort; otherwise drop.
+  it's reachable at all before spending any effort; otherwise drop. (Stress + gemination — the other two
+  once-"unread" features — turned out to be real and are now decoded; see the alphabetic section above.)
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%

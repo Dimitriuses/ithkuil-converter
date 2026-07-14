@@ -79,7 +79,7 @@ const MODELS = [
   ["consonant-cnn", "consonant-core CNN — near-identical pairs + noise robustness", "npm run cnn"],
   ["primary-cnn", "primary CNN — decodes Vr/Vv (function, context, stem)", "npm run cnn-primary"],
   ["top-cnn", "top-extension CNN — 3-consonant clusters", "npm run cnn-top"],
-  ["alpha-cnn", "alphabetic-base CNN — fixes n↔ż / d↔ļ", "npm run cnn-alpha"],
+  ["alpha-cnn", "alphabetic-base CNN — n↔ż / d↔ļ / p↔v + stress + gemination", "npm run cnn-alpha"],
 ]
 
 // ── DOCTOR: read-only readiness report ───────────────────────────────────────────

@@ -325,13 +325,27 @@ function groupChars(span: SegmentedRegion[]): AlphaChar[] {
   return chars
 }
 
+/** Acute-accented vowels — a stressed syllable's vowel carries the accent in romanization. */
+const STRESS_ACCENT: Record<string, string> = { a: "á", e: "é", i: "í", o: "ó", u: "ú" }
+
 /** Decode one alphabetic character to its romanized letters, in reading order. The
  * base consonants come from the CNN when available (it reads each slot independently,
  * fixing the joint match's n↔ż / d↔ļ slot trade-offs), else the joint chamfer match.
- * Both consume the same `frameSquare` mask. */
+ * Both consume the same `frameSquare` mask.
+ *
+ * The CNN can also read two special glyphs the templates don't model: `STRESS` (the
+ * stressed-syllable placeholder core → accent this character's vowel) and `GEM` (the
+ * CORE_GEMINATE bottom mark → double the core consonant). */
 function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates, baseCnn?: BaseClassifier): string {
   const frame = frameSquare(bmp, ch.base, baseCnn?.size)
-  const { core, top, bottom } = baseCnn ? baseCnn.classifyBase(frame) : matchBase(frame, t.base)
+  const raw = baseCnn ? baseCnn.classifyBase(frame) : matchBase(frame, t.base)
+  const stressed = raw.core === "STRESS"
+  const geminate = raw.bottom === "GEM"
+  const plain = (s: string) => (s === "STRESS" || s === "GEM" ? "" : s)
+  const core = plain(raw.core)
+  const top = plain(raw.top)
+  const bottom = geminate ? core : plain(raw.bottom) // GEM doubles the core consonant
+
   let superposed = ""
   let underposed = ""
   let right = ""
@@ -340,6 +354,11 @@ function decodeChar(bmp: Bitmap, ch: AlphaChar, t: AlphaTemplates, baseCnn?: Bas
     if (v.role === "superposed") superposed = classifyMask(m, t.superposed).label
     else if (v.role === "underposed") underposed = classifyMask(m, t.underposed).label
     else right = classifyMask(m, t.side).label
+  }
+  if (stressed) {
+    superposed = STRESS_ACCENT[superposed] ?? superposed
+    right = STRESS_ACCENT[right] ?? right
+    underposed = STRESS_ACCENT[underposed] ?? underposed
   }
   // Reading order within a character.
   return top + superposed + core + right + bottom + underposed

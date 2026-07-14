@@ -48,16 +48,20 @@ const SZ = process.argv[4] ? Number(process.argv[4]) : 80
 const SUFFIX = SZ === 80 ? "" : `-${SZ}`
 const MODEL_DIR = `models/alpha-cnn${SUFFIX}`
 const CACHE_PATH = `models/alpha-cnn-data${SUFFIX}.json`
-const CACHE_VERSION = 3 // bumped: data now rendered through the real pipeline (encode), not isolated glyphs
+const CACHE_VERSION = 4 // bumped: added STRESS (stressed placeholder) + GEM (geminate) classes
 
 // The consonant inventory that can fill a core/top/bottom slot (matches alphabetic.ts).
 const CONS = "pbtdkgfvţḑszšžçxhļcżčjmnňrlř".split("")
 const VOWS = ["a", "e", "i", "o", "u"]
-// Each slot's label set: NONE (slot empty / placeholder core) + every consonant.
-const LABELS = ["NONE", ...CONS]
+// Acute-accented forms — a stressed syllable's vowel carries the accent in romanization.
+const ACC: Record<string, string> = { a: "á", e: "é", i: "í", o: "ó", u: "ú" }
+// Slot label set: NONE + every consonant + two special glyphs — STRESS (the
+// STRESSED_SYLLABLE_PLACEHOLDER core) and GEM (the CORE_GEMINATE bottom mark). One shared
+// set across the three heads; only the core head ever sees STRESS, only bottom sees GEM.
+const LABELS = ["NONE", ...CONS, "STRESS", "GEM"]
 const SLOTS = ["core", "top", "bottom"] as const
 type Slot = (typeof SLOTS)[number]
-// Encoder cores that mean "no consonant core" (a bare placeholder base).
+// Encoder cores that mean "no consonant core" (a bare, *unstressed* placeholder base).
 const PLACEHOLDERS = new Set(["STANDARD_PLACEHOLDER", "ALPHABETIC_PLACEHOLDER", "TONAL_PLACEHOLDER"])
 
 let rng = 20260714 >>> 0
@@ -75,15 +79,29 @@ interface Sample {
 }
 
 /** A random phonetic word — a mix of CVC / CV / VCC syllables — so `textToSecondaries`
- * packs a spread of top+bottom, core+bottom, and core-only bases. */
+ * packs a spread of top+bottom, core+bottom, and core-only bases. A fraction carry an
+ * intervocalic geminate (VCCV, same consonant → CORE_GEMINATE) or an acute-accented vowel
+ * (→ STRESSED_SYLLABLE_PLACEHOLDER), so those two glyph classes are represented in training. */
 function randWord(): string {
   const nSyl = 1 + ((rand() * 3) | 0)
   let w = ""
   for (let s = 0; s < nSyl; s++) {
     const f = rand()
-    if (f < 0.55) w += pick(CONS) + pick(VOWS) + pick(CONS) // CVC → top+right+bottom
+    if (f < 0.16) {
+      // geminate syllable VCCV (same consonant, intervocalic) → CORE_GEMINATE
+      const c = pick(CONS)
+      w += pick(VOWS) + c + c + pick(VOWS)
+    } else if (f < 0.58) w += pick(CONS) + pick(VOWS) + pick(CONS) // CVC → top+right+bottom
     else if (f < 0.8) w += pick(CONS) + pick(VOWS) // CV → top+right / core
     else w += pick(VOWS) + pick(CONS) + pick(CONS) // VCC → core+bottom
+  }
+  // ~22% of words: stress one syllable by accenting a random (plain) vowel.
+  if (rand() < 0.22) {
+    const vowelPos = [...w].map((ch, i) => (ACC[ch] ? i : -1)).filter((i) => i >= 0)
+    if (vowelPos.length) {
+      const i = pick(vowelPos)
+      w = w.slice(0, i) + ACC[w[i]] + w.slice(i + 1)
+    }
   }
   return w
 }
@@ -141,12 +159,15 @@ function generate(n: number): Sample[] {
     for (let ci = 0; ci < bases.length; ci++) {
       const spec = specs[ci]
       const coreRaw = spec.core ?? ""
-      const core = PLACEHOLDERS.has(coreRaw) ? "" : coreRaw
+      // core: a consonant, "" (bare placeholder), or STRESS (stressed-syllable placeholder).
+      const core = coreRaw === "STRESSED_SYLLABLE_PLACEHOLDER" ? "STRESS" : PLACEHOLDERS.has(coreRaw) ? "" : coreRaw
       const top = spec.top ?? ""
-      const bottom = spec.bottom ?? ""
+      // bottom: a consonant, "", or GEM (the CORE_GEMINATE doubling mark).
+      const bottom = (spec.bottom ?? "") === "CORE_GEMINATE" ? "GEM" : spec.bottom ?? ""
       // Skip labels outside our inventory (defensive).
-      if ((core && !CONS.includes(core)) || (top && !CONS.includes(top)) || (bottom && !CONS.includes(bottom)))
-        continue
+      const okCore = core === "" || core === "STRESS" || CONS.includes(core)
+      const okBottom = bottom === "" || bottom === "GEM" || CONS.includes(bottom)
+      if (!okCore || (top && !CONS.includes(top)) || !okBottom) continue
       const mask = frameSquare(bmp, bases[ci].base, SZ)
       const gray = new Float32Array(SZ * SZ)
       for (let p = 0; p < gray.length; p++) gray[p] = mask.data[p] ? 1 : 0
@@ -275,8 +296,8 @@ async function main(): Promise<void> {
     for (let i = 0; i < test.length; i++) if (preds[ki][i] === test[i].labels[k]) ok++
     console.log(`  ${k.padEnd(8)} ${((100 * ok) / test.length).toFixed(1)}%`)
   })
-  // Per-class recall for the near-identical letters that motivated this (across all slots).
-  const idx = Object.fromEntries(["n", "ż", "d", "ļ", "p", "v"].map((c) => [c, LABELS.indexOf(c)]))
+  // Per-class recall for the near-identical letters + the two special glyphs (all slots).
+  const idx = Object.fromEntries(["n", "ż", "d", "ļ", "p", "v", "STRESS", "GEM"].map((c) => [c, LABELS.indexOf(c)]))
   const rec: Record<string, [number, number]> = {}
   for (const c of Object.keys(idx)) rec[c] = [0, 0]
   for (let i = 0; i < test.length; i++)
