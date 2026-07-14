@@ -499,8 +499,12 @@ the side (`right`) diacritics.
   on the core head (→ acute-accent the syllable's vowel) and **`GEM`** on the bottom head (→ double the
   core consonant); the generator now renders accented/geminated words so both are trained. Held-out
   STRESS 167/167, GEM 241/242 (they're visually distinct → near-perfect). **In-pipeline stress 0→10/10,
-  gemination 0→8/8, zero regression** (plain 15/15, p/v 9/9). Still unread: `left`/tone diacritics — see
-  Next up (likely unreachable via alphabetic mode).
+  gemination 0→8/8, zero regression** (plain 15/15, p/v 9/9). Stressed **diaeresis** vowels take a
+  circumflex, not an acute (`ä→â`, per @zsnout's `STRESSED_TO_UNSTRESSED_VOWEL_MAP`) — handled.
+  - **Scope caveat:** this covers **bottom-slot** gemination (`atta`). The encoder also emits the geminate
+    in the **top** slot when `core == top` (`attka`), which is still dropped; and the ext-only letters
+    `w y ' " ¿` are absent from the CNN's label space entirely. Both are tracked in *Next up* — they need a
+    retrain, not just decode logic.
 
 ### Robust primary detection (CTE) — done
 
@@ -657,10 +661,22 @@ tooling — none of it blocks the tool being usable today.
 
 ### Next up (planned — nothing below is built yet)
 
-- **Alphabetic — tone (`left` diacritic): likely a dead entry.** No phonetic input tested emits a `left`
-  slot — tone appears to be a formative-level feature that doesn't surface in alphabetic spelling. Confirm
-  it's reachable at all before spending any effort; otherwise drop. (Stress + gemination — the other two
-  once-"unread" features — turned out to be real and are now decoded; see the alphabetic section above.)
+- ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
+  never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
+  random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
+  formative-level feature that does not surface in alphabetic spelling. Nothing to build.
+- **Alphabetic — extension letters `w y ' " ¿` (real gap, found while checking tone).** @zsnout's `EXT` set
+  admits these in top/bottom slots, but the base CNN's label space only holds the 28 **core** consonants —
+  so any word using them is unreadable (`awka → baa`, `ayka → aka`). The roadmap's own example
+  *"Wattunkí ruyün"* hits this. Needs them added to the top/bottom label space + a retrain.
+- **Alphabetic — top-slot gemination (real gap).** The encoder marks a geminate in **`top`** when
+  `core == top` (`attka`), not only in `bottom` — ~40% of geminates in a random corpus are top-slot. The
+  training guard currently *skips* those samples and decode drops the marker (`attka → ata`). Needs `GEM`
+  allowed on the top head + a retrain. (Bottom-slot gemination — the common `atta` case — already works.)
+- **Alphabetic — reading order when `superposed` + `top` co-occur.** The encoder consumes the superposed
+  vowel *before* the letter-core, so romanization order is `superposed → top → core → …`, but our
+  reconstruction uses `top → superposed → …`. It only differs when both are present (reachable via the
+  ext-only letters above), which is why the current test words never caught it.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%

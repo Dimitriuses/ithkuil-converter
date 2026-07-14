@@ -325,8 +325,13 @@ function groupChars(span: SegmentedRegion[]): AlphaChar[] {
   return chars
 }
 
-/** Acute-accented vowels — a stressed syllable's vowel carries the accent in romanization. */
-const STRESS_ACCENT: Record<string, string> = { a: "á", e: "é", i: "í", o: "ó", u: "ú" }
+/** Stressed vowel forms — a stressed syllable's vowel carries the accent in romanization.
+ * The inverse of @zsnout's STRESSED_TO_UNSTRESSED_VOWEL_MAP, so the diaeresis vowels take a
+ * circumflex (ä→â), not an acute. */
+const STRESS_ACCENT: Record<string, string> = {
+  a: "á", e: "é", i: "í", o: "ó", u: "ú",
+  ä: "â", ë: "ê", ö: "ô", ü: "û",
+}
 
 /** Decode one alphabetic character to its romanized letters, in reading order. The
  * base consonants come from the CNN when available (it reads each slot independently,
