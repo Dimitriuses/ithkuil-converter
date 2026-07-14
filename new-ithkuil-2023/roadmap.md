@@ -486,10 +486,13 @@ the side (`right`) diacritics.
   nothing like the pipeline — the gap is in how the pipeline draws it, not the spec). **Fix:** train the
   multi-task CNN (core/top/bottom heads, on the shared `frameSquare` binary mask) on data rendered
   through the **actual `encode()` pipeline** and labelled by `textToSecondaries` — so training and
-  inference share one exact domain. Held-out (pipeline domain): core 98% / top 93% / bottom 92%.
-  **In-pipeline `npm run alphabetic`: 14/15 exact, 98.2% char** (was 13/15, 94.6%) — n↔ż and d↔ļ resolved;
-  `phrase-test` **7/7**, `word-test` unaffected. Residual: one p↔v (top slot); `left`/tone/geminate/stress
-  still unread.
+  inference share one exact domain. Deployed config: **80px** frame, 8000 samples, 50 epochs.
+  Held-out (pipeline domain): core 98% / top 94% / bottom 95%.
+  **In-pipeline `npm run alphabetic`: 15/15 exact, 100% char** (was 13/15, 94.6%) — n↔ż, d↔ļ **and p↔v**
+  resolved; `phrase-test` **7/7**, `word-test` unaffected. p↔v (the last miss at 64px) needed the 80px
+  bump: the top/bottom extension marks are small, and 64px left the top slot weakest — raising resolution
+  lifted bottom 92→95% and cleared both p↔v cases (`peka`, `pika`) with zero regression. `left`/tone/
+  geminate/stress still unread.
 
 ### Robust primary detection (CTE) — done
 
@@ -634,7 +637,7 @@ tooling — none of it blocks the tool being usable today.
 | Full composed-word → text · multi-formative phrases | ✅ done — 100% round-trip |
 | svgdom compact-render hit-testing shim | ✅ done |
 | **M9** CNN — native training (tfjs-node), 48px | ✅ done — **beats template 90.7% vs 85.0%** in-pipeline |
-| Alphabetic-register decoding — **base CNN** | ✅ done — **98.2% char / 93% exact** (was 94.6%/87%); n↔ż, d↔ļ fixed via pipeline-domain CNN |
+| Alphabetic-register decoding — **base CNN** | ✅ done — **100% char / 100% exact** (was 94.6%/87%); n↔ż, d↔ļ, p↔v fixed via pipeline-domain 80px CNN |
 | Robust primary **detection** (CTE) | ✅ done — 64/64 grid |
 | Aligned primary **decode** (spec + perspective) | ✅ done — spec 98% / persp 84% under Ca (was 80%/63%) |
 | Secondary cluster extensions (bottom) — full breadth | ✅ done — 97% over all 28 (was 0% out-of-set) |
@@ -646,9 +649,8 @@ tooling — none of it blocks the tool being usable today.
 
 ### Next up (planned — nothing below is built yet)
 
-- **Alphabetic — remaining bits** (now 98.2% char-level; n↔ż, d↔ļ fixed by the pipeline-domain base CNN):
-  the residual **p↔v** (top slot, ~93% held-out) could yield to more pipeline-domain samples / epochs; read
-  `left`/tone diacritics + geminate markers, and stress (`STRESSED_SYLLABLE_PLACEHOLDER`) — still unread.
+- **Alphabetic — remaining bits**: still unread are `left`/tone diacritics, geminate markers, and stress
+  (`STRESSED_SYLLABLE_PLACEHOLDER`).
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%

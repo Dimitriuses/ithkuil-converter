@@ -37,14 +37,15 @@ const textToSecondaries = (fromText as Record<string, unknown>).textToSecondarie
   o: unknown,
 ) => Record<string, string>[]
 
-const N = process.argv[2] ? Number(process.argv[2]) : 6000
-const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 40
+const N = process.argv[2] ? Number(process.argv[2]) : 8000
+const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 50
 // Frame side (arg 4). The base is stretched to SZ×SZ via `frameSquare` — the SAME
 // normalized binary representation the chamfer match and in-pipeline decode use, so there
 // is no train/inference domain gap (an aspect-preserving grayscale crop had one: 99%
-// held-out but collapsed in-pipeline). 64px gives the per-slot heads enough rows.
-const SZ = process.argv[4] ? Number(process.argv[4]) : 64
-const SUFFIX = SZ === 64 ? "" : `-${SZ}`
+// held-out but collapsed in-pipeline). 80px is the deployed default — the small top/bottom
+// extension marks (p↔v lived there) need the extra rows; 64px left the top slot weaker.
+const SZ = process.argv[4] ? Number(process.argv[4]) : 80
+const SUFFIX = SZ === 80 ? "" : `-${SZ}`
 const MODEL_DIR = `models/alpha-cnn${SUFFIX}`
 const CACHE_PATH = `models/alpha-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 3 // bumped: data now rendered through the real pipeline (encode), not isolated glyphs
@@ -89,7 +90,7 @@ function randWord(): string {
 
 /** The tall char bases of an alphabetic span, in reading order (side diacritics — short
  * separate regions — are excluded, matching the decoder's char grouping). */
-function spanCharBases(bmp: ReturnType<typeof binarize>, regions: SegmentedRegion[]): SegmentedRegion[] {
+function spanCharBases(regions: SegmentedRegion[]): SegmentedRegion[] {
   const maxH = Math.max(1, ...regions.map((r) => r.base.h))
   return regions.filter((r) => r.base.h >= maxH * 0.55)
 }
@@ -134,7 +135,7 @@ function generate(n: number): Sample[] {
       }
       if (inSpan) span.push(rg)
     }
-    const bases = spanCharBases(bmp, span)
+    const bases = spanCharBases(span)
     if (bases.length !== specs.length) continue // extraction/encoder disagree → skip (keep labels honest)
 
     for (let ci = 0; ci < bases.length; ci++) {
@@ -269,23 +270,21 @@ async function main(): Promise<void> {
     return out.map((t) => t.argMax(1).arraySync() as number[])
   })
   console.log(`\nheld-out per-slot accuracy (${test.length} samples):`)
-  const zi = LABELS.indexOf("ż"), ni = LABELS.indexOf("n"), di = LABELS.indexOf("d"), li = LABELS.indexOf("ļ")
   SLOTS.forEach((k, ki) => {
     let ok = 0
     for (let i = 0; i < test.length; i++) if (preds[ki][i] === test[i].labels[k]) ok++
     console.log(`  ${k.padEnd(8)} ${((100 * ok) / test.length).toFixed(1)}%`)
   })
-  // Confusion on the target pairs across all slots.
-  let nOk = 0, nN = 0, zOk = 0, zN = 0, dOk = 0, dN = 0, lOk = 0, lN = 0
+  // Per-class recall for the near-identical letters that motivated this (across all slots).
+  const idx = Object.fromEntries(["n", "ż", "d", "ļ", "p", "v"].map((c) => [c, LABELS.indexOf(c)]))
+  const rec: Record<string, [number, number]> = {}
+  for (const c of Object.keys(idx)) rec[c] = [0, 0]
   for (let i = 0; i < test.length; i++)
     SLOTS.forEach((k, ki) => {
       const y = test[i].labels[k], p = preds[ki][i]
-      if (y === ni) { nN++; if (p === ni) nOk++ }
-      if (y === zi) { zN++; if (p === zi) zOk++ }
-      if (y === di) { dN++; if (p === di) dOk++ }
-      if (y === li) { lN++; if (p === li) lOk++ }
+      for (const [c, ci] of Object.entries(idx)) if (y === ci) { rec[c][1]++; if (p === ci) rec[c][0]++ }
     })
-  console.log(`  target pairs — n ${nOk}/${nN}, ż ${zOk}/${zN}, d ${dOk}/${dN}, ļ ${lOk}/${lN}`)
+  console.log(`  target letters — ${Object.entries(rec).map(([c, [o, t]]) => `${c} ${o}/${t}`).join(", ")}`)
 
   mkdirSync(MODEL_DIR, { recursive: true })
   await model.save(fileSaveHandler(MODEL_DIR))

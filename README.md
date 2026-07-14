@@ -113,7 +113,7 @@ npm run encode -- "saläha" --out word.svg     # …or written to a file
 ```bash
 npm run word-test        # composed word → text     (48/48)
 npm run phrase-test      # multi-word phrase → text (7/7)
-npm run alphabetic       # alphabetic-mode spelling (14/15, 98.2% char-level)
+npm run alphabetic       # alphabetic-mode spelling (15/15, 100% char-level)
 npm run tricon-test      # 3-consonant clusters
 npm run case-test        # case (Vc) decoding
 # …see package.json "scripts" for the full list
