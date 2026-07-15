@@ -24,6 +24,7 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize, segment, type Bitmap, type SegmentedRegion } from "./segment.js"
+import { loadCache, saveCache, serTemplate, deserTemplate, type SerTemplate } from "./template-cache.js"
 
 export type CharType = "secondary" | "quaternary" | "tertiary" | "primary"
 
@@ -68,27 +69,53 @@ function composedPrimaryTemplates(): Template[] {
 }
 
 // One combined, type-tagged template set. Type is read from the class prefix.
-const TYPED_TEMPLATES: Template[] = [
-  ...buildBaseTemplates(
-    CONSONANTS.map((c) => ({ label: c, class: `secondary-${c}`, el: () => Secondary({ core: c }) })),
-  ),
-  ...buildBaseTemplates([
-    { label: "∅", class: "quaternary-none", el: () => Quaternary({}) },
-    ...Object.keys(ILLOCUTION_TO_SECONDARY_EXTENSION).map((v) => ({
-      label: v,
-      class: `quaternary-${v}`,
-      el: () => Quaternary({ value: v as never }),
-    })),
-  ]),
-  ...buildBaseTemplates(
-    Object.keys(VALENCE).map((v) => ({
-      label: v,
-      class: `tertiary-${v}`,
-      el: () => Tertiary({ valence: v as never }),
-    })),
-  ),
-  ...composedPrimaryTemplates(),
-]
+function buildTypedTemplates(): Template[] {
+  return [
+    ...buildBaseTemplates(
+      CONSONANTS.map((c) => ({ label: c, class: `secondary-${c}`, el: () => Secondary({ core: c }) })),
+    ),
+    ...buildBaseTemplates([
+      { label: "∅", class: "quaternary-none", el: () => Quaternary({}) },
+      ...Object.keys(ILLOCUTION_TO_SECONDARY_EXTENSION).map((v) => ({
+        label: v,
+        class: `quaternary-${v}`,
+        el: () => Quaternary({ value: v as never }),
+      })),
+    ]),
+    ...buildBaseTemplates(
+      Object.keys(VALENCE).map((v) => ({
+        label: v,
+        class: `tertiary-${v}`,
+        el: () => Tertiary({ valence: v as never }),
+      })),
+    ),
+    ...composedPrimaryTemplates(),
+  ]
+}
+
+// Built lazily and cached to disk: the set is ~64 composed-formative renders plus the
+// per-type base renders — ~44 s, which used to be paid at module load on EVERY process
+// start (server and every test run). Bump CACHE_VERSION if the renders or value sets change.
+const CACHE_NAME = "char-type"
+const CACHE_VERSION = 1
+let typedTemplates: Template[] | null = null
+
+function ensureTemplates(): Template[] {
+  if (typedTemplates) return typedTemplates
+  const cached = loadCache<SerTemplate[]>(CACHE_NAME, CACHE_VERSION)
+  if (cached) {
+    typedTemplates = cached.map(deserTemplate)
+    return typedTemplates
+  }
+  typedTemplates = buildTypedTemplates()
+  saveCache(CACHE_NAME, CACHE_VERSION, typedTemplates.map(serTemplate))
+  return typedTemplates
+}
+
+/** Build/load the type templates now (call at warmup so the first decode doesn't pay it). */
+export function warmCharType(): void {
+  ensureTemplates()
+}
 
 export interface CharTypeResult {
   type: CharType
@@ -99,6 +126,6 @@ export interface CharTypeResult {
 
 /** Detect a segmented character's type from its base shape. */
 export function classifyCharType(bmp: Bitmap, region: SegmentedRegion, size = 64): CharTypeResult {
-  const best = classifyMask(maskOfBox(bmp, region.base, size), TYPED_TEMPLATES)
+  const best = classifyMask(maskOfBox(bmp, region.base, size), ensureTemplates())
   return { type: best.class.split("-")[0] as CharType, label: best.label, score: best.score }
 }

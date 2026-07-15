@@ -62,6 +62,9 @@ const hasDeps = () => existsSync(join(ROOT, "node_modules", "@zsnout", "ithkuil"
 const hasDataset = () => existsSync(join(ROOT, "dataset", "manifest.json"))
 const hasAlphaCache = () => existsSync(join(ROOT, "models", "alphabetic-base.json"))
 const hasSecondaryCache = () => existsSync(join(ROOT, "models", "secondary-ext.json"))
+// These two dominate a cold start (~44 s + ~28 s of glyph rendering) — see template-cache.ts.
+const hasCharTypeCache = () => existsSync(join(ROOT, "models", "char-type.json"))
+const hasPrimaryCache = () => existsSync(join(ROOT, "models", "primary-templates.json"))
 const hasModel = (dir) => existsSync(join(ROOT, "models", dir, "model.json"))
 
 /** Whether the native tfjs-node addon actually loads (Windows error-126 territory). It's
@@ -102,6 +105,10 @@ function doctor() {
   else info("alphabetic cache not built — auto-builds on first decode (~5 min, one-time)")
   if (hasSecondaryCache()) ok("secondary-extension cache built")
   else info("secondary-ext cache not built — auto-builds on first decode (~4 min, one-time)")
+  if (hasCharTypeCache()) ok("char-type template cache built")
+  else info("char-type cache not built — first decode pays ~44 s of rendering (then cached)")
+  if (hasPrimaryCache()) ok("primary template cache built")
+  else info("primary cache not built — first decode pays ~28 s of rendering (then cached)")
 
   head("Optional CNN models (decode falls back to templates without these)")
   for (const [dir, desc, cmd] of MODELS) {
@@ -160,10 +167,10 @@ function setup() {
   // The secondary-extension cache has no standalone builder — the verify step below
   // decodes real secondaries, which builds models/secondary-ext.json as a side effect.
 
-  head("5/5  Verify end-to-end  (also builds the secondary-ext cache)")
+  head("5/5  Verify end-to-end  (also builds the secondary-ext / char-type / primary caches)")
   info("decoding a batch of composed words — several minutes on first run…")
   const verified = npm(["run", "word-test"])
-  if (verified && hasSecondaryCache()) ok("reverse pipeline works; secondary-ext cache built")
+  if (verified && hasSecondaryCache()) ok("reverse pipeline works; template caches built")
   else if (verified) info("reverse pipeline ran (check the round-trip line above)")
   else die("verification (word round-trip) failed to run — see output above")
 

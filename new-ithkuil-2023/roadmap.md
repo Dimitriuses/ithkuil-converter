@@ -448,6 +448,24 @@ that native training is fast.
   version × stem sweep round-trips **5/6 = 83%**. Closing the last gap likely needs real (non-synthetic)
   scans or a version-specialized head.
 
+### Warm-up: disk-cache the rendered template sets (done) — ~86 s → ~19 s per start
+
+The decode pipeline's startup cost turned out to have nothing to do with the CNNs (all four load in
+**0.07 s combined**). Timing each stage of `warmDecode` showed the cost was template grids rebuilt at
+**module load**, on every server start *and every test run*: `char-type.ts` **44 s** (it renders a
+4×4×4 spec × perspective × configuration grid of *composed formatives* — primary type templates can't come
+from isolated renders) and `primary.ts` **28 s** (its own 64-cell Ca grid). `alphabetic.ts`/`secondary.ts`
+already disk-cached theirs, which is exactly why they imported in 0.02 s.
+
+- **Fix:** [`template-cache.ts`](src/template-cache.ts) factors out the mask→base64→JSON pattern (rather
+  than adding a 4th copy of it), and both modules now build **lazily** behind `ensureTemplates()` +
+  `warmCharType()` / `warmPrimary()`, cached to `models/char-type.json` + `models/primary-templates.json`.
+  Derived data (chamfer distance transforms) is recomputed on load rather than stored.
+- **Result:** module import **77 s → 9.5 s**, `warmCharType` **44 s → 0.01 s**, `warmPrimary` **28 s → 0.01 s**;
+  total warm start **~86 s → ~19 s**, stable across runs. Cold (no cache) is unchanged (~94 s) and writes the
+  caches. **Behaviourally identical** — `word` 48/48, `phrase` 7/7, `alphabetic` 15/15, `primary-aligned`
+  48/48, `tricon` (top 93% / full 65% / 44/44) all match their pre-cache numbers exactly.
+
 ### Alphabetic-register decoding (done, first version) — the real multi-word fix
 
 Investigating multi-word decode failures ("saläha mela" dropping the 2nd word) disproved
@@ -699,14 +717,11 @@ tooling — none of it blocks the tool being usable today.
   (N 12k→20k so every context grows) or **more capacity** (the trunk is only 16/32/32 + dense 96 for a
   36-class × 3-head problem). Worth weighing against value: this shape needs a 3-consonant cluster inside a
   single syllable, so it's rare in ordinary words.
-- **Warm-up: cache the `char-type` + `primary` template grids to disk (~86 s → ~15 s per start).** Measured
-  breakdown of a normal (caches-present) start: `char-type.js` import **44 s**, `primary.js` **28 s**,
-  alphabetic distance-transform rebuild 9 s, quaternary+tertiary 6 s, libraries (tfjs-node/@zsnout/svgdom)
-  ~4 s, and **all four CNN models 0.07 s combined** — the models are *not* the warm-up cost. `char-type.ts`
-  builds a 4×4×4 grid of **composed formative** renders at module load and `primary.ts` renders its zone
-  templates, and unlike [`alphabetic.ts`](src/alphabetic.ts)/[`secondary.ts`](src/secondary.ts) neither
-  caches to disk — so both are rebuilt on every server start *and every test run*. Applying the same proven
-  cache pattern (masks base64 → JSON, `CACHE_VERSION` busts it) is a contained change with a large payoff.
+- **Warm-up — remaining ~19 s** (down from ~86 s, see the done section). What's left: `warmAlphabetic` 9.4 s
+  (recomputing ~1200 chamfer distance transforms on load — could be stored, but they're ~15 MB of Float32,
+  so it'd want a binary sidecar rather than base64 JSON) and ~9.5 s of module import (mostly `tsx` compiling
+  the graph + tfjs-node's native load — a `tsc` build served from `dist/` would cut it). Both are modest and
+  optional; the 72 s of glyph rendering is already gone.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%

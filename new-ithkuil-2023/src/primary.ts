@@ -24,6 +24,15 @@ import { classifyMask, type Template } from "./classify.js"
 import { distanceTransform, meanNearestDistance } from "./chamfer.js"
 import { alignToFrame } from "./align.js"
 import { encode } from "./forward.js"
+import {
+  loadCache,
+  saveCache,
+  serTemplate,
+  deserTemplate,
+  maskToB64,
+  b64ToMask,
+  type SerTemplate,
+} from "./template-cache.js"
 
 const NS = "http://www.w3.org/2000/svg"
 const CANVAS = 160
@@ -59,19 +68,6 @@ const ZONE_CORE: BBox = { x: 32, y: 18, w: 98, h: 120 }
 const PERSPECTIVES = ["M", "G", "N", "A"] as const
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"] as const
 
-// Every perspective (incl. M, whose left zone is just the shared core stroke) gets
-// a template; classification is by shape.
-const perspTemplates: Template[] = PERSPECTIVES.map((p) => ({
-  label: p,
-  class: `persp-${p}`,
-  mask: zoneMask(renderFixed({ ...BASE, perspective: p }), ZONE_PERSPECTIVE),
-}))
-const specTemplates: Template[] = SPECIFICATIONS.map((s) => ({
-  label: s,
-  class: `spec-${s}`,
-  mask: zoneMask(renderFixed({ specification: s, perspective: "M" }), ZONE_CORE),
-}))
-
 export interface PrimaryDecode {
   specification: string
   perspective: string
@@ -79,9 +75,10 @@ export interface PrimaryDecode {
 
 /** Decode a primary rendered in the fixed frame by classifying its zones. */
 export function decodePrimaryFixed(bmp: Bitmap): PrimaryDecode {
+  const t = ensureTemplates()
   return {
-    perspective: classifyMask(zoneMask(bmp, ZONE_PERSPECTIVE), perspTemplates).label,
-    specification: classifyMask(zoneMask(bmp, ZONE_CORE), specTemplates).label,
+    perspective: classifyMask(zoneMask(bmp, ZONE_PERSPECTIVE), t.persp).label,
+    specification: classifyMask(zoneMask(bmp, ZONE_CORE), t.spec).label,
   }
 }
 
@@ -144,35 +141,101 @@ interface WholeTemplate {
   dt: Float32Array
 }
 
-// Build the grid once (rendered as words, primary = leftmost region). Perspective
-// gets whole-shape masks (+ distance transforms for the joint match); specification
-// gets aligned core-zone masks.
-const perspWhole: WholeTemplate[] = []
-const specCore: Template[] = []
-for (const spec of SPECIFICATIONS) {
-  for (const persp of PERSPECTIVES) {
-    for (const cfg of PRIMARY_CONFIGS) {
-      const text = formativeToIthkuil({
-        root: "l",
-        type: "UNF/C",
-        specification: spec as never,
-        ca: { perspective: persp as never, configuration: cfg as never },
-      })
-      const r = encode(text, { margin: 10 })
-      if (!r.ok) continue
-      const img = decodePng(svgToPng(r.svg, { width: 500 }))
-      const bmp = binarize(img.data, img.width, img.height)
-      const region = segment(bmp)[0]
-      if (!region) continue
-      const whole = frameSquare(bmp, region.bbox)
-      perspWhole.push({ label: persp, mask: whole, dt: distanceTransform(whole) })
-      specCore.push({
-        label: spec,
-        class: `spec-${spec}`,
-        mask: zoneMask(alignToFrame(cropRegionBitmap(bmp, region.bbox)), ZONE_CORE),
-      })
+interface PrimaryTemplates {
+  /** Fixed-frame zone templates (decodePrimaryFixed). */
+  persp: Template[]
+  spec: Template[]
+  /** Ca-covering grid, rendered as words (decodePrimaryAligned). */
+  perspWhole: WholeTemplate[]
+  specCore: Template[]
+}
+
+/** Render every template set: the fixed-frame zones, plus the spec × perspective ×
+ * configuration grid (rendered as words, primary = leftmost region). Perspective gets
+ * whole-shape masks; specification gets aligned core-zone masks. */
+function buildTemplates(): PrimaryTemplates {
+  const persp: Template[] = PERSPECTIVES.map((p) => ({
+    label: p,
+    class: `persp-${p}`,
+    mask: zoneMask(renderFixed({ ...BASE, perspective: p }), ZONE_PERSPECTIVE),
+  }))
+  const spec: Template[] = SPECIFICATIONS.map((s) => ({
+    label: s,
+    class: `spec-${s}`,
+    mask: zoneMask(renderFixed({ specification: s, perspective: "M" }), ZONE_CORE),
+  }))
+  const perspWhole: WholeTemplate[] = []
+  const specCore: Template[] = []
+  for (const s of SPECIFICATIONS) {
+    for (const p of PERSPECTIVES) {
+      for (const cfg of PRIMARY_CONFIGS) {
+        const text = formativeToIthkuil({
+          root: "l",
+          type: "UNF/C",
+          specification: s as never,
+          ca: { perspective: p as never, configuration: cfg as never },
+        })
+        const r = encode(text, { margin: 10 })
+        if (!r.ok) continue
+        const img = decodePng(svgToPng(r.svg, { width: 500 }))
+        const bmp = binarize(img.data, img.width, img.height)
+        const region = segment(bmp)[0]
+        if (!region) continue
+        const whole = frameSquare(bmp, region.bbox)
+        perspWhole.push({ label: p, mask: whole, dt: distanceTransform(whole) })
+        specCore.push({
+          label: s,
+          class: `spec-${s}`,
+          mask: zoneMask(alignToFrame(cropRegionBitmap(bmp, region.bbox)), ZONE_CORE),
+        })
+      }
     }
   }
+  return { persp, spec, perspWhole, specCore }
+}
+
+// Built lazily and cached to disk: the grid is 64 word renders + alignment, ~28 s, which
+// used to be paid at module load on EVERY process start. The distance transforms are
+// recomputed on load (cheap) rather than stored. Bump CACHE_VERSION if the renders,
+// zones, or value sets change.
+const CACHE_NAME = "primary-templates"
+const CACHE_VERSION = 1
+interface SerShape {
+  persp: SerTemplate[]
+  spec: SerTemplate[]
+  perspWhole: { l: string; s: number; m: string }[]
+  specCore: SerTemplate[]
+}
+let templates: PrimaryTemplates | null = null
+
+function ensureTemplates(): PrimaryTemplates {
+  if (templates) return templates
+  const cached = loadCache<SerShape>(CACHE_NAME, CACHE_VERSION)
+  if (cached) {
+    templates = {
+      persp: cached.persp.map(deserTemplate),
+      spec: cached.spec.map(deserTemplate),
+      perspWhole: cached.perspWhole.map((t) => {
+        const mask = b64ToMask(t.s, t.m)
+        return { label: t.l, mask, dt: distanceTransform(mask) }
+      }),
+      specCore: cached.specCore.map(deserTemplate),
+    }
+    return templates
+  }
+  templates = buildTemplates()
+  saveCache(CACHE_NAME, CACHE_VERSION, {
+    persp: templates.persp.map(serTemplate),
+    spec: templates.spec.map(serTemplate),
+    perspWhole: templates.perspWhole.map((t) => ({ l: t.label, s: t.mask.size, m: maskToB64(t.mask) })),
+    specCore: templates.specCore.map(serTemplate),
+  } satisfies SerShape)
+  return templates
+}
+
+/** Build/load the primary templates now (call at warmup so the first decode doesn't pay it). */
+export function warmPrimary(): void {
+  ensureTemplates()
 }
 
 /** Nearest whole-shape template by symmetric Chamfer distance (templates carry a
@@ -193,10 +256,11 @@ function matchWhole(query: Mask, templates: WholeTemplate[]): string {
 
 /** Decode a segmented primary of unknown scale/position. */
 export function decodePrimaryAligned(queryBmp: Bitmap): PrimaryDecode {
+  const t = ensureTemplates()
   const whole = frameSquare(queryBmp, { x: 0, y: 0, w: queryBmp.width, h: queryBmp.height })
   const core = zoneMask(alignToFrame(queryBmp), ZONE_CORE)
   return {
-    perspective: matchWhole(whole, perspWhole),
-    specification: classifyMask(core, specCore).label,
+    perspective: matchWhole(whole, t.perspWhole),
+    specification: classifyMask(core, t.specCore).label,
   }
 }

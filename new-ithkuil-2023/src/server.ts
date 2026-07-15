@@ -42,16 +42,20 @@ let decodeDone = false // true once warmup has actually finished (for /api/statu
 function warmDecode() {
   if (!decodeReady) {
     decodeReady = (async () => {
-      const [decode, seg, img, alpha, secondary] = await Promise.all([
+      const [decode, seg, img, alpha, secondary, charType, primary] = await Promise.all([
         import("./decode-word.js"),
         import("./segment.js"),
         import("./image-io.js"),
         import("./alphabetic.js"),
         import("./secondary.js"),
+        import("./char-type.js"),
+        import("./primary.js"),
       ])
       // build/load the cached template sets now, not on the first decode
       alpha.warmAlphabetic()
       secondary.warmSecondary()
+      charType.warmCharType() // ~44 s to render cold, then disk-cached
+      primary.warmPrimary() // ~28 s to render cold, then disk-cached
       await decode.enableCoreCnn() // consonant CNN on by default (no-op if model absent)
       await decode.enablePrimaryCnn() // primary-feature CNN → decodes Vr/Vv
       await decode.enableTopCnn() // top-extension CNN → decodes 3-consonant cluster tops
