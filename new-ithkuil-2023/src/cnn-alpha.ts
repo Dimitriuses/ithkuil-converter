@@ -106,8 +106,17 @@ function randWord(): string {
     } else if (f < 0.34) {
       // V + ext-only + core + V → an ext-only letter in the TOP slot ("awka")
       w += pick(VOWS) + pick(EXT_ONLY) + pick(CORE_CONS) + pick(VOWS)
-    } else if (f < 0.66) w += pick(EXT_CONS) + pick(VOWS) + pick(EXT_CONS) // CVC → top+right+bottom
-    else if (f < 0.84) w += pick(CORE_CONS) + pick(VOWS) // CV → top+right / core
+    } else if (f < 0.46) {
+      // V X c Y V → a full 3-letter core: top + core + bottom in ONE base ("atkra").
+      // The densest base there is, and the bottom letter is hardest to read in it. It only
+      // arises incidentally from abutting syllables, so it must be generated explicitly —
+      // without this the context is starved (~380 train samples ⇒ 47% bottom accuracy).
+      const c = pick(CORE_CONS)
+      let x = pick(EXT_CONS)
+      while (x === c) x = pick(EXT_CONS) // x === c would make it a top-geminate instead
+      w += pick(VOWS) + x + c + pick(EXT_CONS) + pick(VOWS)
+    } else if (f < 0.7) w += pick(EXT_CONS) + pick(VOWS) + pick(EXT_CONS) // CVC → top+right+bottom
+    else if (f < 0.86) w += pick(CORE_CONS) + pick(VOWS) // CV → top+right / core
     else w += pick(VOWS) + pick(CORE_CONS) + pick(EXT_CONS) // VCC → core+bottom
   }
   // ~22% of words: stress one syllable by accenting a random (plain) vowel.

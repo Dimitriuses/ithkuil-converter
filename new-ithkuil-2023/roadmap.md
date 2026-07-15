@@ -516,10 +516,19 @@ the side (`right`) diacritics.
   - **Sizing matters:** at 8000 samples the 36-class space thinned per-class density (bottom head 96→92%)
     and regressed the common letters (`tuni→tuzi`, `tapi→tavi`). **12000 samples / 60 epochs** restored it
     (bottom 95.5%, w 98% / y 99% / `'` 97%, STRESS 259/259, GEM 498/503) — that's the deployed config.
-  - **Result:** ext letters **0→8/8**, top-slot gemination **0→4/6**, with **zero regression** (plain 15/15,
+  - **Result:** ext letters **0→8/8**, top-slot gemination **0→6/6**, with **zero regression** (plain 15/15,
     p/v 9/9, stress 10/10, bottom-gem 8/8; `alphabetic` 15/15, `phrase` 7/7, `word` 48/48). Combined
-    alphabetic probe suite **42/56 → 54/56**. Residual: 2 top-gem misses (`attka→attxa`) are bottom-*letter*
-    errors in the dense 3-letter-core context, not gemination failures.
+    alphabetic probe suite **42/56 → 54/56**.
+- **The dense 3-letter core — a training-distribution hole, not a model limit.** The last top-gem misses
+  (`attka→attxa`) were bottom-*letter* errors, so we measured bottom accuracy **conditioned on how crowded
+  the base is** rather than tuning blind. That exposed a cliff: `core+bottom` 97%, `placeholder+top+bottom`
+  96%, but **`core+top+bottom` (a full 3-letter core, e.g. `atkra`) only 47%** — because *no generator form
+  produced it*. It arose only when random syllables happened to abut (~380 train samples vs thousands for
+  every other context). Adding an explicit `V X c Y V` form (~12% of syllables) 4×'d its data and lifted
+  every context: dense **47→75%**, top-GEM+bottom **88.5→94%**, core+bottom **97→98.5%**,
+  placeholder+top+bottom **96→97%** — and took **top-slot gemination to 6/6** with no regression.
+  **Lesson: when one case lags, condition the metric on context before touching hyper-parameters — the
+  aggregate (bottom 95%) completely hid a 47% sub-population.**
 
 ### Robust primary detection (CTE) — done
 
@@ -680,10 +689,13 @@ tooling — none of it blocks the tool being usable today.
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
   random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
   formative-level feature that does not surface in alphabetic spelling. Nothing to build.
-- **Alphabetic — residual top-slot gemination misses (2/6).** `attka → attxa`, `ollka → ollva`: the
-  gemination itself reads correctly; the *bottom letter* is misread in the dense 3-letter-core context
-  (top-GEM + core + bottom in one base). Bottom head is 95.5% held-out, so these are ordinary letter
-  errors — more samples/epochs or a bottom-slot-focused head would close them.
+- **Alphabetic — the dense 3-letter core is the last weak spot** (`core + top + bottom` in one base, e.g.
+  `atkra`). Now explicitly generated, which lifted it **47 → 75%** bottom accuracy and cleared top-slot
+  gemination (6/6) — but it remains the hardest context by a wide margin (every other context is 94–98.5%),
+  and a dedicated probe set still reads **2/6** (`atkra→atksa`, `eslpa→elpa` — the *top* letter is dropped
+  too, so both extension heads struggle when three consonants share one base). Options: raise its share of
+  the training mix further, more samples/epochs, or more input resolution for the crowded base. Note this
+  shape is rare in ordinary words — it needs a 3-consonant cluster inside a single syllable.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
