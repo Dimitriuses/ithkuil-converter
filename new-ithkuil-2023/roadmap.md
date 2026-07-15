@@ -727,14 +727,14 @@ samples crash** (56/425). Three separate problems, found together:
    inconsistently, so trailing root consonants are routed to the wrong decoder and dropped
    (`armpwala → armmala`). **But char-type is necessary, not sufficient:** the 35 that *did* get the correct
    `pss` shape still scored **0%**, so the per-secondary decode is failing on these roots too (they use the
-   full consonant inventory — the same weakness as ④). Expect to need both fixes.
+   full consonant inventory — the same weakness as L4). Expect to need both fixes.
 3. **`decodeWordToText` throws on real input** (~13% of samples): when no secondary is detected there is no
    root, and `featuresToText` → `formativeToIthkuil` raises *"You must provide the root of a formative"*.
    Uncaught ⇒ `/api/decode` would 500.
 
-**Agreed plan (in order):** ① re-baseline the harnesses on real lexicon roots so everything downstream is
-measured honestly → ② fix the crash (graceful degradation) → ③ fix `char-type` for multi-secondary roots
-(unlocks ~47% of the lexicon) → ④ the core+bottom classifier for 3-consonant clusters.
+**Agreed plan (in order):** L1 re-baseline the harnesses on real lexicon roots so everything downstream is
+measured honestly → L2 fix the crash (graceful degradation) → L3 fix `char-type` for multi-secondary roots
+(unlocks ~47% of the lexicon) → L4 the core+bottom classifier for 3-consonant clusters.
 
 **L1 — DONE.** [`lexicon.ts`](src/lexicon.ts) exposes the real root forms (deterministic, evenly-spread
 sampling by length) and [`lexicon-roundtrip.ts`](src/lexicon-roundtrip.ts) (`npm run lexicon-test -- [perLength]`)
@@ -774,12 +774,12 @@ benchmark**. Note sample size matters: two different 25-root samples of the same
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **④ Core+bottom classifier for 3-consonant clusters.** Measured headroom (n=257 synthetic clusters): top
+- **L4 Core+bottom classifier for 3-consonant clusters.** Measured headroom (n=257 synthetic clusters): top
   93.0% (top-cnn), core 87.9%, **bottom 75.1%**, **core+bottom both 68.9%** ⇒ full 65%. The tell: core+bottom
   is **100% when no top is present** and collapses to 68.9% once there is one — the same "a top makes the base
   taller ⇒ every slot shifts" effect the alphabetic CNN solved. At alpha-cnn-level core+bottom (~98%),
   full ≈ **91%**. NOTE the 65% is on easy roots; on real 3-consonant lexicon roots the whole path is at 12%,
-  so do ①–③ first — this is a *different* task from the alphabetic dense core (`decodeSecondary` vs
+  so do L1–L3 first — this is a *different* task from the alphabetic dense core (`decodeSecondary` vs
   `decodeAlphabeticSpan`, real consonant core vs placeholder), and unlike that one it covers 37% of the lexicon.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
