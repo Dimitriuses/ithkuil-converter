@@ -701,7 +701,54 @@ tooling — none of it blocks the tool being usable today.
 | Primary-feature CNN (entanglement) — trained + wired (80px) | ✅ decodes Vr **context + function** + Vv **stem** (100% round-trip, was 0%; word-test 48/48). **version** guarded (~0.97 conf, 83% round-trip) |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
+### ⚠️ Reality check: on the REAL lexicon the decoder is 23.5%, not ~100% (2026-07-14)
+
+Every headline number above is measured on a **hand-picked, easy corpus**. Measured against the actual
+@zsnout lexicon (4387 roots; `npm run lexicon-test -- 100`, 100 roots sampled per length):
+
+| Root length | share of lexicon | round-trip | threw |
+|---|---|---|---|
+| 1-consonant | 1% | **100%** | — |
+| 2-consonant | 15% | **67%** | 7 |
+| **3-consonant** | **37%** (largest class) | **35%** | 18 |
+| **4-consonant** | **33%** | **0%** | 1 |
+| **5-consonant** | **14%** | **0%** | 30 |
+
+**LEXICON-WEIGHTED: 23.5%** — the honest real-vocabulary number, vs `word-test`'s 100%. Also **~13% of
+samples crash** (56/425). Three separate problems, found together:
+
+1. **The test corpus is unrepresentative — the root cause of the blind spot.** `word-test`'s 48/48 uses
+   toy roots (`l`, `s`, `m`, `r`, `kt`, `sm`); `tricon-test`'s 3/6 uses hand-picked `str`/`mlk`/`ksp`. Real
+   3-consonant roots score **12%**, because real roots use the full inventory (`ţ ç ż š ň ḑ` …), not
+   convenient Latin letters. We were optimizing against an easy sample.
+2. **4–5 consonant roots (47% of the lexicon) are at 0%.** They pack into **multiple secondary
+   characters**, and `char-type` mis-types the extra one: for 4-consonant roots the observed shapes are
+   `psq`×61 (primary-secondary-**quaternary**), `pss`×35, `psp`×2 — the same structural slot typed
+   inconsistently, so trailing root consonants are routed to the wrong decoder and dropped
+   (`armpwala → armmala`). **But char-type is necessary, not sufficient:** the 35 that *did* get the correct
+   `pss` shape still scored **0%**, so the per-secondary decode is failing on these roots too (they use the
+   full consonant inventory — the same weakness as ④). Expect to need both fixes.
+3. **`decodeWordToText` throws on real input** (~13% of samples): when no secondary is detected there is no
+   root, and `featuresToText` → `formativeToIthkuil` raises *"You must provide the root of a formative"*.
+   Uncaught ⇒ `/api/decode` would 500.
+
+**Agreed plan (in order):** ① re-baseline the harnesses on real lexicon roots so everything downstream is
+measured honestly → ② fix the crash (graceful degradation) → ③ fix `char-type` for multi-secondary roots
+(unlocks ~47% of the lexicon) → ④ the core+bottom classifier for 3-consonant clusters.
+
+**① — DONE.** [`lexicon.ts`](src/lexicon.ts) exposes the real root forms (deterministic, evenly-spread
+sampling by length) and [`lexicon-roundtrip.ts`](src/lexicon-roundtrip.ts) (`npm run lexicon-test -- [perLength]`)
+reports per-length round-trip, the detected char-type shapes, crash counts, and the lexicon-weighted total.
+`word-test` keeps its easy corpus but is now documented as a **feature-level regression gate, not a
+benchmark**. Note sample size matters: two different 25-root samples of the same length disagreed by ~3×
+(3-consonant read 12% vs 40%) — quote ≥100/length. **Baseline to beat: 23.5%.**
+
 ### Next up (planned — nothing below is built yet)
+- **② Fix the `decodeWordToText` crash** — no secondary ⇒ no root ⇒ `formativeToIthkuil` throws. Degrade
+  gracefully (return a partial/empty decode) instead of propagating; `/api/decode` must not 500.
+- **③ Fix `char-type` for multi-secondary roots** — 4–5 consonant roots (47% of the lexicon) render as
+  several secondaries; the extra ones are mis-typed as quaternary/primary and dropped. Biggest single win
+  available (0% → ?), and likely the same "composed vs isolated render" lesson as the primary type grid.
 
 - ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
@@ -727,9 +774,13 @@ tooling — none of it blocks the tool being usable today.
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **Core+bottom classifier for 3-consonant clusters.** The top-extension CNN lifted `full` to 65% and the
-  cap is now the core+bottom template in the cluster regime (~12% coreWrong) — the remaining word misses are
-  all core/bottom, not top. A core+bottom CNN (or extending the secondary CNN to those heads) would push it further.
+- **④ Core+bottom classifier for 3-consonant clusters.** Measured headroom (n=257 synthetic clusters): top
+  93.0% (top-cnn), core 87.9%, **bottom 75.1%**, **core+bottom both 68.9%** ⇒ full 65%. The tell: core+bottom
+  is **100% when no top is present** and collapses to 68.9% once there is one — the same "a top makes the base
+  taller ⇒ every slot shifts" effect the alphabetic CNN solved. At alpha-cnn-level core+bottom (~98%),
+  full ≈ **91%**. NOTE the 65% is on easy roots; on real 3-consonant lexicon roots the whole path is at 12%,
+  so do ①–③ first — this is a *different* task from the alphabetic dense core (`decodeSecondary` vs
+  `decodeAlphabeticSpan`, real consonant core vs placeholder), and unlike that one it covers 37% of the lexicon.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.

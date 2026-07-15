@@ -5,6 +5,14 @@
  * reads (root, specification, vn); every other slot defaults on both the forward
  * and reverse sides, so it regenerates identically (that's how elision is handled).
  *
+ * ⚠️ SCOPE — this is a **feature-level regression gate, NOT an accuracy benchmark.** Its
+ * roots are deliberately short and easy (`l`, `s`, `kt`, `sm`) so that a change to
+ * specification / Vn / case / a CNN shows up in isolation, uncontaminated by root
+ * difficulty. Its 48/48 says "the features it covers still work" — it does NOT say the
+ * decoder reads real vocabulary: real @zsnout roots are mostly 3–5 consonants drawn from
+ * the full inventory and score far lower. For the honest number use `npm run lexicon-test`
+ * ([`lexicon-roundtrip.ts`](lexicon-roundtrip.ts)).
+ *
  *   npm run word-test
  */
 import "./dom-shim.js"

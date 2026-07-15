@@ -26,6 +26,7 @@
     "word": "tsx src/word-demo.ts",
     "secondary-test": "tsx src/secondary-roundtrip.ts",
     "word-test": "tsx src/word-roundtrip.ts",
+    "lexicon-test": "tsx src/lexicon-roundtrip.ts",
     "phrase-test": "tsx src/phrase-roundtrip.ts",
     "case-test": "tsx src/case-roundtrip.ts",
     "vrvv-test": "tsx src/vrvv-roundtrip.ts",
