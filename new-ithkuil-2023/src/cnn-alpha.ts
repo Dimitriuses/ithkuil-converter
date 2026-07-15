@@ -108,9 +108,16 @@ function randWord(): string {
       w += pick(VOWS) + pick(EXT_ONLY) + pick(CORE_CONS) + pick(VOWS)
     } else if (f < 0.46) {
       // V X c Y V → a full 3-letter core: top + core + bottom in ONE base ("atkra").
-      // The densest base there is, and the bottom letter is hardest to read in it. It only
-      // arises incidentally from abutting syllables, so it must be generated explicitly —
-      // without this the context is starved (~380 train samples ⇒ 47% bottom accuracy).
+      // The densest base there is and by far the hardest: a top mark makes the base taller, so
+      // frameSquare stretches it differently and every mark shifts — the net has to learn each
+      // slot's position *conditioned* on which other slots are filled. It only arises
+      // incidentally from abutting syllables, so it must be generated explicitly (unseeded it
+      // had ~380 train samples ⇒ 47% bottom accuracy; this 12% share lifts it to ~75%).
+      //
+      // NOTE: do NOT raise this share further to chase the dense case — it's zero-sum at this
+      // sample count. Tried 25%: dense 75→79% but it starved placeholder+top+bottom (97→93%)
+      // and the probe suite went 58/62 → 57/62 (p/v started colliding with ¿). Fixing dense
+      // needs more TOTAL data or capacity, not a bigger slice of the same budget.
       const c = pick(CORE_CONS)
       let x = pick(EXT_CONS)
       while (x === c) x = pick(EXT_CONS) // x === c would make it a top-geminate instead

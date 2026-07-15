@@ -690,12 +690,23 @@ tooling — none of it blocks the tool being usable today.
   random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
   formative-level feature that does not surface in alphabetic spelling. Nothing to build.
 - **Alphabetic — the dense 3-letter core is the last weak spot** (`core + top + bottom` in one base, e.g.
-  `atkra`). Now explicitly generated, which lifted it **47 → 75%** bottom accuracy and cleared top-slot
-  gemination (6/6) — but it remains the hardest context by a wide margin (every other context is 94–98.5%),
-  and a dedicated probe set still reads **2/6** (`atkra→atksa`, `eslpa→elpa` — the *top* letter is dropped
-  too, so both extension heads struggle when three consonants share one base). Options: raise its share of
-  the training mix further, more samples/epochs, or more input resolution for the crowded base. Note this
-  shape is rare in ordinary words — it needs a 3-consonant cluster inside a single syllable.
+  `atkra`). Explicitly generating it lifted the context **47 → 75%** and cleared top-slot gemination (6/6),
+  but it stays the hardest context (all others 94–98.5%) and a dedicated probe reads **2/6**.
+  **Re-weighting is exhausted — it's zero-sum at this sample count.** Raising its share 12→25% bought
+  dense 75→79% and top-GEM 94→97%, but starved `placeholder+top+bottom` (97→93%, the common `mela` shape)
+  and the probe suite *regressed* 58/62 → 57/62 (p/v began colliding with `¿`). Reverted; the known-good
+  model is preserved at `models/alpha-cnn.keep`. Remaining options, both ~2.5 h: **more total data**
+  (N 12k→20k so every context grows) or **more capacity** (the trunk is only 16/32/32 + dense 96 for a
+  36-class × 3-head problem). Worth weighing against value: this shape needs a 3-consonant cluster inside a
+  single syllable, so it's rare in ordinary words.
+- **Warm-up: cache the `char-type` + `primary` template grids to disk (~86 s → ~15 s per start).** Measured
+  breakdown of a normal (caches-present) start: `char-type.js` import **44 s**, `primary.js` **28 s**,
+  alphabetic distance-transform rebuild 9 s, quaternary+tertiary 6 s, libraries (tfjs-node/@zsnout/svgdom)
+  ~4 s, and **all four CNN models 0.07 s combined** — the models are *not* the warm-up cost. `char-type.ts`
+  builds a 4×4×4 grid of **composed formative** renders at module load and `primary.ts` renders its zone
+  templates, and unlike [`alphabetic.ts`](src/alphabetic.ts)/[`secondary.ts`](src/secondary.ts) neither
+  caches to disk — so both are rebuilt on every server start *and every test run*. Applying the same proven
+  cache pattern (masks base64 → JSON, `CACHE_VERSION` busts it) is a contained change with a large payoff.
 - **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
   function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
