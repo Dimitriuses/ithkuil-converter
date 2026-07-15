@@ -29,11 +29,28 @@ export interface DecodedFeatures {
   illocutionValidation?: string
 }
 
-/** Assemble decoded features into a partial formative and romanize it. */
+/**
+ * Assemble decoded features into a partial formative and romanize it.
+ *
+ * Returns `""` when the features can't form a word. That is a normal outcome for a
+ * *recognizer*: on a hard input the pipeline may decode no secondary at all (every
+ * character mis-typed), leaving no root — and `formativeToIthkuil` throws outright
+ * without one ("You must provide the root of a formative"). ~13% of real-lexicon roots
+ * hit this. A failed decode must surface as an empty result the caller can report, not
+ * as an exception that takes down `/api/decode`.
+ */
 export function featuresToText(f: DecodedFeatures): string {
+  // A root is mandatory; nothing else here is.
+  if (!f.root) return ""
   const { type = "UNF/C", ...rest } = f
   // Drop undefined so @zsnout applies its own defaults.
   const formative: Record<string, unknown> = { type }
   for (const [k, v] of Object.entries(rest)) if (v != null) formative[k] = v
-  return formativeToIthkuil(formative as never)
+  try {
+    return formativeToIthkuil(formative as never)
+  } catch {
+    // Other combinations @zsnout rejects (a garbled decode can yield an impossible
+    // feature set) — same reasoning: report the failure, don't propagate it.
+    return ""
+  }
 }

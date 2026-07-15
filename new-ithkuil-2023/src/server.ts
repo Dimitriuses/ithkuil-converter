@@ -134,7 +134,19 @@ async function handleDecode(body: Record<string, unknown>, res: ServerResponse):
   }
   const bmp = seg.binarize(rgba.data, rgba.width, rgba.height)
   const regions = seg.segment(bmp)
-  const { text, words } = decode.decodePhrase(bmp, rgba) // pass RGBA so the core CNN runs
+  // A recognizer must not 500 on a hard image: report the failure instead. (The known
+  // cause — no root ⇒ formativeToIthkuil throws — is handled in assemble.ts; this is the
+  // backstop for anything else the decoders throw on unexpected input.)
+  let text: string
+  let words: ReturnType<typeof decode.decodePhrase>["words"]
+  try {
+    ;({ text, words } = decode.decodePhrase(bmp, rgba)) // pass RGBA so the core CNN runs
+  } catch (e) {
+    return sendJson(res, 200, {
+      ok: false,
+      error: `decode failed: ${e instanceof Error ? e.message : String(e)}`,
+    })
+  }
   const overlay = img.renderSegmentationOverlay(rgba, regions)
   const overlayBase64 = img.encodePng(overlay).toString("base64")
   sendJson(res, 200, { ok: true, text, words, overlayBase64 })

@@ -736,19 +736,43 @@ samples crash** (56/425). Three separate problems, found together:
 measured honestly → L2 fix the crash (graceful degradation) → L3 fix `char-type` for multi-secondary roots
 (unlocks ~47% of the lexicon) → L4 the core+bottom classifier for 3-consonant clusters.
 
-**L1 — DONE.** [`lexicon.ts`](src/lexicon.ts) exposes the real root forms (deterministic, evenly-spread
-sampling by length) and [`lexicon-roundtrip.ts`](src/lexicon-roundtrip.ts) (`npm run lexicon-test -- [perLength]`)
-reports per-length round-trip, the detected char-type shapes, crash counts, and the lexicon-weighted total.
-`word-test` keeps its easy corpus but is now documented as a **feature-level regression gate, not a
-benchmark**. Note sample size matters: two different 25-root samples of the same length disagreed by ~3×
-(3-consonant read 12% vs 40%) — quote ≥100/length. **Baseline to beat: 23.5%.**
+#### Lexicon benchmark harness (done) — the honest number, and how to keep it honest
+
+[`lexicon.ts`](src/lexicon.ts) exposes the real root forms (`ROOT_FORMS`, `rootsOfLength`, and a
+deterministic, evenly-spread `sampleRootsOfLength` so a run is comparable to the last one).
+[`lexicon-roundtrip.ts`](src/lexicon-roundtrip.ts) — `npm run lexicon-test -- [perLength]` — reports
+per-length round-trip, the **lexicon-weighted total**, the detected char-type shapes (how structural
+failures surface), and crash counts.
+
+- **Baseline to beat: 23.5%.**
+- `word-test` keeps its easy corpus but is now documented as a **feature-level regression gate, not a
+  benchmark** — it isolates spec/Vn/case/CNN changes, and still passes 48/48. Never cite it as accuracy.
+- **Sample size matters:** two different 25-root samples of the same length disagreed by ~3× (3-consonant
+  read 12% vs 40%). Quote ≥100/length; the 25 default is a quick look only.
+
+#### Graceful decode failure (done) — a recognizer must not throw
+
+`featuresToText` fed `formativeToIthkuil`, which throws outright without a root ("You must provide the root
+of a formative") — and on a hard image the pipeline can legitimately decode **no secondary at all**, leaving
+no root. That crashed **~13% of real-lexicon inputs** (56/425) and would have 500'd `/api/decode`.
+
+- [`assemble.ts`](src/assemble.ts) now returns `""` when there's no root, and catches other combinations
+  @zsnout rejects (a garbled decode can yield an impossible feature set). A failed decode is a *reported*
+  outcome, not an exception. [`server.ts`](src/server.ts) also wraps `decodePhrase` as a backstop → 200
+  `{ok:false, error}` rather than 500.
+- **Crashes 56 → 0; lexicon-weighted unchanged at 23.5%** — correct, since a crash was already a failure.
+- **It was masking a diagnosis:** those inputs now report their char shapes — `pp` (primary+**primary**),
+  `pq`, `ppq`, `pqq`, `ppp` — i.e. **no secondary detected**. Every crash was a char-type mis-typing of the
+  root character, which is direct evidence for L3.
 
 ### Next up (planned — nothing below is built yet)
-- **L2 Fix the `decodeWordToText` crash** — no secondary ⇒ no root ⇒ `formativeToIthkuil` throws. Degrade
-  gracefully (return a partial/empty decode) instead of propagating; `/api/decode` must not 500.
-- **L3 Fix `char-type` for multi-secondary roots** — 4–5 consonant roots (47% of the lexicon) render as
-  several secondaries; the extra ones are mis-typed as quaternary/primary and dropped. Biggest single win
-  available (0% → ?), and likely the same "composed vs isolated render" lesson as the primary type grid.
+- **L3 Fix `char-type` for real roots** — two failure modes, same root cause. (a) 4–5 consonant roots (47% of
+  the lexicon) pack into **several secondaries** and the extra ones mis-type (`psq`×61 / `psp` / `pps` for
+  4-consonant); (b) on 2–3 consonant roots the *only* secondary is sometimes typed primary/quaternary, so no
+  root is found at all (`pp`×12, `pq`×6 on 3-consonant — these were the former crashes). Likely the same
+  "composed vs isolated render" lesson already learned for the primary type grid. **But necessary, not
+  sufficient:** the 35/100 4-consonant roots that *did* get the correct `pss` shape still scored 0%, so
+  expect to need L4 as well.
 
 - ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
