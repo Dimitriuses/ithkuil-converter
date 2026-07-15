@@ -765,14 +765,29 @@ no root. That crashed **~13% of real-lexicon inputs** (56/425) and would have 50
   `pq`, `ppq`, `pqq`, `ppp` — i.e. **no secondary detected**. Every crash was a char-type mis-typing of the
   root character, which is direct evidence for L3.
 
+#### Char-type on real roots (done) — composed secondaries, 80% → 97%
+
+The type templates for **secondaries** were isolated bare cores (`Secondary({ core })`), while the primary
+ones had long since been rebuilt from **composed formatives** (with a comment explaining exactly why). But a
+real root's secondary carries top/bottom extensions, and roots >3 consonants spill into extra secondaries —
+none of which looks like a bare core. Real secondaries matched at only **~0.43**, so primary/quaternary
+templates won by default, and the mis-typed characters were routed to the wrong decoder and dropped.
+
+- **Every failure was a secondary** (→quaternary ×48, →primary ×21); the primary never mis-typed.
+- **Fix:** `composedSecondaryTemplates()` renders real lexicon roots (12 per length, lengths 1–5) as
+  formatives and lifts the secondaries out — region 0 is the primary, the rest are the root's secondaries.
+  Covers the whole shape space: bare core, core+bottom, top+core+bottom, and the multi-secondary spill.
+  Bare-core templates are kept alongside. `CACHE_VERSION` bumped (a stale cache would hide the fix).
+- **char-type on real roots: 80.3% → 96.9% held-out** (5-consonant **59% → 98%**, 4-consonant 74% → 93%).
+  Measured on roots *excluded* from the template sample — testing on the same deterministic sample would
+  have been contamination, and it inflated the figure by ~1.4 pp (98.3% → 96.9%).
+- **Structure is now correct:** 4/5-consonant shapes went `psq`×61 → **`pss`×93** / `pss`×96. Crashes stay 0.
+- **Lexicon-weighted 23.5% → 26.1%**; no regressions (`word` 48/48, `phrase` 7/7, `alphabetic` 15/15,
+  `primary-aligned` 48/48, `tricon` unchanged).
+- **As predicted, necessary but not sufficient:** 4/5-consonant roots are still 0% — the characters are now
+  routed correctly, but `decodeSecondary` misreads them. That is L4, and the misses named the cause (below).
+
 ### Next up (planned — nothing below is built yet)
-- **L3 Fix `char-type` for real roots** — two failure modes, same root cause. (a) 4–5 consonant roots (47% of
-  the lexicon) pack into **several secondaries** and the extra ones mis-type (`psq`×61 / `psp` / `pps` for
-  4-consonant); (b) on 2–3 consonant roots the *only* secondary is sometimes typed primary/quaternary, so no
-  root is found at all (`pp`×12, `pq`×6 on 3-consonant — these were the former crashes). Likely the same
-  "composed vs isolated render" lesson already learned for the primary type grid. **But necessary, not
-  sufficient:** the 35/100 4-consonant roots that *did* get the correct `pss` shape still scored 0%, so
-  expect to need L4 as well.
 
 - ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
@@ -798,13 +813,23 @@ no root. That crashed **~13% of real-lexicon inputs** (56/425) and would have 50
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **L4 Core+bottom classifier for 3-consonant clusters.** Measured headroom (n=257 synthetic clusters): top
-  93.0% (top-cnn), core 87.9%, **bottom 75.1%**, **core+bottom both 68.9%** ⇒ full 65%. The tell: core+bottom
-  is **100% when no top is present** and collapses to 68.9% once there is one — the same "a top makes the base
-  taller ⇒ every slot shifts" effect the alphabetic CNN solved. At alpha-cnn-level core+bottom (~98%),
-  full ≈ **91%**. NOTE the 65% is on easy roots; on real 3-consonant lexicon roots the whole path is at 12%,
-  so do L1–L3 first — this is a *different* task from the alphabetic dense core (`decodeSecondary` vs
-  `decodeAlphabeticSpan`, real consonant core vs placeholder), and unlike that one it covers 37% of the lexicon.
+- **L4 Fix `decodeSecondary` for real roots — inventory first, then core+bottom accuracy.** Two parts:
+  - **(a) The extension inventory is wrong — 27% of the lexicon is undecodable by construction.**
+    `secondary.ts` sets `EXTENSION_SET = CONSONANTS`, i.e. the 28 **CORE** consonants — but @zsnout's `EXT`
+    set also admits `w y ' " ¿`, which `CORE` excludes. **1188/4387 roots (27.1%) contain one** (`w` 15.3%,
+    `y` 11.7%; 42% of 5-consonant roots). With no `w` template the decoder emits its nearest guess, hence the
+    systematic `aňçtļwala → aňçtļdšala`, `armpwala → armmdšala` — a `w` read as `dš`. This is *exactly* the
+    gap already fixed in the alphabetic CNN (core ∈ `CORE_CONS`, top/bottom ∈ `EXT_CONS`); apply the same
+    split here. Cheap and mechanical — do it first, and note it must be right *before* training (b).
+  - **(b) Core+bottom classifier.** Measured headroom (n=257 synthetic clusters): top 93.0% (top-cnn), core
+    87.9%, **bottom 75.1%**, **core+bottom both 68.9%** ⇒ full 65%. The tell: core+bottom is **100% when no
+    top is present** and collapses to 68.9% once there is one — the same "a top makes the base taller ⇒ every
+    slot shifts" effect the alphabetic CNN solved. At alpha-cnn-level core+bottom (~98%), full ≈ **91%**.
+    Note 65% is on *easy* roots; real 3-consonant roots round-trip at 40%. This is a *different* task from the
+    alphabetic dense core (`decodeSecondary` vs `decodeAlphabeticSpan`, real consonant core vs placeholder),
+    and unlike that one it covers 37% of the lexicon.
+  - **Expected payoff:** with char-type fixed, this is what stands between 26.1% and the bulk of the lexicon —
+    (a) unblocks 27% of roots outright; (b) targets the 4/5-consonant 0% and the 3-consonant 40%.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.

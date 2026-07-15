@@ -20,6 +20,7 @@ import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
 import { buildBaseTemplates, maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
 import { CONSONANTS } from "./glyph-classes.js"
+import { sampleRootsOfLength } from "./lexicon.js"
 import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
@@ -68,12 +69,61 @@ function composedPrimaryTemplates(): Template[] {
   return templates
 }
 
+// Secondary type templates need the SAME treatment as the primary ones, for the same
+// reason. An isolated `Secondary({ core })` is a bare core, but a real root's secondary
+// carries top/bottom extensions — a completely different silhouette — and roots longer
+// than 3 consonants spill into additional secondaries. Matched against bare cores only,
+// real secondaries scored just ~0.43 and lost to primary/quaternary templates: char-type
+// was 80% overall on real lexicon roots and 59% on 5-consonant ones, and every single
+// mis-typing was a secondary (→quaternary ×48, →primary ×21). Those wrong types route the
+// root to the wrong decoder, so its consonants are dropped — which is why 4–5 consonant
+// roots (47% of the lexicon) round-tripped at 0%.
+//
+// So: render real lexicon roots as composed formatives and take the secondaries. Region 0
+// is the primary; every later region is one of the root's secondaries (a minimal formative
+// has no tertiary/quaternary). Sampling across root lengths 1–5 covers the whole shape
+// space — bare core, core+bottom, top+core+bottom, and the multi-secondary spill.
+const SECONDARY_SAMPLE_PER_LENGTH = 12
+
+function composedSecondaryTemplates(): Template[] {
+  const templates: Template[] = []
+  for (const len of [1, 2, 3, 4, 5]) {
+    for (const cr of sampleRootsOfLength(len, SECONDARY_SAMPLE_PER_LENGTH)) {
+      let text: string
+      try {
+        text = formativeToIthkuil({ root: cr, type: "UNF/C" } as never)
+      } catch {
+        continue
+      }
+      let r
+      try {
+        r = encode(text, { margin: 10 })
+      } catch {
+        continue
+      }
+      if (!r.ok) continue
+      const img = decodePng(svgToPng(r.svg, { width: 700 }))
+      const bmp = binarize(img.data, img.width, img.height)
+      const regions = segment(bmp)
+      // Label with the root only — type detection just needs "secondary"; the consonants
+      // are re-read by decodeSecondary. (Many templates share a label.)
+      for (const rg of regions.slice(1)) {
+        templates.push({ label: cr, class: `secondary-${cr}`, mask: maskOfBox(bmp, rg.base, 64) })
+      }
+    }
+  }
+  return templates
+}
+
 // One combined, type-tagged template set. Type is read from the class prefix.
 function buildTypedTemplates(): Template[] {
   return [
+    // Isolated bare cores — still the right reference for a bare-core secondary…
     ...buildBaseTemplates(
       CONSONANTS.map((c) => ({ label: c, class: `secondary-${c}`, el: () => Secondary({ core: c }) })),
     ),
+    // …plus real, extension-bearing secondaries lifted out of composed words.
+    ...composedSecondaryTemplates(),
     ...buildBaseTemplates([
       { label: "∅", class: "quaternary-none", el: () => Quaternary({}) },
       ...Object.keys(ILLOCUTION_TO_SECONDARY_EXTENSION).map((v) => ({
@@ -97,7 +147,7 @@ function buildTypedTemplates(): Template[] {
 // per-type base renders — ~44 s, which used to be paid at module load on EVERY process
 // start (server and every test run). Bump CACHE_VERSION if the renders or value sets change.
 const CACHE_NAME = "char-type"
-const CACHE_VERSION = 1
+const CACHE_VERSION = 2 // bumped: added composed (extension-bearing) secondary templates
 let typedTemplates: Template[] | null = null
 
 function ensureTemplates(): Template[] {
