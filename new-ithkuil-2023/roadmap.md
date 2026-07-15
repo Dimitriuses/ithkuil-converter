@@ -736,7 +736,7 @@ samples crash** (56/425). Three separate problems, found together:
 measured honestly → ② fix the crash (graceful degradation) → ③ fix `char-type` for multi-secondary roots
 (unlocks ~47% of the lexicon) → ④ the core+bottom classifier for 3-consonant clusters.
 
-**① — DONE.** [`lexicon.ts`](src/lexicon.ts) exposes the real root forms (deterministic, evenly-spread
+**L1 — DONE.** [`lexicon.ts`](src/lexicon.ts) exposes the real root forms (deterministic, evenly-spread
 sampling by length) and [`lexicon-roundtrip.ts`](src/lexicon-roundtrip.ts) (`npm run lexicon-test -- [perLength]`)
 reports per-length round-trip, the detected char-type shapes, crash counts, and the lexicon-weighted total.
 `word-test` keeps its easy corpus but is now documented as a **feature-level regression gate, not a
@@ -744,9 +744,9 @@ benchmark**. Note sample size matters: two different 25-root samples of the same
 (3-consonant read 12% vs 40%) — quote ≥100/length. **Baseline to beat: 23.5%.**
 
 ### Next up (planned — nothing below is built yet)
-- **② Fix the `decodeWordToText` crash** — no secondary ⇒ no root ⇒ `formativeToIthkuil` throws. Degrade
+- **L2 Fix the `decodeWordToText` crash** — no secondary ⇒ no root ⇒ `formativeToIthkuil` throws. Degrade
   gracefully (return a partial/empty decode) instead of propagating; `/api/decode` must not 500.
-- **③ Fix `char-type` for multi-secondary roots** — 4–5 consonant roots (47% of the lexicon) render as
+- **L3 Fix `char-type` for multi-secondary roots** — 4–5 consonant roots (47% of the lexicon) render as
   several secondaries; the extra ones are mis-typed as quaternary/primary and dropped. Biggest single win
   available (0% → ?), and likely the same "composed vs isolated render" lesson as the primary type grid.
 
