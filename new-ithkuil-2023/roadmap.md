@@ -866,11 +866,25 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
   labelled scan set than 16 words to trust; (2) **core decode accuracy** (the secondary-CNN residual below),
   which caps even a perfect scan; (3) **scale the loop** past 16 words for a tighter number. Captures live in
   `export/` (untracked).
-- **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). Residual is per-slot letter
-  confusions on hard bases: `t↔ḑ` on 2-consonant `kt` (the 2 word-test misses), and the dense 3-letter-core /
-  spilled cases in 4–5 consonant roots (~93%). Levers, in effort order: **oversample the confusable pairs**;
-  **`AUGMENT=1` retrain** (the flag now exists — jitter expands the ~6000 distinct root secondaries); more
-  epochs; a near-identical-pair tie-break. Diminishing returns vs the +40 points already banked.
+- **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). *Investigated 2026-07-17; the cheap
+  and medium levers are exhausted — see below before spending more here.* **Diagnosis:** the model
+  **hard-overfits** (100% train / 94.2% held-out on the core+bottom joint metric that caps the round-trip). The
+  **core slot is effectively solved (99%)**; the whole residual is **diffuse small-mark confusions in the
+  top/bottom *extension* slots** — ~15 letter-pairs each contributing 1–4 held-out errors (`v↔f`, `b↔c`, `d↔ḑ`,
+  `š↔w`, plus presence/absence drops `s→NONE`, `v→NONE`), no single dominant pair. **Ruled out empirically:**
+  (a) *targeted oversampling* — the errors are too diffuse to help; (b) *more capacity / more epochs* — it
+  already overfits; (c) **augmentation + regularization** (mild ±2px shift + stroke dilate/erode jitter,
+  dropout 0.45, L2) — **tested, zero gain** on clean held-out (93.7% = from-scratch baseline; jitter teaches
+  invariances the model already has, not mark *identity*); (d) **higher input resolution** — the 80px
+  `frameSquare` masks of the confused samples are already crisp (visual check), so the marks aren't
+  under-resolved. **Root cause:** each extension mark is a small, low-salience part of a *whole-character* mask
+  where the core dominates, and several pairs (voiced/voiceless) differ by one tiny stroke — a representation
+  limit, and no more real data exists (only ~6000 roots, all used). **Only high-effort/uncertain levers left:**
+  a **region-cropped extension head** (feed the top/bottom zones as their own higher-res sub-images to
+  dedicated heads, so the small marks aren't diluted by the core) — real architecture work, unproven payoff.
+  Recommendation: treat 92.6% as near the practical ceiling for this representation and prefer higher-ROI work
+  unless the region-crop idea is explicitly wanted. *(CPU note: each secondary retrain is ~25 min/30-epoch run
+  on tfjs-node; a full deploy retrain is ~1–2 h — factor this into any further attempt.)*
 - **Multi-line segmentation.** Split a multi-line image into lines before decoding. Pure upstream
   preprocessing — **no retrain** (the CNNs see identical per-character crops); it just feeds the existing
   pipeline line by line.
