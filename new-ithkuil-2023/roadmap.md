@@ -843,49 +843,43 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
 
 ### Next up (planned — nothing below is built yet)
 
-- **Secondary CNN — remaining ~7% of the lexicon.** At 92.6% the residual is per-slot letter confusions on
-  hard bases: `t↔ḑ` on 2-consonant `kt` (2 word-test misses), and the dense 3-letter-core / spilled cases in
-  4–5 consonant roots (both ~93%). Levers: more training data (only ~6000 distinct root secondaries exist —
-  augment with geometric jitter, or oversample the confusable pairs), more epochs, or a near-identical-pair
-  tie-break. Diminishing returns vs the +40 points already banked.
-- ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
-  never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
-  random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
-  formative-level feature that does not surface in alphabetic spelling. Nothing to build.
-- **Alphabetic — the dense 3-letter core is the last weak spot** (`core + top + bottom` in one base, e.g.
-  `atkra`). Explicitly generating it lifted the context **47 → 75%** and cleared top-slot gemination (6/6),
-  but it stays the hardest context (all others 94–98.5%) and a dedicated probe reads **2/6**.
-  **Re-weighting is exhausted — it's zero-sum at this sample count.** Raising its share 12→25% bought
-  dense 75→79% and top-GEM 94→97%, but starved `placeholder+top+bottom` (97→93%, the common `mela` shape)
-  and the probe suite *regressed* 58/62 → 57/62 (p/v began colliding with `¿`). Reverted; the known-good
-  model is preserved at `models/alpha-cnn.keep`. Remaining options, both ~2.5 h: **more total data**
-  (N 12k→20k so every context grows) or **more capacity** (the trunk is only 16/32/32 + dense 96 for a
-  36-class × 3-head problem). Worth weighing against value: this shape needs a 3-consonant cluster inside a
-  single syllable, so it's rare in ordinary words.
-- **Warm-up — remaining ~19 s** (down from ~86 s, see the done section). What's left: `warmAlphabetic` 9.4 s
-  (recomputing ~1200 chamfer distance transforms on load — could be stored, but they're ~15 MB of Float32,
-  so it'd want a binary sidecar rather than base64 JSON) and ~9.5 s of module import (mostly `tsx` compiling
-  the graph + tfjs-node's native load — a `tsc` build served from `dist/` would cut it). Both are modest and
-  optional; the 72 s of glyph rendering is already gone.
-- **Vr/Vv `version` — close the last gap.** context + function + stem now round-trip 100% (80px cracked
-  function, which was ≈chance on minimal primaries at 48px). version still reads only ~75% on clean defaults
-  even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
-  round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
-  resolution.
-- ~~**Non-CNN polish**~~ — **mostly obsolete, superseded by the CNNs.** "Aligned perspective past 84%" is
-  done differently: perspective is now taken from the **primary CNN's perspective head** (it was already
-  trained, just unwired) — `decode-word.ts` sets `decoded.perspective = pf.perspective` and it threads
-  through `assemble.ts` into the Ca. NB the 84% was the *chamfer under Ca co-variation*; with default Ca both
-  read 100%, and non-default Ca is unreachable in round-trip anyway (configuration is undecoded), so this is
-  a correctness/robustness change with no round-trip delta today — it matters once other Ca is decoded. The
-  `s`-on-k/t/p bottom extension is subsumed by the secondary CNN (~95% bottom). *Remaining, genuinely
-  non-CNN:* nothing worth a task.
-- **Deferred infra:** multi-line segmentation (pure upstream preprocessing — **no retrain**, CNNs see the
-  same crops); deskew/denoise for real scans. **Prep done:** [`augment.ts`](src/augment.ts) +
-  `AUGMENT=1 npm run cnn-…` add scan-simulation augmentation (rotation / blur / speckle / stroke morphology)
-  to all four pipeline-domain trainers — they otherwise train on clean renders only. Augmented runs write to
-  `-aug`-suffixed model/cache paths so they never clobber the deployed clean models. Real-scan support is a
-  *deliberate retrain* with this flag (plus deskew/denoise preprocessing), not an automatic behaviour.
+- **Real scans — the big frontier.** Everything above is measured on clean synthetic renders; real
+  photos/scans/hand-drawing are unhandled. Two parts: (1) **deskew/denoise preprocessing** to normalize a
+  scan toward the clean domain; (2) a **retrain of the four pipeline-domain CNNs with `AUGMENT=1`** — the
+  augmentation infra is already built ([`augment.ts`](src/augment.ts): rotation/blur/speckle/stroke
+  morphology; augmented runs write to `-aug` paths, so they don't touch the deployed clean models). Needs a
+  small set of real labelled scans to validate against.
+- **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). Residual is per-slot letter
+  confusions on hard bases: `t↔ḑ` on 2-consonant `kt` (the 2 word-test misses), and the dense 3-letter-core /
+  spilled cases in 4–5 consonant roots (~93%). Levers, in effort order: **oversample the confusable pairs**;
+  **`AUGMENT=1` retrain** (the flag now exists — jitter expands the ~6000 distinct root secondaries); more
+  epochs; a near-identical-pair tie-break. Diminishing returns vs the +40 points already banked.
+- **Multi-line segmentation.** Split a multi-line image into lines before decoding. Pure upstream
+  preprocessing — **no retrain** (the CNNs see identical per-character crops); it just feeds the existing
+  pipeline line by line.
+- **Warm-up — the remaining ~19 s** (down from ~86 s; see the done section). What's left: `warmAlphabetic`
+  9.4 s (recomputing ~1200 chamfer distance transforms on load — storable, but they're ~15 MB of Float32, so
+  it'd want a binary sidecar not base64 JSON) and ~9.5 s of module import (`tsx` compiling the graph +
+  tfjs-node native load — a `tsc`/`dist` build would cut it). Both modest and optional.
+- **Vr/Vv `version` — the last primary-feature gap.** context + function + stem + perspective all round-trip;
+  version still reads only ~75% on clean defaults even at 80px (its mark is subtler), so it's taken only
+  above a 0.97 confidence guard (83% round-trip). Closing it likely needs **real scanned data** or a
+  **version-specialized head**, not more resolution.
+- **Alphabetic — the dense 3-letter core** (`core + top + bottom` in one base, e.g. `atkra`) — lowest
+  priority. It's the last weak alphabetic context (probe 2/6; all others 94–98.5%), but re-weighting is
+  exhausted (zero-sum: 12→25% share lifted dense 75→79% but regressed the common `mela` shape and the probe
+  suite 58/62→57/62). Remaining levers are ~2.5 h each — **more total data** (N 12k→20k) or **more capacity**
+  (trunk is only 16/32/32) — and the shape needs a 3-consonant cluster inside one syllable, so it's rare.
+  Known-good model preserved at `models/alpha-cnn.keep`.
+
+#### Resolved / decided-against (kept so they aren't re-proposed)
+
+- **Alphabetic tone (`left` diacritic) — not a feature.** `textToSecondaries` never assigns `left` (verified
+  in the encoder source *and* 0/20 000 random words); tone is formative-level, absent from alphabetic
+  spelling. Nothing to build.
+- **"Non-CNN polish" — superseded by the CNNs.** Aligned perspective is now read by the primary CNN's
+  perspective head (wired through `assemble.ts`); the `s`-on-k/t/p bottom extension is subsumed by the
+  secondary CNN (~95% bottom). No standalone chamfer-tuning task remains.
 
 **Web-tool (M8) polish ideas — design & functionality:**
 
