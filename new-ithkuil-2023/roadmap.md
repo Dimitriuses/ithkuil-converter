@@ -848,17 +848,24 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
   fiducial-registered A4 grid of known lexicon words (BR corner is a ring → orientation is unambiguous);
   [`scan-ingest.ts`](src/scan-ingest.ts) detects the four fiducials, deskews any capture (scanner or phone,
   PNG/JPEG, any rotation) onto the canonical frame via 4-point homography, and [`scan-test.ts`](src/scan-test.ts)
-  crops each cell by its manifest box and scores it against the printed label (Otsu per cell, not the fixed
-  128). **First real-scan pass (16-word sheet, 3 devices):** clean-sheet ceiling **88%** → flatbed scan **81%**
-  (imaging cost ~one cell) → good phone **75%** → weak phone **63%**; overall **76.6%**. Deskew geometry is
-  sound (clean sheet through the same path = the direct-decode ceiling). **Glare is the dominant degradation**
-  — the whole-word failures (`∅`) cluster in the overexposed region and scale with camera quality; two misses
-  recur on every capture and are the known decode residual (d↔g / ļ-drop), not imaging.
-  Remaining, in order: (1) **deskew/denoise + local/adaptive thresholding** to recover glare cells (biggest
-  single lever — those are the `∅`s); (2) a **retrain of the four pipeline-domain CNNs with `AUGMENT=1`** — infra
-  already built ([`augment.ts`](src/augment.ts): rotation/blur/speckle/stroke morphology; augmented runs write to
-  `-aug` paths, so they don't touch the deployed clean models); (3) **scale the loop** past 16 words for a
-  tighter number. Captures live in `export/` (untracked).
+  crops each cell by its manifest box and scores it against the printed label. **Real-scan pass (16-word sheet,
+  3 devices):** clean-sheet ceiling **88%** → flatbed scan **81%** (imaging cost ~one cell) → good phone **75%**
+  → weak phone **69%**; overall **78.1%**. Deskew geometry is sound (clean sheet through the same path = the
+  direct-decode ceiling).
+  **Imaging preprocessing is now largely tapped out on these captures.** Done: (a) EXIF-orientation handling in
+  [`decodeJpeg`](src/image-io.ts) — phone JPEGs carry `Orientation=6` (90° CW), which `jpeg-js` ignores;
+  matters for the eventual *fiducial-less* OCR case, not the sheet (the ring already fixes rotation); (b)
+  **flat-field + global Otsu** thresholding in `scan-test` ([`flatFieldBinarize`](src/segment.ts)) — levels the
+  glare gradient then cuts once; **76.6% → 78.1%** with no regression on flat-lit captures. *Rejected:* per-pixel
+  **adaptive** local thresholding — it amplified scanner grain into spurious diacritics and regressed the clean
+  scan to 31% (see git history). The residual is now (i) the **decode-model** errors that recur on every capture
+  (d↔g, ļ-drop — same as clean), and (ii) **genuinely glare-destroyed** cells where ink is blown to ~paper white
+  (no threshold recovers them). So the real levers left are **not** more preprocessing:
+  (1) **retrain the four pipeline CNNs with `AUGMENT=1`** — infra built ([`augment.ts`](src/augment.ts):
+  rotation/blur/speckle/stroke morphology; `-aug` paths keep deployed clean models untouched) — wants a bigger
+  labelled scan set than 16 words to trust; (2) **core decode accuracy** (the secondary-CNN residual below),
+  which caps even a perfect scan; (3) **scale the loop** past 16 words for a tighter number. Captures live in
+  `export/` (untracked).
 - **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). Residual is per-slot letter
   confusions on hard bases: `t↔ḑ` on 2-consonant `kt` (the 2 word-test misses), and the dense 3-letter-core /
   spilled cases in 4–5 consonant roots (~93%). Levers, in effort order: **oversample the confusable pairs**;

@@ -13,9 +13,9 @@
  */
 import "./dom-shim.js"
 import { loadImage, cropRgba, type RgbaImage } from "./image-io.js"
-import { binarize } from "./segment.js"
+import { flatFieldBinarize } from "./segment.js"
 import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn, enableAlphabeticCnn } from "./decode-word.js"
-import { deskew, loadManifest, toGray, otsu } from "./scan-ingest.js"
+import { deskew, loadManifest } from "./scan-ingest.js"
 
 const CROP_MARGIN = 24 // white padding around each manifest box (deskew is not pixel-perfect)
 
@@ -26,9 +26,10 @@ function decodeCell(canon: RgbaImage, box: { x: number; y: number; w: number; h:
     w: box.w + 2 * CROP_MARGIN,
     h: box.h + 2 * CROP_MARGIN,
   })
-  // Otsu on the crop, nudged so faint (glare) ink still falls below the threshold.
-  const thr = Math.min(200, otsu(toGray(crop)) + 10)
-  const bmp = binarize(crop.data, crop.width, crop.height, thr)
+  // Flat-field + global Otsu: levels out glare so faint glyphs survive, with no penalty on
+  // flat-lit captures (78.1% vs 76.6% for a plain global cut; adaptive local thresholding
+  // regressed the clean scan by amplifying grain — see git history).
+  const bmp = flatFieldBinarize(crop.data, crop.width, crop.height, 2)
   const { text } = decodeWordToText(bmp, crop)
   return text
 }

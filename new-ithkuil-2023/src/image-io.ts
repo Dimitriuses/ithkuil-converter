@@ -24,8 +24,68 @@ export function loadPng(path: string): RgbaImage {
   return decodePng(readFileSync(path))
 }
 
-/** Decode a JPEG buffer to RGBA. `tolerantDecoding` copes with slightly-off phone JPEGs,
- * and the resolution/memory caps are raised for high-megapixel captures. */
+/** Read the EXIF Orientation tag (1–8) from a JPEG buffer, or 1 if absent. Phone cameras
+ * store pixels in the sensor's native orientation plus this tag; viewers rotate on display,
+ * but `jpeg-js` returns the raw grid, so we must apply it ourselves. */
+export function readExifOrientation(buf: Buffer): number {
+  for (let i = 2; i + 4 < buf.length && buf[i] === 0xff; ) {
+    const marker = buf[i + 1]!
+    const len = (buf[i + 2]! << 8) | buf[i + 3]!
+    if (marker === 0xda || marker === 0xd9) break // start-of-scan / end — no more metadata
+    if (marker === 0xe1 && buf.toString("ascii", i + 4, i + 8) === "Exif") {
+      const tiff = i + 10
+      const le = buf.toString("ascii", tiff, tiff + 2) === "II"
+      const u16 = (p: number) => (le ? buf.readUInt16LE(p) : buf.readUInt16BE(p))
+      const u32 = (p: number) => (le ? buf.readUInt32LE(p) : buf.readUInt32BE(p))
+      const ifd = tiff + u32(tiff + 4)
+      const n = u16(ifd)
+      for (let e = 0; e < n; e++) {
+        const ent = ifd + 2 + e * 12
+        if (u16(ent) === 0x0112) return u16(ent + 8) // Orientation tag
+      }
+      return 1
+    }
+    i += 2 + len
+  }
+  return 1
+}
+
+/** Reorient RGBA pixels per an EXIF orientation (1–8). Dimensions swap for 5–8. */
+export function applyOrientation(img: RgbaImage, o: number): RgbaImage {
+  if (o <= 1 || o > 8) return img
+  const { width: W, height: H, data } = img
+  const swap = o >= 5
+  const dW = swap ? H : W
+  const dH = swap ? W : H
+  const out = new Uint8Array(dW * dH * 4)
+  for (let dy = 0; dy < dH; dy++) {
+    for (let dx = 0; dx < dW; dx++) {
+      let sx: number, sy: number
+      // prettier-ignore
+      switch (o) {
+        case 2: sx = W - 1 - dx; sy = dy; break            // mirror horizontal
+        case 3: sx = W - 1 - dx; sy = H - 1 - dy; break    // 180°
+        case 4: sx = dx; sy = H - 1 - dy; break            // mirror vertical
+        case 5: sx = dy; sy = dx; break                    // transpose
+        case 6: sx = dy; sy = H - 1 - dx; break            // 90° CW
+        case 7: sx = W - 1 - dy; sy = H - 1 - dx; break    // transverse
+        case 8: sx = W - 1 - dy; sy = dx; break            // 90° CCW
+        default: sx = dx; sy = dy
+      }
+      const s = (sy * W + sx) * 4
+      const d = (dy * dW + dx) * 4
+      out[d] = data[s]!
+      out[d + 1] = data[s + 1]!
+      out[d + 2] = data[s + 2]!
+      out[d + 3] = data[s + 3]!
+    }
+  }
+  return { width: dW, height: dH, data: out }
+}
+
+/** Decode a JPEG buffer to RGBA, applying EXIF orientation. `tolerantDecoding` copes with
+ * slightly-off phone JPEGs, and the resolution/memory caps are raised for high-megapixel
+ * captures. */
 export function decodeJpeg(buf: Buffer): RgbaImage {
   const img = jpeg.decode(buf, {
     useTArray: true,
@@ -34,7 +94,7 @@ export function decodeJpeg(buf: Buffer): RgbaImage {
     maxResolutionInMP: 200,
     maxMemoryUsageInMB: 1024,
   })
-  return { width: img.width, height: img.height, data: img.data }
+  return applyOrientation({ width: img.width, height: img.height, data: img.data }, readExifOrientation(buf))
 }
 
 /** Decode a PNG or JPEG buffer, dispatching on the magic bytes (robust to a wrong file

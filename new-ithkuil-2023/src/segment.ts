@@ -74,6 +74,70 @@ export function binarize(
   return { width, height, ink }
 }
 
+/**
+ * Flat-field binarization for real captures: subtract a smooth local-mean background (so the
+ * paper is levelled to white everywhere, removing glare/lighting gradients), then apply ONE
+ * global Otsu cut to the levelled image. Unlike per-pixel adaptive thresholding this doesn't
+ * distort thick strokes or amplify grain — on flat-lit captures the background is ~constant, so
+ * it's near a no-op, but it recovers glyphs sitting in a glare patch. `winDiv` sets the
+ * background window to min(w,h)/winDiv (must be wide enough to be paper-dominated).
+ */
+export function flatFieldBinarize(
+  rgba: Uint8Array | Buffer,
+  width: number,
+  height: number,
+  winDiv = 2,
+): Bitmap {
+  const n = width * height
+  const gray = new Float64Array(n)
+  for (let i = 0; i < n; i++) gray[i] = 0.299 * rgba[i * 4]! + 0.587 * rgba[i * 4 + 1]! + 0.114 * rgba[i * 4 + 2]!
+  const iw = width + 1
+  const integral = new Float64Array(iw * (height + 1))
+  for (let y = 0; y < height; y++) {
+    let rowSum = 0
+    for (let x = 0; x < width; x++) {
+      rowSum += gray[y * width + x]!
+      integral[(y + 1) * iw + (x + 1)] = integral[y * iw + (x + 1)]! + rowSum
+    }
+  }
+  const r = Math.max(20, (Math.min(width, height) / winDiv) | 0)
+  const norm = new Float64Array(n)
+  const hist = new Array(256).fill(0)
+  for (let y = 0; y < height; y++) {
+    const y0 = Math.max(0, y - r)
+    const y1 = Math.min(height - 1, y + r)
+    for (let x = 0; x < width; x++) {
+      const x0 = Math.max(0, x - r)
+      const x1 = Math.min(width - 1, x + r)
+      const sum =
+        integral[(y1 + 1) * iw + (x1 + 1)]! - integral[y0 * iw + (x1 + 1)]! - integral[(y1 + 1) * iw + x0]! + integral[y0 * iw + x0]!
+      const bg = sum / ((x1 - x0 + 1) * (y1 - y0 + 1))
+      const v = Math.max(0, Math.min(255, gray[y * width + x]! - bg + 255))
+      norm[y * width + x] = v
+      hist[Math.round(v)]++
+    }
+  }
+  // Otsu on the levelled image.
+  let sumAll = 0
+  for (let t = 0; t < 256; t++) sumAll += t * hist[t]
+  let sumB = 0
+  let wB = 0
+  let maxVar = 0
+  let thr = 127
+  for (let t = 0; t < 256; t++) {
+    wB += hist[t]
+    if (wB === 0) continue
+    const wF = n - wB
+    if (wF === 0) break
+    sumB += t * hist[t]
+    const between = wB * wF * (sumB / wB - (sumAll - sumB) / wF) ** 2
+    if (between > maxVar) (maxVar = between), (thr = t)
+  }
+  const ink = new Uint8Array(n)
+  for (let i = 0; i < n; i++) ink[i] = norm[i]! < thr ? 1 : 0
+  return { width, height, ink }
+}
+
 /** Find connected components (8-connectivity) via iterative flood fill. */
 export function connectedComponents(bmp: Bitmap, minPixels = 1): Component[] {
   const { width: W, height: H, ink } = bmp
