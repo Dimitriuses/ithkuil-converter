@@ -22,6 +22,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng, cropRgba } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { toGrayNxN } from "./cnn-data.js"
+import { augmentImage, AUGMENT_ON } from "./augment.js"
 import { fileSaveHandler } from "./cnn-io.js"
 import { CONSONANTS } from "./glyph-classes.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
@@ -33,7 +34,8 @@ const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 40
 // enough rows to survive the resize — 64px is the deployed default. Other sizes get
 // suffixed paths so an experiment never clobbers the deployed model.
 const SZ = process.argv[4] ? Number(process.argv[4]) : 64
-const SUFFIX = SZ === 64 ? "" : `-${SZ}`
+// `-aug` keeps an augmented (scan-robust) run from clobbering the deployed clean model/cache.
+const SUFFIX = `${SZ === 64 ? "" : `-${SZ}`}${AUGMENT_ON ? "-aug" : ""}`
 const MODEL_DIR = `models/top-cnn${SUFFIX}`
 const CACHE_PATH = `models/top-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 1
@@ -75,7 +77,8 @@ function generate(n: number): Sample[] {
     }
     let img
     try {
-      img = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec), {}, { canvas: 128 }), { width: 256 }))
+      const raw = decodePng(svgToPng(renderGlyphToSvg(Secondary(spec), {}, { canvas: 128 }), { width: 256 }))
+      img = AUGMENT_ON ? augmentImage(raw, rand) : raw
     } catch {
       continue
     }

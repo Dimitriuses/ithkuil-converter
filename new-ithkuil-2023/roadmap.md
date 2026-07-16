@@ -435,7 +435,8 @@ that native training is fast.
   (`models/primary-cnn-48/…`) so an experiment never clobbers the deployed model.
 - **Wired into decode (`decode-word.ts`, [`primary-cnn.ts`](src/primary-cnn.ts)):** `enablePrimaryCnn()`
   warm-loads it (server + tests), and the primary case runs it on the grayscale crop to fill the Vr
-  **context** + **function** and Vv **stem** (plus a more Ca-robust specification). **`vrvv-test`: non-default
+  **context** + **function** and Vv **stem** (plus a more Ca-robust specification and **perspective** — its
+  `perspective` head, ~97% held-out, is now wired through `assemble.ts` into the Ca). **`vrvv-test`: non-default
   context × function × stem round-trip 32/32 = 100%** (was 0% — completely undecoded), and **`word-test`
   stays 48/48** (these read 100% on clean/default primaries, so default words don't regress).
 - **The 80px bump was what cracked function.** At 48px, function read **83% co-varying but only ~52% on
@@ -871,9 +872,20 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
-  the `s`-on-k/t/p bottom extension (extension-margin tuning).
-- **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.
+- ~~**Non-CNN polish**~~ — **mostly obsolete, superseded by the CNNs.** "Aligned perspective past 84%" is
+  done differently: perspective is now taken from the **primary CNN's perspective head** (it was already
+  trained, just unwired) — `decode-word.ts` sets `decoded.perspective = pf.perspective` and it threads
+  through `assemble.ts` into the Ca. NB the 84% was the *chamfer under Ca co-variation*; with default Ca both
+  read 100%, and non-default Ca is unreachable in round-trip anyway (configuration is undecoded), so this is
+  a correctness/robustness change with no round-trip delta today — it matters once other Ca is decoded. The
+  `s`-on-k/t/p bottom extension is subsumed by the secondary CNN (~95% bottom). *Remaining, genuinely
+  non-CNN:* nothing worth a task.
+- **Deferred infra:** multi-line segmentation (pure upstream preprocessing — **no retrain**, CNNs see the
+  same crops); deskew/denoise for real scans. **Prep done:** [`augment.ts`](src/augment.ts) +
+  `AUGMENT=1 npm run cnn-…` add scan-simulation augmentation (rotation / blur / speckle / stroke morphology)
+  to all four pipeline-domain trainers — they otherwise train on clean renders only. Augmented runs write to
+  `-aug`-suffixed model/cache paths so they never clobber the deployed clean models. Real-scan support is a
+  *deliberate retrain* with this flag (plus deskew/denoise preprocessing), not an automatic behaviour.
 
 **Web-tool (M8) polish ideas — design & functionality:**
 

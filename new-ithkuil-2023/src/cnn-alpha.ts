@@ -28,6 +28,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize, segment, type SegmentedRegion } from "./segment.js"
 import { frameSquare, isRegister, warmAlphabetic } from "./alphabetic.js"
+import { augmentImage, AUGMENT_ON } from "./augment.js"
 import { fileSaveHandler } from "./cnn-io.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { join } from "node:path"
@@ -47,7 +48,8 @@ const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
 // held-out but collapsed in-pipeline). 80px is the deployed default — the small top/bottom
 // extension marks (p↔v lived there) need the extra rows; 64px left the top slot weaker.
 const SZ = process.argv[4] ? Number(process.argv[4]) : 80
-const SUFFIX = SZ === 80 ? "" : `-${SZ}`
+// `-aug` keeps an augmented (scan-robust) run from clobbering the deployed clean model/cache.
+const SUFFIX = `${SZ === 80 ? "" : `-${SZ}`}${AUGMENT_ON ? "-aug" : ""}`
 const MODEL_DIR = `models/alpha-cnn${SUFFIX}`
 const CACHE_PATH = `models/alpha-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 5 // bumped: ext-only letters (w y ' " ¿) + GEM allowed on the top slot
@@ -168,7 +170,8 @@ function generate(n: number): Sample[] {
     if (!r.ok) continue
     let img
     try {
-      img = decodePng(svgToPng(r.svg, { width: 900 }))
+      const raw = decodePng(svgToPng(r.svg, { width: 900 }))
+      img = AUGMENT_ON ? augmentImage(raw, rand) : raw
     } catch {
       continue
     }

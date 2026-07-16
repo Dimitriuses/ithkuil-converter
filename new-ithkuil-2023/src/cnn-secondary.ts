@@ -27,6 +27,7 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { classifyCharType } from "./char-type.js"
 import { frameSquare } from "./alphabetic.js"
+import { augmentImage, AUGMENT_ON } from "./augment.js"
 import { fileSaveHandler } from "./cnn-io.js"
 import { ROOT_FORMS } from "./lexicon.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
@@ -40,7 +41,8 @@ const textToSecondaries = (fromText as Record<string, unknown>).textToSecondarie
 const N = process.argv[2] ? Number(process.argv[2]) : 100000 // soft cap; real caps at the # of root secondaries
 const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
 const SZ = process.argv[4] ? Number(process.argv[4]) : 80
-const SUFFIX = SZ === 80 ? "" : `-${SZ}`
+// `-aug` keeps an augmented (scan-robust) run from clobbering the deployed clean model/cache.
+const SUFFIX = `${SZ === 80 ? "" : `-${SZ}`}${AUGMENT_ON ? "-aug" : ""}`
 const MODEL_DIR = `models/secondary-cnn${SUFFIX}`
 const CACHE_PATH = `models/secondary-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 1
@@ -107,7 +109,8 @@ function generate(n: number): Sample[] {
       continue
     }
     if (!r.ok) continue
-    const img = decodePng(svgToPng(r.svg, { width: 500 }))
+    const raw = decodePng(svgToPng(r.svg, { width: 500 }))
+    const img = AUGMENT_ON ? augmentImage(raw, rand) : raw
     const bmp = binarize(img.data, img.width, img.height)
     const secs = segment(bmp).filter((rg) => classifyCharType(bmp, rg).type === "secondary")
     if (secs.length !== specs.length) continue // char-type/encoder disagree → keep labels honest
@@ -173,7 +176,7 @@ function loadOrGenerate(n: number): Sample[] {
     console.log(`loaded ${cached.length} cached secondaries (${CACHE_PATH})`)
     return cached
   }
-  console.log(`generating secondaries (${SZ}px) from real lexicon roots…`)
+  console.log(`generating secondaries (${SZ}px${AUGMENT_ON ? ", AUGMENTED for scan-robustness" : ""}) from real lexicon roots…`)
   const gen = generate(n)
   saveCache(gen)
   console.log(`cached ${gen.length} secondaries → ${CACHE_PATH}`)

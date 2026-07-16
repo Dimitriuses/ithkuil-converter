@@ -195,12 +195,14 @@ export function decodeRegions(
         const p = decodePrimaryAligned(cropRegionBitmap(bmp, region))
         decoded = { specification: p.specification, perspective: p.perspective }
         // The CNN reads the Vr/Vv features the template can't — context + function (Vr),
-        // stem (Vv) — plus a more Ca-robust specification. These read 100% on clean/default
-        // primaries at 80px, so they don't regress default words. version is only ~75% on
-        // clean primaries (its mark is even subtler), so it's taken only when very confident.
+        // stem (Vv) — plus a more Ca-robust specification and perspective. These read 100%
+        // on clean/default primaries at 80px, so they don't regress default words. version
+        // is only ~75% on clean primaries (its mark is subtler), so it's taken only when
+        // very confident.
         if (primaryCnn && grayImage) {
           const pf = primaryCnn.classifyImage(cropRgba(grayImage, region.bbox))
           decoded.specification = pf.specification
+          decoded.perspective = pf.perspective // CNN ~97% vs the aligned template's ~84%
           decoded.context = pf.context
           decoded.function = pf.function
           decoded.stem = pf.stem
@@ -234,6 +236,8 @@ function charactersToFeatures(characters: DecodedCharacter[]): DecodedFeatures {
     switch (c.type) {
       case "primary":
         if (c.decoded.specification) features.specification = c.decoded.specification as string
+        // Perspective (Ca) — only when non-default (M), so default words elide identically.
+        if (c.decoded.perspective && c.decoded.perspective !== "M") features.perspective = c.decoded.perspective as string
         // Vr/Vv (only when non-default, so unread/default slots elide identically).
         if (c.decoded.context && c.decoded.context !== "EXS") features.context = c.decoded.context as string
         if (c.decoded.function && c.decoded.function !== "STA") features.function = c.decoded.function as string

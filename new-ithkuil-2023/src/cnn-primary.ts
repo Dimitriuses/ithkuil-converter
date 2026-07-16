@@ -18,6 +18,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng, cropRgba } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { toGrayNxN } from "./cnn-data.js"
+import { augmentImage, AUGMENT_ON } from "./augment.js"
 import { fileSaveHandler } from "./cnn-io.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { join } from "node:path"
@@ -28,7 +29,8 @@ const EPOCHS = process.argv[3] ? Number(process.argv[3]) : 60
 // function/version marks that 48px lost); other sizes get their own paths so an
 // experiment never clobbers the deployed model.
 const SZ = process.argv[4] ? Number(process.argv[4]) : 80
-const SUFFIX = SZ === 80 ? "" : `-${SZ}`
+// `-aug` keeps an augmented (scan-robust) run from clobbering the deployed clean model/cache.
+const SUFFIX = `${SZ === 80 ? "" : `-${SZ}`}${AUGMENT_ON ? "-aug" : ""}`
 const MODEL_DIR = `models/primary-cnn${SUFFIX}`
 const CACHE_PATH = `models/primary-cnn-data${SUFFIX}.json`
 const CACHE_VERSION = 2 // bumped: nuisance Ca now biased toward defaults (v1 was always-random)
@@ -105,7 +107,8 @@ function generate(n: number): Sample[] {
     }
     const r = encode(text, { margin: 10 })
     if (!r.ok) continue
-    const img = decodePng(svgToPng(r.svg, { width: 500 }))
+    const raw = decodePng(svgToPng(r.svg, { width: 500 }))
+    const img = AUGMENT_ON ? augmentImage(raw, rand) : raw
     const bmp = binarize(img.data, img.width, img.height)
     const region = segment(bmp)[0]
     if (!region) continue

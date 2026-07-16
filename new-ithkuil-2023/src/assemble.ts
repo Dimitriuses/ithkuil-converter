@@ -15,6 +15,8 @@ export interface DecodedFeatures {
   /** Root consonant string (Cr), e.g. "kt". */
   root?: string
   specification?: string
+  /** Ca perspective (M default) — the only Ca feature the reverse pipeline reads. */
+  perspective?: string
   /** Vr context (EXS default), function (STA default). */
   context?: string
   function?: string
@@ -42,10 +44,13 @@ export interface DecodedFeatures {
 export function featuresToText(f: DecodedFeatures): string {
   // A root is mandatory; nothing else here is.
   if (!f.root) return ""
-  const { type = "UNF/C", ...rest } = f
+  const { type = "UNF/C", perspective, ...rest } = f
   // Drop undefined so @zsnout applies its own defaults.
   const formative: Record<string, unknown> = { type }
   for (const [k, v] of Object.entries(rest)) if (v != null) formative[k] = v
+  // Perspective is not a top-level slot — it rides in the Ca complex (the rest of Ca
+  // defaults). Only present when non-default (set upstream), so this is safe to include.
+  if (perspective) formative.ca = { perspective }
   try {
     return formativeToIthkuil(formative as never)
   } catch {
