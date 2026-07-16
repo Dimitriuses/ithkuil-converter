@@ -21,8 +21,9 @@ import { type Mask } from "./normalize.js"
 import { maskOfBox } from "./decompose.js"
 import { classifyMask, type Template } from "./classify.js"
 import { chamferSimilarity } from "./chamfer.js"
+import { frameSquare } from "./alphabetic.js"
 import { buildVowelMap } from "./decode.js"
-import { CONSONANTS } from "./glyph-classes.js"
+import { CONSONANTS, EXTENSION_CONSONANTS } from "./glyph-classes.js"
 import { cropRgba, type RgbaImage } from "./image-io.js"
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs"
 import { fileURLToPath } from "node:url"
@@ -32,14 +33,23 @@ const SIZE = 64
 const vowelMap = buildVowelMap()
 
 /**
- * Cluster extensions to consider — the **full consonant inventory**. A biconsonantal
- * root's second consonant is rendered as a *bottom* extension and can be any consonant,
- * so we build a template for every one (was a 5-consonant subset → out-of-set extensions
- * decoded at 0%). Only bottom extensions are built: top-only extensions don't occur in
- * real formatives (a triconsonantal root uses top AND bottom together, which these
- * single-extension templates don't model), so top templates were dead weight.
+ * Cluster extensions to consider — the **full extension inventory**, which is the
+ * consonant cores PLUS `w`/`y`. A biconsonantal root's second consonant is rendered as a
+ * *bottom* extension and can be any of them, so we build a template for every one (was a
+ * 5-consonant subset → out-of-set extensions decoded at 0%).
+ *
+ * `w`/`y` are extension-only letters (@zsnout's `EXT` has them, `CORE` doesn't). They were
+ * missing here, and they appear root-finally in **27% of the real lexicon** — with no
+ * template to match, those roots decoded to the nearest wrong guess (`aňçtļwala →
+ * aňçtļdšala`). They only ever occupy the bottom slot, so the core and top sets are
+ * unchanged (measured: 0 roots start with, or carry medially, a w/y).
  */
-export const EXTENSION_SET: readonly string[] = CONSONANTS
+export const EXTENSION_SET: readonly string[] = EXTENSION_CONSONANTS
+
+/** The core a root's *spilled* secondaries carry — they hold only extensions, no consonant
+ * core (see `forcePlaceholderCharacters` in @zsnout's textToSecondaries). Decoding one
+ * must contribute NO letter of its own. */
+const PLACEHOLDER_CORE = "STANDARD_PLACEHOLDER"
 
 /** Fraction of the base height (from the top) excluded when reading core+bottom, so a
  * 3-consonant cluster's TOP extension doesn't corrupt the core+bottom match (with the
@@ -113,10 +123,15 @@ interface TopSet {
 // loaded fast thereafter — mirrors the alphabetic base-template cache. Bump
 // CACHE_VERSION when the render or the core/extension sets change.
 let bareTemplates: Template[] | null = null
-let extTemplates: Template[] | null = null
+// Extension (core+bottom) templates, partitioned by core kind: real consonant cores vs the
+// STANDARD_PLACEHOLDER (a root's *spilled* secondaries). They're routed by position, not by
+// score — a spilled secondary is placeholder-core by construction — so the placeholder set
+// never competes against real cores (which was blanking them, `andrala → nrala`).
+let realExtTemplates: Template[] | null = null
+let placeholderTemplates: Template[] | null = null
 let topByCore: Map<string, TopSet> | null = null
 
-const CACHE_VERSION = 3 // bumped: core+bottom templates are now lower-portion (top-excluded)
+const CACHE_VERSION = 7 // bumped: ext templates partitioned real vs placeholder; routed by position
 const CACHE_PATH = fileURLToPath(new URL("../models/secondary-ext.json", import.meta.url))
 
 interface CacheShape {
@@ -164,12 +179,19 @@ function saveCache(bare: Template[], ext: Template[], top: Map<string, TopSet>):
   }
 }
 
+/** Split the combined core+bottom set (as cached) into real-core vs placeholder-core. */
+function partitionExt(ext: Template[]): void {
+  const coreOf = (t: Template) => (JSON.parse(t.label) as [string, string | null, string | null])[0]
+  realExtTemplates = ext.filter((t) => coreOf(t) !== PLACEHOLDER_CORE)
+  placeholderTemplates = ext.filter((t) => coreOf(t) === PLACEHOLDER_CORE)
+}
+
 function ensureTemplates(): void {
   if (bareTemplates) return
   const cached = loadCache()
   if (cached) {
     bareTemplates = cached.bare
-    extTemplates = cached.ext
+    partitionExt(cached.ext)
     topByCore = cached.top
     return
   }
@@ -180,12 +202,26 @@ function ensureTemplates(): void {
       ext.push(mkTemplate(core, null, x)) // bottom extension (the real cluster case)
     }
   }
-  extTemplates = ext
-  // Core-conditioned top templates for 3-consonant clusters.
+  // A root longer than one secondary spills into PLACEHOLDER-CORE secondaries. @zsnout
+  // packs a formative's root with `textToSecondaries(root, { forcePlaceholderCharacters:
+  // true })`, and there `CORE_ = index++ ? "" : CORE` — only the FIRST secondary may take a
+  // consonant core; every later one is extension-only on a STANDARD_PLACEHOLDER. We had no
+  // such template, so the placeholder matched its nearest consonant and injected a phantom
+  // letter (`rmpw → rmp` + `dw`), keeping 4–5 consonant roots (47% of the lexicon) at 0%.
+  // Only bottom variants are needed: core+bottom is matched on the LOWER portion with the
+  // top excluded, so placeholder+bottom and placeholder+top+bottom are identical there.
+  // Always WITH a bottom, never bare: a spilled secondary matches `seq(ext, ext.optional())`,
+  // and for length 1 the encoder assigns top only when an underposed vowel is present —
+  // root secondaries carry no vowels (those live on the primary), so it's always the bottom.
+  // (A bare-placeholder template is not just useless but harmful: it out-competes real bare
+  // cores, which cost 1-consonant roots 100%→96% — `dala` decoded to nothing.)
+  for (const x of EXTENSION_SET) ext.push(mkTemplate(PLACEHOLDER_CORE, null, x))
+  // Core-conditioned top templates for 3-consonant clusters — plus the placeholder core,
+  // whose spilled secondary can carry a top of its own.
   const top = new Map<string, TopSet>()
-  for (const core of CONSONANTS) {
+  for (const core of [...CONSONANTS, PLACEHOLDER_CORE]) {
     const none = renderTopZone({ core: core as never })
-    const tops = CONSONANTS.map((x) => ({
+    const tops = EXTENSION_SET.map((x) => ({
       label: x,
       class: "top",
       mask: renderTopZone({ core: core as never, top: x as never }),
@@ -193,7 +229,8 @@ function ensureTemplates(): void {
     top.set(core, { none, tops })
   }
   topByCore = top
-  saveCache(bareTemplates, extTemplates, top)
+  saveCache(bareTemplates, ext, top) // cache stores the combined set; partitioned on use
+  partitionExt(ext)
 }
 
 /** Build/load the secondary template set now (call at server warmup so the first
@@ -235,6 +272,18 @@ export interface TopClassifier {
   classifyImage(img: RgbaImage): { top: string | null }
 }
 
+/**
+ * Optional learned secondary CNN (cnn-secondary.ts): reads core/top/bottom together from
+ * the `frameSquare` binary mask, per-slot, so core+bottom don't collapse when a top is
+ * present (chamfer: 100% → 69%). `""` = an empty slot (a `""` core is a spilled placeholder
+ * secondary); `"GEM"` = CORE_GEMINATE (double the core). Structural type keeps this module
+ * tfjs-free; `loadSecondaryCnn()` satisfies it.
+ */
+export interface SecondaryClassifier {
+  size: number
+  classifyBase(mask: Mask): { core: string; top: string; bottom: string }
+}
+
 /** Decode a segmented secondary character into consonant(s) + vowels. */
 export function decodeSecondary(
   bmp: Bitmap,
@@ -245,40 +294,92 @@ export function decodeSecondary(
   grayImage?: RgbaImage,
   /** Optional top-extension CNN; when present (with grayImage) it reads the top. */
   topCnn?: TopClassifier,
+  /** True for a root's *spilled* secondary (2nd+ of a multi-secondary root): it's a
+   * placeholder core with extensions only, so match it against the placeholder set. */
+  isSpilled = false,
+  /** Optional secondary CNN; when present it reads core/top/bottom together (per-slot),
+   * superseding the chamfer core+bottom, the placeholder routing, and the top classifier. */
+  secondaryCnn?: SecondaryClassifier,
 ): SecondaryDecode {
   ensureTemplates()
-  // Read core+bottom from the lower portion (top excluded) so a 3-consonant cluster's
-  // top extension doesn't corrupt the match; templates are built the same way.
-  const baseMask = maskOfBox(bmp, lowerBox(region.base), SIZE)
-  const bare = classifyMask(baseMask, bareTemplates!)
-  const ext = classifyMask(baseMask, extTemplates!)
-  // Accept an extension only if it clearly beats the best bare core.
-  const chosen = ext.score > bare.score + EXTENSION_MARGIN ? ext : bare
-  let [core] = JSON.parse(chosen.label) as [string, string | null, string | null]
-  const [, , bottomExtension] = JSON.parse(chosen.label) as [string, string | null, string | null]
-
-  // The CNN was trained on BARE grayscale cores, so use it to refine the core only
-  // when no extension is present (its input domain); template handles extended clusters.
-  if (cnn && grayImage && !bottomExtension) {
-    core = cnn.classifyImage(cropRgba(grayImage, region.base)).label
-  }
-
-  // Top extension (3-consonant cluster: top C1 + core C2 + bottom C3): read the top
-  // zone conditioned on the decoded core, gated by a margin so 2-consonant/bare bases
-  // don't gain a spurious top (0% spurious at TOP_MARGIN; real tops read ~81%).
+  let core: string
+  let bottomExtension: string | null
   let topExtension: string | null = null
-  if (topCnn && grayImage) {
-    // The CNN reads presence + identity from the whole base crop (learning the core
-    // conditioning implicitly), beating the margin-gated top-zone template on both the
-    // 19% it used to miss and the 13% it mis-IDed.
-    topExtension = topCnn.classifyImage(cropRgba(grayImage, region.base)).top
+  let isPlaceholder: boolean
+
+  if (secondaryCnn) {
+    // Per-slot read from the whole framed base — robust to a top shifting the base (which
+    // collapsed the chamfer core+bottom to 69%). A "" core is a spilled placeholder; a GEM
+    // slot is a doubled core (CORE_GEMINATE).
+    const s = secondaryCnn.classifyBase(frameSquare(bmp, region.base, secondaryCnn.size))
+    const gemTo = (v: string): string | null => (v === "GEM" ? s.core || null : v || null)
+    isPlaceholder = isSpilled || s.core === ""
+    core = isPlaceholder ? "" : s.core
+    topExtension = gemTo(s.top)
+    // The CNN hallucinates a bottom on a *lone* core (bare "s" read as {s, bottom:m}),
+    // dropping 1-consonant roots 100%→72%. But it's reliable on dense bases (93% on 4–5
+    // consonant roots), where chamfer's bottom gate — computed on the top-excluded lower
+    // portion — is actually the *less* reliable one. So: when a top is present (a cluster) or
+    // this is a spilled placeholder, trust the CNN's bottom; only on a lone base (no top) fall
+    // back to chamfer's bare-vs-ext PRESENCE gate (reliable there — it drove the old 48/48).
+    const hasBottom =
+      isPlaceholder || topExtension
+        ? s.bottom !== ""
+        : (() => {
+            const lowerMask = maskOfBox(bmp, lowerBox(region.base), SIZE)
+            return classifyMask(lowerMask, realExtTemplates!).score > classifyMask(lowerMask, bareTemplates!).score + EXTENSION_MARGIN
+          })()
+    bottomExtension = hasBottom ? gemTo(s.bottom) : null
+    // A lone real core (no top, no bottom): the consonant CNN (M9) is 100% on it — its exact
+    // training domain — so defer to it there.
+    if (cnn && grayImage && !hasBottom && !topExtension && !isPlaceholder) {
+      core = cnn.classifyImage(cropRgba(grayImage, region.base)).label
+    }
   } else {
-    const topSet = topByCore?.get(core)
-    if (topSet) {
-      const topMask = maskOfBox(bmp, topZoneBox(region.base), SIZE)
-      const best = classifyMask(topMask, topSet.tops)
-      if (best.score > chamferSimilarity(topMask, topSet.none) + TOP_MARGIN) {
-        topExtension = best.label
+    // Read core+bottom from the lower portion (top excluded) so a 3-consonant cluster's
+    // top extension doesn't corrupt the match; templates are built the same way.
+    const baseMask = maskOfBox(bmp, lowerBox(region.base), SIZE)
+    if (isSpilled) {
+      // Placeholder-core by construction — never let it fall onto a real consonant.
+      const p = JSON.parse(classifyMask(baseMask, placeholderTemplates!).label) as [string, string | null, string | null]
+      core = p[0]
+      bottomExtension = p[2]
+    } else {
+      const bare = classifyMask(baseMask, bareTemplates!)
+      const ext = classifyMask(baseMask, realExtTemplates!)
+      // Accept an extension only if it clearly beats the best bare core.
+      const chosen = ext.score > bare.score + EXTENSION_MARGIN ? ext : bare
+      const p = JSON.parse(chosen.label) as [string, string | null, string | null]
+      core = p[0]
+      bottomExtension = p[2]
+    }
+    // A spilled (placeholder-core) secondary carries extensions only — it contributes no
+    // letter of its own. Keep the label for the top lookup below, blank it on the way out.
+    isPlaceholder = core === PLACEHOLDER_CORE
+
+    // The CNN was trained on BARE grayscale cores, so use it to refine the core only
+    // when no extension is present (its input domain); template handles extended clusters.
+    // It only knows consonants, so it must never overwrite a placeholder core.
+    if (cnn && grayImage && !bottomExtension && !isPlaceholder) {
+      core = cnn.classifyImage(cropRgba(grayImage, region.base)).label
+    }
+
+    // Top extension (3-consonant cluster: top C1 + core C2 + bottom C3): read the top
+    // zone conditioned on the decoded core, gated by a margin so 2-consonant/bare bases
+    // don't gain a spurious top (0% spurious at TOP_MARGIN; real tops read ~81%).
+    if (topCnn && grayImage) {
+      // The CNN reads presence + identity from the whole base crop (learning the core
+      // conditioning implicitly), beating the margin-gated top-zone template on both the
+      // 19% it used to miss and the 13% it mis-IDed.
+      topExtension = topCnn.classifyImage(cropRgba(grayImage, region.base)).top
+    } else {
+      const topSet = topByCore?.get(core)
+      if (topSet) {
+        const topMask = maskOfBox(bmp, topZoneBox(region.base), SIZE)
+        const best = classifyMask(topMask, topSet.tops)
+        if (best.score > chamferSimilarity(topMask, topSet.none) + TOP_MARGIN) {
+          topExtension = best.label
+        }
       }
     }
   }
@@ -301,7 +402,7 @@ export function decodeSecondary(
   }
 
   return {
-    core,
+    core: isPlaceholder ? "" : core, // a spilled secondary adds no letter of its own
     topExtension,
     bottomExtension,
     superposedVowel,

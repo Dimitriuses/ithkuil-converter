@@ -83,6 +83,7 @@ const MODELS = [
   ["primary-cnn", "primary CNN — decodes Vr/Vv (function, context, stem)", "npm run cnn-primary"],
   ["top-cnn", "top-extension CNN — 3-consonant clusters", "npm run cnn-top"],
   ["alpha-cnn", "alphabetic-base CNN — n↔ż / d↔ļ / p↔v + stress + gemination", "npm run cnn-alpha"],
+  ["secondary-cnn", "secondary core+bottom CNN — real-lexicon roots (23.5%→92.6%)", "npm run cnn-secondary"],
 ]
 
 // ── DOCTOR: read-only readiness report ───────────────────────────────────────────

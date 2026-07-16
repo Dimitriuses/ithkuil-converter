@@ -21,7 +21,7 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn } from "./decode-word.js"
+import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn } from "./decode-word.js"
 
 const ROOTS = ["l", "s", "kt", "sm"] // single + cluster roots
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"]
@@ -32,6 +32,7 @@ const VNS = ["none", "PRL", "CPL"]
 const cnnOn = await enableCoreCnn()
 const primOn = await enablePrimaryCnn()
 const topOn = await enableTopCnn()
+const secOn = await enableSecondaryCnn()
 
 let total = 0
 let ok = 0

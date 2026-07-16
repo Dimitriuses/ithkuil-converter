@@ -66,6 +66,22 @@ export const CONSONANTS = Object.keys(CORES).filter(
   (n) => !PLACEHOLDER_CORES.has(n),
 ) as (keyof typeof CORES)[]
 
+/**
+ * Letters that can fill an *extension* (top/bottom) but never a core: @zsnout's `EXT` set
+ * admits them while `CORE` does not, so they're absent from `CONSONANTS` above.
+ *
+ * `EXTENSIONS` also holds variant/marker glyphs (`p_WITH_LINE`, `CORE_GEMINATE`,
+ * `EJECTIVE`, `VELARIZED`, `'`, `"`, `¿` …), but measuring the real root lexicon shows its
+ * alphabet is exactly the 28 cores plus these two: **w (673 roots) and y (515)** — 27% of
+ * all roots — and both occur ONLY root-finally, i.e. only ever in the bottom slot. Without
+ * them the decoder had no template to match and emitted its nearest guess (a `w` read as
+ * `dš`), making those roots undecodable by construction.
+ */
+export const EXTENSION_ONLY_CONSONANTS: readonly string[] = ["w", "y"]
+
+/** Everything that can fill a top/bottom extension slot: the cores plus w/y. */
+export const EXTENSION_CONSONANTS: readonly string[] = [...CONSONANTS, ...EXTENSION_ONLY_CONSONANTS]
+
 const consonantClasses: GlyphClass[] = CONSONANTS.map((core) => ({
   id: `secondary-${slug(core)}`,
   label: core,

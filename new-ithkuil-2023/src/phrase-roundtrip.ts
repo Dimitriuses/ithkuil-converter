@@ -12,12 +12,13 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodePhrase, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableAlphabeticCnn } from "./decode-word.js"
+import { decodePhrase, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn, enableAlphabeticCnn } from "./decode-word.js"
 
 // Warm the same CNNs the server uses, so the phrase test reflects the deployed pipeline.
 await enableCoreCnn()
 await enablePrimaryCnn()
 await enableTopCnn()
+await enableSecondaryCnn()
 await enableAlphabeticCnn()
 
 // A small pool of formatives whose features the reverse pipeline models.

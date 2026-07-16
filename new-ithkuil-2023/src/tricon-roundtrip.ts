@@ -20,7 +20,7 @@ import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeSecondary } from "./secondary.js"
 import { loadTopCnn } from "./top-cnn.js"
 import { encode } from "./forward.js"
-import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn } from "./decode-word.js"
+import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn } from "./decode-word.js"
 import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
 
 const diac = partitionTemplates(loadTemplates("dataset", 64)).diacritic
@@ -70,6 +70,7 @@ console.log(`no spurious top on bare/2-consonant: ${clean}/${cn} = ${((100 * cle
 await enableCoreCnn()
 await enablePrimaryCnn()
 await enableTopCnn()
+await enableSecondaryCnn()
 let wr = 0
 let wn = 0
 const misses: string[] = []

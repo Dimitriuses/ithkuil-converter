@@ -699,23 +699,26 @@ tooling — none of it blocks the tool being usable today.
 | Case (Vc) decoding | ✅ done — 100% over all 68 cases (was always THM) |
 | Consonant CNN — **on by default** (native 48px) | ✅ done — beats template on noise, no clean regression |
 | Primary-feature CNN (entanglement) — trained + wired (80px) | ✅ decodes Vr **context + function** + Vv **stem** (100% round-trip, was 0%; word-test 48/48). **version** guarded (~0.97 conf, 83% round-trip) |
+| Secondary core+bottom CNN (80px, formative-domain) | ✅ done — **real-lexicon round-trip 23.5% → 92.6%** (L1–L4); reads core/top/bottom per-slot, hybrid bare-vs-ext gate |
 | **M8** local tool — tabbed web dashboard + CLI + data/model job panel | ✅ v1 + v2 + UI polish done |
 
-### ⚠️ Reality check: on the REAL lexicon the decoder is 23.5%, not ~100% (2026-07-14)
+### ⚠️→✅ Reality check: the REAL-lexicon number was 23.5%, not ~100% — now 92.6% (2026-07-14)
 
-Every headline number above is measured on a **hand-picked, easy corpus**. Measured against the actual
-@zsnout lexicon (4387 roots; `npm run lexicon-test -- 100`, 100 roots sampled per length):
+Every headline number *above* is measured on a **hand-picked, easy corpus**. Measured against the actual
+@zsnout lexicon (4387 roots; `npm run lexicon-test -- 100`, 100 roots sampled per length) the story was very
+different — and fixing it (tasks L1–L4 below) took it from **23.5% → 92.6%**:
 
-| Root length | share of lexicon | round-trip | threw |
+| Root length | share of lexicon | baseline | after L1–L4 |
 |---|---|---|---|
-| 1-consonant | 1% | **100%** | — |
-| 2-consonant | 15% | **67%** | 7 |
-| **3-consonant** | **37%** (largest class) | **35%** | 18 |
-| **4-consonant** | **33%** | **0%** | 1 |
-| **5-consonant** | **14%** | **0%** | 30 |
+| 1-consonant | 1% | 100% | **100%** |
+| 2-consonant | 15% | 67% | **95%** |
+| **3-consonant** | **37%** (largest class) | 35% | **91%** |
+| **4-consonant** | **33%** | 0% | **93%** |
+| **5-consonant** | **14%** | 0% | **93%** |
+| **WEIGHTED** | | **23.5%** | **92.6%** |
 
-**LEXICON-WEIGHTED: 23.5%** — the honest real-vocabulary number, vs `word-test`'s 100%. Also **~13% of
-samples crash** (56/425). Three separate problems, found together:
+The 23.5% baseline (vs `word-test`'s 100%) also **crashed on ~13% of samples** (56/425). Three separate
+problems, found together — all fixed below:
 
 1. **The test corpus is unrepresentative — the root cause of the blind spot.** `word-test`'s 48/48 uses
    toy roots (`l`, `s`, `m`, `r`, `kt`, `sm`); `tricon-test`'s 3/6 uses hand-picked `str`/`mlk`/`ksp`. Real
@@ -787,8 +790,63 @@ templates won by default, and the mis-typed characters were routed to the wrong 
 - **As predicted, necessary but not sufficient:** 4/5-consonant roots are still 0% — the characters are now
   routed correctly, but `decodeSecondary` misreads them. That is L4, and the misses named the cause (below).
 
+#### Secondary decoding for real roots — inventory + spilled placeholders (done) — 26.1% → 52.0%
+
+`decodeSecondary` was built for the toy corpus and broke on real roots two structural ways, both fixed by
+reading @zsnout's encoder (`construct/formative.js` packs a root via `textToSecondaries(root,
+{ forcePlaceholderCharacters: true })` — the same encoder already reverse-engineered for alphabetic mode):
+
+- **(a) Extension inventory was the 28 cores only.** `EXTENSION_SET = CONSONANTS`, but @zsnout's `EXT` also
+  admits `w y ' " ¿`. Measuring the lexicon, its alphabet is *exactly* the 28 cores plus **`w` (673 roots)
+  and `y` (515)** — **27% of all roots** — and both occur ONLY root-finally (0 start with or carry one
+  medially), so only the bottom slot needed them. Without a template, a `w` was read as its nearest guess
+  (`dš`). Added `EXTENSION_ONLY_CONSONANTS = ["w","y"]` → `EXTENSION_SET = EXTENSION_CONSONANTS`. **+7 pts
+  (26.1 → 33.1%)** on its own.
+- **(b) Roots >1 secondary "spill" into placeholder-core characters.** `forcePlaceholderCharacters` means
+  only the FIRST secondary of a root takes a consonant core; the rest are `STANDARD_PLACEHOLDER` with
+  extensions only. The decoder had no such template, so it forced the placeholder onto a consonant and
+  injected a phantom letter (`rmpw → rmpdw`), pinning 4–5 consonant roots at **0%**. Added placeholder+bottom
+  templates (no bare variant — always a bottom, per the encoder), and — crucially — **routed by position, not
+  by score**: `decodeRegions` marks the 2nd+ secondary in a consecutive run as *spilled* and matches those
+  against the placeholder set only. A spilled secondary is placeholder by construction, so it never competes
+  with (and steals) a real core. Placeholder decodes to no letter of its own.
+- **Result: lexicon-weighted 26.1% → 52.0%** (4-consonant **0% → 55%**, 3-consonant 40% → 55%, 2-consonant
+  72% → 81%, 5-consonant 0% → 5%). No regression: `word` 48/48, `phrase` 7/7, `alphabetic` 15/15,
+  `secondary` unchanged, and — the trap avoided — `tricon` full stays **65%** (an earlier score-based attempt
+  had dropped it to 59% with `andrala → nrala`; position routing fixes that).
+
+#### Secondary core+bottom CNN (done) — 52.0% → 92.6%
+
+The remaining cap was core+bottom *accuracy*: chamfer is 100% on a bare/2-consonant base but collapses to
+~69% once a top extension is present (the top makes the base taller, every mark shifts, and a whole-frame
+match trades slots off) — the entanglement the alphabetic CNN already solved. Same recipe on a *formative
+root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`secondary-cnn.ts`](src/secondary-cnn.ts),
+`npm run cnn-secondary`), one softmax head per slot over the `frameSquare` binary mask.
+
+- **Pipeline-domain data (relearned again):** reusing the *alphabetic* CNN on these transferred poorly
+  (core 64–95%, top 32–81%) — different render domain. So each sample is a real lexicon root rendered as a
+  formative (`encode(formativeToIthkuil({ root }))`), its secondaries extracted, and labelled from
+  `textToSecondaries(root, { forcePlaceholderCharacters: true })` — the exact call `construct/formative.js`
+  uses. ~6000 samples (bounded by the # of distinct root secondaries), 80px, 60 epochs. Held-out **core 99.0%
+  / top 96.1% / bottom 94.9% / core+bottom-both 94.2%**.
+- **Hybrid, because the CNN hallucinates a bottom on a *lone* core** (bare `s` read as `{s, bottom:m}` — it's
+  trained mostly on extension-bearing secondaries), which alone dropped 1-consonant roots 100%→72% and
+  `word-test` 48→34. Fix: the CNN reads the slot *identities*, but when there's **no top**, chamfer's reliable
+  bare-vs-extension gate decides whether a **bottom is present at all** (it drove the old 48/48); a lone core
+  then defers to the consonant CNN (100% in its domain). With a top or a spilled placeholder, the CNN's
+  bottom is trusted (it's strong on dense bases; chamfer's top-excluded gate is the weaker one there).
+- **Result: lexicon-weighted 52.0% → 92.6%** (2-consonant 81→95%, 3-consonant 55→**91%**, 4-consonant
+  55→**93%**, 5-consonant 5→**93%**, 1-consonant **100%**). `phrase` 7/7, `alphabetic` 15/15, `tricon` word
+  round-trip 3/6→**4/6**. `word-test` **46/48** — the 2 misses are a `t↔ḑ` bottom-extension confusion (a
+  near-identical pair) on root `kt`; a small letter-level cost for a **+40-point** lexicon gain.
+
 ### Next up (planned — nothing below is built yet)
 
+- **Secondary CNN — remaining ~7% of the lexicon.** At 92.6% the residual is per-slot letter confusions on
+  hard bases: `t↔ḑ` on 2-consonant `kt` (2 word-test misses), and the dense 3-letter-core / spilled cases in
+  4–5 consonant roots (both ~93%). Levers: more training data (only ~6000 distinct root secondaries exist —
+  augment with geometric jitter, or oversample the confusable pairs), more epochs, or a near-identical-pair
+  tie-break. Diminishing returns vs the +40 points already banked.
 - ~~**Alphabetic — tone (`left` diacritic)**~~ — **RESOLVED as a non-feature; dropped.** `textToSecondaries`
   never assigns `left` (confirmed by reading the encoder source *and* 0 occurrences across a 20 000-word
   random corpus — the only slots it ever emits are `core/top/right/bottom/superposed/underposed`). Tone is a
@@ -813,23 +871,6 @@ templates won by default, and the mis-typed characters were routed to the wrong 
   even at 80px — its mark is subtler still — so it's decoded only above a 0.97 confidence guard (83%
   round-trip). Closing it likely needs **real scanned data** or a **version-specialized head**, not more
   resolution.
-- **L4 Fix `decodeSecondary` for real roots — inventory first, then core+bottom accuracy.** Two parts:
-  - **(a) The extension inventory is wrong — 27% of the lexicon is undecodable by construction.**
-    `secondary.ts` sets `EXTENSION_SET = CONSONANTS`, i.e. the 28 **CORE** consonants — but @zsnout's `EXT`
-    set also admits `w y ' " ¿`, which `CORE` excludes. **1188/4387 roots (27.1%) contain one** (`w` 15.3%,
-    `y` 11.7%; 42% of 5-consonant roots). With no `w` template the decoder emits its nearest guess, hence the
-    systematic `aňçtļwala → aňçtļdšala`, `armpwala → armmdšala` — a `w` read as `dš`. This is *exactly* the
-    gap already fixed in the alphabetic CNN (core ∈ `CORE_CONS`, top/bottom ∈ `EXT_CONS`); apply the same
-    split here. Cheap and mechanical — do it first, and note it must be right *before* training (b).
-  - **(b) Core+bottom classifier.** Measured headroom (n=257 synthetic clusters): top 93.0% (top-cnn), core
-    87.9%, **bottom 75.1%**, **core+bottom both 68.9%** ⇒ full 65%. The tell: core+bottom is **100% when no
-    top is present** and collapses to 68.9% once there is one — the same "a top makes the base taller ⇒ every
-    slot shifts" effect the alphabetic CNN solved. At alpha-cnn-level core+bottom (~98%), full ≈ **91%**.
-    Note 65% is on *easy* roots; real 3-consonant roots round-trip at 40%. This is a *different* task from the
-    alphabetic dense core (`decodeSecondary` vs `decodeAlphabeticSpan`, real consonant core vs placeholder),
-    and unlike that one it covers 37% of the lexicon.
-  - **Expected payoff:** with char-type fixed, this is what stands between 26.1% and the bulk of the lexicon —
-    (a) unblocks 27% of roots outright; (b) targets the 4/5-consonant 0% and the 3-consonant 40%.
 - **Non-CNN polish:** push aligned perspective past 84% (affiliation axis on the primary grid); recover
   the `s`-on-k/t/p bottom extension (extension-margin tuning).
 - **Deferred infra:** multi-line segmentation; deskew/denoise for real scans.

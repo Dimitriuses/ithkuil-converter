@@ -25,7 +25,7 @@ import { encode } from "./forward.js"
 import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
-import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableAlphabeticCnn } from "./decode-word.js"
+import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn, enableAlphabeticCnn } from "./decode-word.js"
 import { sampleRootsOfLength, rootsOfLength, lengthShare, rootLengths, ROOT_FORMS } from "./lexicon.js"
 
 const PER_LENGTH = process.argv[2] ? Number(process.argv[2]) : 25
@@ -34,6 +34,7 @@ const PER_LENGTH = process.argv[2] ? Number(process.argv[2]) : 25
 await enableCoreCnn()
 await enablePrimaryCnn()
 await enableTopCnn()
+await enableSecondaryCnn()
 await enableAlphabeticCnn()
 
 console.log(`lexicon round-trip — ${ROOT_FORMS.length} roots, sampling ${PER_LENGTH} per length\n`)

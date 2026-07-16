@@ -20,6 +20,7 @@ import { loadAlphabeticCnn, type AlphabeticCnn } from "./alphabetic-cnn.js"
 import { loadCnnClassifier, type CnnClassifier } from "./cnn-classify.js"
 import { loadPrimaryCnn, type PrimaryCnn } from "./primary-cnn.js"
 import { loadTopCnn, type TopCnn } from "./top-cnn.js"
+import { loadSecondaryCnn, type SecondaryCnn } from "./secondary-cnn.js"
 import { featuresToText, type DecodedFeatures } from "./assemble.js"
 import { cropRgba, type RgbaImage } from "./image-io.js"
 
@@ -77,6 +78,22 @@ export async function enableTopCnn(dir = "models/top-cnn"): Promise<boolean> {
   }
 }
 
+// The secondary CNN — reads core/top/bottom of a secondary per-slot (formative-domain),
+// fixing the chamfer core+bottom collapse (100%→69%) when a top extension is present. When
+// loaded it supersedes the chamfer core+bottom, the spilled-placeholder routing, and top-cnn.
+let secondaryCnn: SecondaryCnn | null = null
+
+/** Load the secondary CNN so subsequent secondary decodes read core+top+bottom via CNN. */
+export async function enableSecondaryCnn(dir = "models/secondary-cnn"): Promise<boolean> {
+  try {
+    secondaryCnn = await loadSecondaryCnn(dir)
+    return true
+  } catch {
+    secondaryCnn = null
+    return false
+  }
+}
+
 // The alphabetic-base CNN — reads a phonetically-spelt syllable's core/top/bottom
 // consonants, replacing the joint chamfer match (which confused n↔ż, d↔ļ via slot
 // trade-offs). Used only when a grayscale image is available (its input domain).
@@ -126,19 +143,31 @@ export function decodeRegions(
   regions: SegmentedRegion[],
   grayImage?: RgbaImage,
 ): DecodedCharacter[] {
-  return regions.map((region, i) => {
-    const ct = classifyCharType(bmp, region)
+  // First pass: character types (with the primary-initial prior).
+  const cts = regions.map((region) => classifyCharType(bmp, region))
+  const types = cts.map((ct, i) =>
     // Structural prior: a formative is primary-initial. The thin CTE primary blade
     // otherwise mis-types as a secondary consonant, so if the leftmost character
     // isn't confidently another type, treat it as the primary.
-    const type =
-      i === 0 && ct.type !== "primary" && ct.score < FIRST_CHAR_PRIMARY_THRESHOLD
-        ? "primary"
-        : ct.type
+    i === 0 && ct.type !== "primary" && ct.score < FIRST_CHAR_PRIMARY_THRESHOLD ? "primary" : ct.type,
+  )
+  // A root longer than one secondary "spills" into extension-only placeholder secondaries:
+  // within a consecutive run of secondaries, the FIRST holds the consonant core and the
+  // rest are spilled. (Mirrors @zsnout's `forcePlaceholderCharacters` root packing.)
+  let prevSecondary = false
+  const spilled = types.map((t) => {
+    const s = t === "secondary" && prevSecondary
+    prevSecondary = t === "secondary"
+    return s
+  })
+
+  return regions.map((region, i) => {
+    const type = types[i]
+    const ct = cts[i]
     let decoded: Record<string, unknown> = {}
     switch (type) {
       case "secondary": {
-        const s = decodeSecondary(bmp, region, diacriticTemplates, coreCnn ?? undefined, grayImage, topCnn ?? undefined)
+        const s = decodeSecondary(bmp, region, diacriticTemplates, coreCnn ?? undefined, grayImage, topCnn ?? undefined, spilled[i], secondaryCnn ?? undefined)
         const consonants = [s.topExtension, s.core, s.bottomExtension].filter(Boolean).join("")
         decoded = {
           consonants,
