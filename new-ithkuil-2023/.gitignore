@@ -11,3 +11,5 @@ dataset/
 # generated CNN dataset + models
 cnn-dataset/
 models/
+
+export/

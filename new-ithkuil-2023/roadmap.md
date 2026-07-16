@@ -843,12 +843,22 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
 
 ### Next up (planned — nothing below is built yet)
 
-- **Real scans — the big frontier.** Everything above is measured on clean synthetic renders; real
-  photos/scans/hand-drawing are unhandled. Two parts: (1) **deskew/denoise preprocessing** to normalize a
-  scan toward the clean domain; (2) a **retrain of the four pipeline-domain CNNs with `AUGMENT=1`** — the
-  augmentation infra is already built ([`augment.ts`](src/augment.ts): rotation/blur/speckle/stroke
-  morphology; augmented runs write to `-aug` paths, so they don't touch the deployed clean models). Needs a
-  small set of real labelled scans to validate against.
+- **Real scans — the big frontier.** *(Loop built + first honest number in hand; remaining work below.)*
+  The **print-and-rescan self-labelling loop is live**: [`scan-sheet.ts`](src/scan-sheet.ts) prints a
+  fiducial-registered A4 grid of known lexicon words (BR corner is a ring → orientation is unambiguous);
+  [`scan-ingest.ts`](src/scan-ingest.ts) detects the four fiducials, deskews any capture (scanner or phone,
+  PNG/JPEG, any rotation) onto the canonical frame via 4-point homography, and [`scan-test.ts`](src/scan-test.ts)
+  crops each cell by its manifest box and scores it against the printed label (Otsu per cell, not the fixed
+  128). **First real-scan pass (16-word sheet, 3 devices):** clean-sheet ceiling **88%** → flatbed scan **81%**
+  (imaging cost ~one cell) → good phone **75%** → weak phone **63%**; overall **76.6%**. Deskew geometry is
+  sound (clean sheet through the same path = the direct-decode ceiling). **Glare is the dominant degradation**
+  — the whole-word failures (`∅`) cluster in the overexposed region and scale with camera quality; two misses
+  recur on every capture and are the known decode residual (d↔g / ļ-drop), not imaging.
+  Remaining, in order: (1) **deskew/denoise + local/adaptive thresholding** to recover glare cells (biggest
+  single lever — those are the `∅`s); (2) a **retrain of the four pipeline-domain CNNs with `AUGMENT=1`** — infra
+  already built ([`augment.ts`](src/augment.ts): rotation/blur/speckle/stroke morphology; augmented runs write to
+  `-aug` paths, so they don't touch the deployed clean models); (3) **scale the loop** past 16 words for a
+  tighter number. Captures live in `export/` (untracked).
 - **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). Residual is per-slot letter
   confusions on hard bases: `t↔ḑ` on 2-consonant `kt` (the 2 word-test misses), and the dense 3-letter-core /
   spilled cases in 4–5 consonant roots (~93%). Levers, in effort order: **oversample the confusable pairs**;

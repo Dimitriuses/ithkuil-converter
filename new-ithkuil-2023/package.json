@@ -27,6 +27,9 @@
     "secondary-test": "tsx src/secondary-roundtrip.ts",
     "word-test": "tsx src/word-roundtrip.ts",
     "lexicon-test": "tsx src/lexicon-roundtrip.ts",
+    "scan-sheet": "tsx src/scan-sheet.ts",
+    "scan-ingest": "tsx src/scan-ingest.ts",
+    "scan-test": "tsx src/scan-test.ts",
     "phrase-test": "tsx src/phrase-roundtrip.ts",
     "case-test": "tsx src/case-roundtrip.ts",
     "vrvv-test": "tsx src/vrvv-roundtrip.ts",
@@ -42,6 +45,7 @@
   },
   "dependencies": {
     "@zsnout/ithkuil": "^0.1.122",
+    "jpeg-js": "^0.4.4",
     "pngjs": "^7.0.0",
     "svgdom": "^0.1.23"
   },

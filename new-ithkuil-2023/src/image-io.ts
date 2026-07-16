@@ -1,7 +1,10 @@
 /**
- * PNG decode/encode (via pngjs) and simple debug drawing for the reverse pipeline.
+ * Image decode/encode (PNG via pngjs, JPEG via jpeg-js) and simple debug drawing for the
+ * reverse pipeline. JPEG matters for real-scan input: phone cameras produce JPG, and both
+ * pure-JS decoders keep the project free of native image dependencies.
  */
 import { PNG } from "pngjs"
+import * as jpeg from "jpeg-js"
 import { readFileSync, writeFileSync } from "node:fs"
 import type { BBox, SegmentedRegion, Role } from "./segment.js"
 
@@ -19,6 +22,32 @@ export function decodePng(buf: Buffer): RgbaImage {
 
 export function loadPng(path: string): RgbaImage {
   return decodePng(readFileSync(path))
+}
+
+/** Decode a JPEG buffer to RGBA. `tolerantDecoding` copes with slightly-off phone JPEGs,
+ * and the resolution/memory caps are raised for high-megapixel captures. */
+export function decodeJpeg(buf: Buffer): RgbaImage {
+  const img = jpeg.decode(buf, {
+    useTArray: true,
+    formatAsRGBA: true,
+    tolerantDecoding: true,
+    maxResolutionInMP: 200,
+    maxMemoryUsageInMB: 1024,
+  })
+  return { width: img.width, height: img.height, data: img.data }
+}
+
+/** Decode a PNG or JPEG buffer, dispatching on the magic bytes (robust to a wrong file
+ * extension — phone exports mislabel formats often enough to matter). */
+export function decodeImage(buf: Buffer): RgbaImage {
+  // PNG: 89 50 4E 47 · JPEG: FF D8 FF
+  if (buf.length >= 3 && buf[0] === 0xff && buf[1] === 0xd8 && buf[2] === 0xff) return decodeJpeg(buf)
+  return decodePng(buf) // pngjs throws a clear error if it's neither
+}
+
+/** Load a PNG or JPEG from disk (format sniffed from the bytes, not the extension). */
+export function loadImage(path: string): RgbaImage {
+  return decodeImage(readFileSync(path))
 }
 
 /** Encode an RGBA image to a PNG buffer. */
