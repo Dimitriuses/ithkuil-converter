@@ -902,6 +902,12 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
   suite 58/62→57/62). Remaining levers are ~2.5 h each — **more total data** (N 12k→20k) or **more capacity**
   (trunk is only 16/32/32) — and the shape needs a 3-consonant cluster inside one syllable, so it's rare.
   Known-good model preserved at `models/alpha-cnn.keep`.
+- **English → Ithkuil translation (AI-assisted) — new direction.** A semantic layer in front of
+  the converter: English sentence → LLM-suggested **objective interpretation options** (the
+  disambiguation Ithkuil requires) → user picks → constrained per-word IR (root chosen from the
+  real `@zsnout` lexicon glosses, categories enum-constrained) → deterministic
+  `formativeToIthkuil` → existing `encode()` renders script. The LLM never writes romanized
+  Ithkuil. Full plan with milestones T1–T6 in [translation-plan.md](translation-plan.md).
 
 #### Resolved / decided-against (kept so they aren't re-proposed)
 
