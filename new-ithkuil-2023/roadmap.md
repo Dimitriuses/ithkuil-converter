@@ -864,8 +864,25 @@ root*: a multi-task CNN ([`cnn-secondary.ts`](src/cnn-secondary.ts) → [`second
   (1) **retrain the four pipeline CNNs with `AUGMENT=1`** — infra built ([`augment.ts`](src/augment.ts):
   rotation/blur/speckle/stroke morphology; `-aug` paths keep deployed clean models untouched) — wants a bigger
   labelled scan set than 16 words to trust; (2) **core decode accuracy** (the secondary-CNN residual below),
-  which caps even a perfect scan; (3) **scale the loop** past 16 words for a tighter number. Captures live in
-  `export/` (untracked).
+  which caps even a perfect scan; (3) **scale the loop** — *now built, awaiting capture* (below). Captures live
+  in `export/` (untracked).
+- **Real-scan dataset v2 — generator ready, needs printing + capturing.** `npm run scan-sheet -- 8` emits
+  **8 sheets × 30 words = 240 distinct words** to `out/sheets/sheet-NN.{png,json}`. Sizing is
+  CI-driven: at p≈0.8, ~240 words/device gives a **±5%** 95% CI, vs **±6% for a single 16-word sheet** — which
+  is why the old 76.6→78.1% preprocessing delta was inside the noise. Words are **lexicon-weighted by root
+  length** (3c×90, 4c×80 — matching `lexicon-roundtrip`, so the number stays comparable to the 92.6% synthetic
+  benchmark), distinct across sheets, with a coverage pass guaranteeing every known-confusable letter appears
+  (`v f b c d ḑ ļ š w x g t ţ z s`). **Protocol:** print all 8 at 100%, capture each on all three devices
+  (~24 captures) → ~240 labelled cells per device.
+  **Sheet identity is self-describing:** an 8-bit strip across the top band ([`scan-layout.ts`](src/scan-layout.ts),
+  filled square = 1, MSB first, 1-based so all-blank means "legacy sheet") — because phone captures arrive named
+  `20260716_185816.jpg`, and scoring a capture against the wrong sheet's manifest would silently corrupt every
+  label. `readSheetId()` reads it after deskew against a local white reference (absolute thresholds fail under
+  glare). Verified: all 8 ids read correctly, and survive 90°/180° rotation + simulated blown-highlight glare;
+  strip-less captures return `null` and fall back to the legacy manifest (the 3 existing captures still score
+  13/12/11 of 16, unchanged). A QR code was considered and deliberately skipped — a sheet index only needs 8
+  bits, and the existing fiducial blob detector already reads them with no new dependency. Revisit QR only if
+  sheets need to carry rich metadata (timestamp, git hash, word-list hash).
 - **Secondary CNN — the remaining ~7% of the lexicon** (round-trip 92.6%). *Investigated 2026-07-17; the cheap
   and medium levers are exhausted — see below before spending more here.* **Diagnosis:** the model
   **hard-overfits** (100% train / 94.2% held-out on the core+bottom joint metric that caps the round-trip). The

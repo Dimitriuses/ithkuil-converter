@@ -6,17 +6,24 @@
  * printed. Labels are free (print-and-rescan), so this is a self-scoring benchmark of imaging
  * robustness — how much real scanner/phone noise, glare, and skew cost us vs. clean renders.
  *
- * Per-cell thresholding is Otsu (not the fixed 128 `binarize` default): real glyphs under
- * glare survive as light grey, and a global 128 would erase them.
+ * Per-cell thresholding is flat-field + Otsu: real glyphs under glare survive as light grey,
+ * and a global cut would erase them.
  *
- *   npx tsx src/scan-test.ts export/Scan.jpg export/phone1.jpg ...   # any number of captures
+ * Each capture identifies ITSELF: the deskewed page carries an 8-bit sheet-id strip, so a pile
+ * of phone photos with auto-generated names is matched to the right manifest automatically —
+ * no filename discipline, and no risk of scoring a capture against the wrong sheet's labels.
+ * Captures with no strip fall back to the legacy single-sheet manifest.
+ *
+ *   npx tsx src/scan-test.ts export/*.jpg          # any number of captures, any sheets
  */
 import "./dom-shim.js"
 import { loadImage, cropRgba, type RgbaImage } from "./image-io.js"
 import { flatFieldBinarize } from "./segment.js"
 import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn, enableAlphabeticCnn } from "./decode-word.js"
-import { deskew, loadManifest } from "./scan-ingest.js"
+import { deskew, loadManifest, readSheetId, type Manifest } from "./scan-ingest.js"
+import { readdirSync, existsSync } from "node:fs"
 
+const SHEET_DIR = "out/sheets"
 const CROP_MARGIN = 24 // white padding around each manifest box (deskew is not pixel-perfect)
 
 function decodeCell(canon: RgbaImage, box: { x: number; y: number; w: number; h: number }): string {
@@ -46,17 +53,32 @@ await enableTopCnn()
 await enableSecondaryCnn()
 await enableAlphabeticCnn()
 
-const man = loadManifest()
-console.log(`\nreal-scan test — ${man.cells.length} cells/sheet, ${captures.length} capture(s)\n`)
+// Index every generated sheet by its id; fall back to the legacy single manifest.
+const sheets = new Map<number, Manifest>()
+if (existsSync(SHEET_DIR))
+  for (const f of readdirSync(SHEET_DIR).filter((f) => f.endsWith(".json"))) {
+    const m = loadManifest(`${SHEET_DIR}/${f}`)
+    if (m.sheetId != null) sheets.set(m.sheetId, m)
+  }
+const legacy = existsSync("out/scan-sheet.json") ? loadManifest() : null
+console.log(`\nreal-scan test — ${sheets.size} sheet manifest(s) indexed, ${captures.length} capture(s)\n`)
 
 let grandOk = 0
 let grandN = 0
+const perSheet = new Map<string, { ok: number; n: number }>()
 for (const cap of captures) {
+  const name = cap.split(/[\\/]/).pop()!
   let canon: RgbaImage
   try {
-    canon = deskew(loadImage(cap), man)
+    canon = deskew(loadImage(cap)) // shared layout — sheet not known yet
   } catch (e) {
-    console.log(`${cap}: DESKEW FAILED — ${(e as Error).message}\n`)
+    console.log(`${name}: DESKEW FAILED — ${(e as Error).message}\n`)
+    continue
+  }
+  const id = readSheetId(canon)
+  const man = (id != null ? sheets.get(id) : null) ?? legacy
+  if (!man) {
+    console.log(`${name}: sheet id ${id ?? "none"} — no matching manifest, skipped\n`)
     continue
   }
   let ok = 0
@@ -73,9 +95,13 @@ for (const cap of captures) {
   }
   grandOk += ok
   grandN += man.cells.length
-  console.log(`${cap.split(/[\\/]/).pop()}:  ${ok}/${man.cells.length} = ${((100 * ok) / man.cells.length).toFixed(0)}%`)
+  const key = id != null ? `sheet ${id}` : "legacy"
+  const acc = perSheet.get(key) ?? { ok: 0, n: 0 }
+  perSheet.set(key, { ok: acc.ok + ok, n: acc.n + man.cells.length })
+  console.log(`${name}  [${key}]:  ${ok}/${man.cells.length} = ${((100 * ok) / man.cells.length).toFixed(0)}%`)
   if (misses.length) console.log(`   e.g. ${misses.join("  ")}`)
   console.log()
 }
 
-console.log(`OVERALL real-scan round-trip: ${grandOk}/${grandN} = ${grandN ? ((100 * grandOk) / grandN).toFixed(1) : "0"}%`)
+for (const [k, v] of perSheet) console.log(`${k.padEnd(10)} ${v.ok}/${v.n} = ${((100 * v.ok) / v.n).toFixed(1)}%`)
+console.log(`\nOVERALL real-scan round-trip: ${grandOk}/${grandN} = ${grandN ? ((100 * grandOk) / grandN).toFixed(1) : "0"}%`)

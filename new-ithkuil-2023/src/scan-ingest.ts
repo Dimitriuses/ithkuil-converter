@@ -14,11 +14,19 @@
  *   npx tsx src/scan-ingest.ts <capture.jpg> [--canonical out.png]   # deskew + save upright
  */
 import { loadImage, savePng, type RgbaImage } from "./image-io.js"
+import * as L from "./scan-layout.js"
 import { readFileSync } from "node:fs"
 
-interface Manifest {
+export interface FidSpec {
+  name: string
+  cx: number
+  cy: number
+  ring: boolean
+}
+export interface Manifest {
+  sheetId?: number
   canvas: { w: number; h: number }
-  fiducials: { name: string; cx: number; cy: number; ring: boolean }[]
+  fiducials: FidSpec[]
   cells: { index: number; root: string; text: string; box: { x: number; y: number; w: number; h: number } }[]
 }
 export const loadManifest = (path = "out/scan-sheet.json"): Manifest => JSON.parse(readFileSync(path, "utf8"))
@@ -226,9 +234,11 @@ export function warpToCanonical(img: RgbaImage, H: number[], cw: number, ch: num
   return { width: cw, height: ch, data: out }
 }
 
-/** Solve the homography mapping canonical → image space from a capture's detected fiducials. */
-export function canonToImage(f: Fiducials, man: Manifest): number[] {
-  const byName = Object.fromEntries(man.fiducials.map((m) => [m.name, [m.cx, m.cy] as [number, number]]))
+/** Solve the homography mapping canonical → image space from a capture's detected fiducials.
+ * Fiducial geometry is identical on every sheet, so this defaults to the shared layout — which
+ * is what lets a capture be deskewed (and its sheet id read) before any manifest is chosen. */
+export function canonToImage(f: Fiducials, fids: readonly FidSpec[] = L.FIDUCIALS): number[] {
+  const byName = Object.fromEntries(fids.map((m) => [m.name, [m.cx, m.cy] as [number, number]]))
   const canon: [number, number][] = [byName.TL!, byName.TR!, byName.BL!, byName.BR!]
   const image: [number, number][] = [f.TL, f.TR, f.BL, f.BR]
   return homography(canon, image)
@@ -238,10 +248,43 @@ const project = (H: number[], x: number, y: number): [number, number] => {
   return [(H[0]! * x + H[1]! * y + H[2]!) / d, (H[3]! * x + H[4]! * y + H[5]!) / d]
 }
 
-/** Deskew a capture onto the manifest's canonical frame (H maps canonical → image; inverse-sampled). */
-export function deskew(img: RgbaImage, man: Manifest): RgbaImage {
-  const H = canonToImage(detectFiducials(img), man)
-  return warpToCanonical(img, H, man.canvas.w, man.canvas.h)
+/** Deskew a capture onto the canonical frame (H maps canonical → image; inverse-sampled).
+ * `man` is optional — without it the shared layout is used, so a capture can be deskewed
+ * before its sheet (and therefore its manifest) is known. */
+export function deskew(img: RgbaImage, man?: Manifest): RgbaImage {
+  const H = canonToImage(detectFiducials(img), man?.fiducials ?? L.FIDUCIALS)
+  return warpToCanonical(img, H, man?.canvas.w ?? L.W, man?.canvas.h ?? L.H)
+}
+
+/**
+ * Read the 8-bit sheet-id strip from a DESKEWED (canonical) capture. Each bit box is compared
+ * against a blank paper strip sampled just below it, so the decision tracks local exposure —
+ * an absolute threshold would misread the strip under glare or in a dark photo. Returns null
+ * if no bits are set (a legacy sheet printed before the strip existed); ids are 1-based.
+ */
+export function readSheetId(canon: RgbaImage): number | null {
+  const meanOf = (b: { x: number; y: number; w: number; h: number }, inset = 0) => {
+    const x0 = Math.round(b.x + b.w * inset)
+    const x1 = Math.round(b.x + b.w * (1 - inset))
+    const y0 = Math.round(b.y + b.h * inset)
+    const y1 = Math.round(b.y + b.h * (1 - inset))
+    let sum = 0
+    let n = 0
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
+        if (x < 0 || y < 0 || x >= canon.width || y >= canon.height) continue
+        const i = (y * canon.width + x) * 4
+        sum += (canon.data[i]! + canon.data[i + 1]! + canon.data[i + 2]!) / 3
+        n++
+      }
+    }
+    return n ? sum / n : 255
+  }
+  const whiteRef = meanOf(L.WHITE_REF)
+  // Inset each bit box by 25%: deskew is not pixel-perfect, so sample the centre only.
+  const bits = Array.from({ length: L.BIT_COUNT }, (_, i) => (meanOf(L.bitBox(i), 0.25) < whiteRef * 0.6 ? 1 : 0))
+  const id = bits.reduce<number>((acc, b) => (acc << 1) | b, 0)
+  return id === 0 ? null : id
 }
 
 // ── debug overlay: draw detected fiducials + projected cell boxes on the raw image ──
@@ -285,7 +328,7 @@ const quad = (img: RgbaImage, p: [number, number][], c: [number, number, number]
  * projected box drawn on top — a visual check that detection locked onto the right marks. */
 export function renderOverlay(img: RgbaImage, man: Manifest): RgbaImage {
   const f = detectFiducials(img)
-  const H = canonToImage(f, man)
+  const H = canonToImage(f, man.fiducials)
   const out: RgbaImage = { width: img.width, height: img.height, data: new Uint8Array(img.data) }
   const F = 150 // fiducial side (from scan-sheet)
   // Cell boxes (magenta), projected canonical → image as perspective quads.
