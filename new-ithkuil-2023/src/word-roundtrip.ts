@@ -22,6 +22,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
 import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn } from "./decode-word.js"
+import { gate } from "./harness.js"
 
 const ROOTS = ["l", "s", "kt", "sm"] // single + cluster roots
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"]
@@ -60,3 +61,5 @@ for (const root of ROOTS) {
 console.log(`composed word → text: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%  (core CNN ${cnnOn ? "on" : "off"}, primary CNN ${primOn ? "on" : "off"}, top CNN ${topOn ? "on" : "off"})`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
 else console.log("  every rendered formative decoded back to its exact romanization.")
+
+gate("composed word → text", ok, total, 95)

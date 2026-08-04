@@ -33,6 +33,9 @@ export type EncodeResult =
  *   fails to parse or the layout can't be produced (e.g. compact mode under Node).
  */
 export function encode(text: string, opts: EncodeOptions = {}): EncodeResult {
+  // Without this, blank input parses "successfully" into zero characters and yields a valid
+  // but empty <svg> — indistinguishable from a real render to a caller checking only `ok`.
+  if (!text.trim()) return { ok: false, reason: "empty text" }
   const parsed = textToScript(text)
   if (!parsed.ok) return { ok: false, reason: parsed.reason }
 

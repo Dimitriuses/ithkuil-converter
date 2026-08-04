@@ -13,6 +13,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
 import { decodePhrase, enableAlphabeticCnn } from "./decode-word.js"
+import { gate } from "./harness.js"
 
 const alphaOn = await enableAlphabeticCnn()
 console.log(`alphabetic-base CNN: ${alphaOn ? "on" : "off (chamfer match)"}`)
@@ -49,3 +50,6 @@ for (const word of WORDS) {
 console.log(`alphabetic round-trip: ${ok}/${WORDS.length} exact = ${((100 * ok) / WORDS.length).toFixed(1)}%`)
 console.log(`  char-level (positional): ${charOk}/${charTotal} = ${((100 * charOk) / charTotal).toFixed(1)}%`)
 if (misses.length) console.log(`  misses:\n    ${misses.join("\n    ")}`)
+
+gate("alphabetic exact", ok, WORDS.length, 80)
+gate("alphabetic char-level", charOk, charTotal, 92)

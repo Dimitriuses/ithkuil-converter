@@ -14,11 +14,11 @@ Also prints a Phase 0.5 completion report.
 """
 
 import json
-import sys
 import shutil
-from pathlib import Path
+import sys
 from collections import Counter
 from datetime import datetime
+from pathlib import Path
 
 
 def main():
@@ -37,13 +37,12 @@ def main():
     results_data   = json.loads(results_path.read_text("utf-8"))
     inventory_data = json.loads(inventory_path.read_text("utf-8"))
 
-    # Support both bare list and {summary, results} wrapper
+    # Support both bare list and {summary, results} wrapper (the wrapper's own summary is
+    # recomputed below from the applied results, so it is not read here)
     if isinstance(results_data, dict) and "results" in results_data:
-        results   = results_data["results"]
-        summary   = results_data.get("summary", {})
+        results = results_data["results"]
     else:
-        results   = results_data
-        summary   = {}
+        results = results_data
 
     # Index results by glyphId
     result_map = {r["glyphId"]: r for r in results}

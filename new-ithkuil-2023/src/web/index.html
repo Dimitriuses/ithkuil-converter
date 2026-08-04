@@ -134,13 +134,17 @@
         <h2>Decode · script image → text</h2>
         <div class="row" style="margin-top: 0">
           <div class="grow">
-            <div class="drop" id="drop">Drop a PNG here, click to choose, or use the last encoded image.</div>
-            <input type="file" id="dec-file" accept="image/png" hidden />
+            <div class="drop" id="drop">Drop a PNG or JPEG here, click to choose, or use the last encoded image.</div>
+            <input type="file" id="dec-file" accept="image/png,image/jpeg" hidden />
           </div>
           <div style="align-self: stretch; display: flex; flex-direction: column; gap: 8px; justify-content: flex-end">
             <button class="ghost" id="dec-use-encoded" disabled>Use last encoded ↑</button>
             <button id="dec-go" disabled>Decode</button>
           </div>
+        </div>
+        <div class="check" style="margin-top: 10px">
+          <input type="checkbox" id="dec-photo" />
+          <label for="dec-photo">photo / scan — level the lighting before thresholding (flat-field + Otsu)</label>
         </div>
         <div class="out" id="dec-out"></div>
       </section>
@@ -254,6 +258,8 @@
       $("dec-file").onchange = (e) => {
         const f = e.target.files[0]; if (!f) return
         const rd = new FileReader(); rd.onload = () => setImage(rd.result, esc(f.name)); rd.readAsDataURL(f)
+        // A JPEG is almost always a camera capture, so pre-tick the photo path.
+        if (/jpe?g$/i.test(f.name) || f.type === "image/jpeg") $("dec-photo").checked = true
       }
       $("drop").ondragover = (e) => { e.preventDefault(); $("drop").classList.add("hover") }
       $("drop").ondragleave = () => $("drop").classList.remove("hover")
@@ -261,6 +267,7 @@
         e.preventDefault(); $("drop").classList.remove("hover")
         const f = e.dataTransfer.files[0]; if (!f) return
         const rd = new FileReader(); rd.onload = () => setImage(rd.result, esc(f.name)); rd.readAsDataURL(f)
+        if (/jpe?g$/i.test(f.name) || f.type === "image/jpeg") $("dec-photo").checked = true
       }
       $("dec-use-encoded").onclick = () => { if (lastEncodedPng) setImage(lastEncodedPng, "last encoded render") }
 
@@ -268,7 +275,7 @@
         if (!pendingImage) return
         const btn = $("dec-go"); btn.disabled = true
         const out = $("dec-out"); out.innerHTML = '<span class="muted">decoding… (first call waits for warmup)</span>'
-        const res = await api("/api/decode", { imageBase64: pendingImage })
+        const res = await api("/api/decode", { imageBase64: pendingImage, photo: $("dec-photo").checked })
         btn.disabled = false
         if (!res.ok) { out.innerHTML = '<span class="err">✗ ' + esc(res.error) + "</span>"; return }
         let html = '<div class="result">' + (esc(res.text) || '<span class="muted">(empty)</span>') + "</div>"

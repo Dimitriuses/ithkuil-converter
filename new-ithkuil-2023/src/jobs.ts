@@ -147,6 +147,10 @@ export function startJob(kind: string, args: Record<string, unknown> = {}): Star
   const child = spawn(process.execPath, argv, {
     cwd: PROJECT_ROOT,
     windowsHide: true,
+    // POSIX: make the child its own process-group leader, so `kill(-pid)` below actually
+    // has a group to signal. Without this the child shares the server's group, the negative
+    // kill fails with ESRCH, and the fallback reaches only the direct child.
+    detached: process.platform !== "win32",
     env: { ...process.env, FORCE_COLOR: "0" },
   })
   const job: JobState = {

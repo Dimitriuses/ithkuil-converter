@@ -14,6 +14,7 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeTertiary, VALENCES } from "./tertiary.js"
+import { gate } from "./harness.js"
 
 const LEVELS = ["MIN", "SBE", "IFR", "DFT", "EQU", "SUR", "SPL", "SPQ", "MAX"]
 
@@ -58,3 +59,5 @@ for (const valence of VALENCES) {
 console.log(`tertiary round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
 console.log(`  valence ${((100 * valOk) / total).toFixed(1)}%  ·  absLevel ${((100 * absOk) / total).toFixed(1)}%  ·  relLevel ${((100 * relOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
+
+gate("tertiary", ok, total, 98)

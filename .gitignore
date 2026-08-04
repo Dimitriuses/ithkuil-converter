@@ -5,7 +5,8 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-package-lock.json
+# NOTE: package-lock.json is deliberately COMMITTED (it used to be ignored here) — `npm ci`
+# needs it, and CI installs with a different npm major than a developer's global one.
 
 # Python
 .venv/
@@ -17,6 +18,8 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+.ruff_cache/
+.pytest_cache/
 
 # TypeScript
 dist/

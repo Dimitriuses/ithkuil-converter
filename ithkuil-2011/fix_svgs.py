@@ -11,7 +11,8 @@ Run:
 
 Edits SVG files in-place. Safe to re-run (idempotent).
 """
-import sys, re
+import re
+import sys
 from pathlib import Path
 
 TRANSFORM_ATTR = 'transform="scale(1,-1)"'
@@ -63,7 +64,7 @@ def main():
     print(f"  Already fixed : {counts['already_fixed']}")
     print(f"  No <path>     : {counts['no_path']}")
     if counts["patched"]:
-        print(f"\nDone. Re-run build_validator.py to regenerate the HTML.")
+        print("\nDone. Re-run build_validator.py to regenerate the HTML.")
 
 if __name__ == "__main__":
     main()

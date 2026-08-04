@@ -5,6 +5,9 @@ out/
 node_modules/
 dist/
 
+# built demo page (deployed to GitHub Pages from CI, never committed)
+dist-demo/
+
 # generated dataset
 dataset/
 

@@ -7,6 +7,7 @@
  *   npm run primary-test
  */
 import { decodePrimaryFixed, renderFixed } from "./primary.js"
+import { gate } from "./harness.js"
 
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"]
 const PERSPECTIVES = ["M", "G", "N", "A"]
@@ -34,3 +35,5 @@ for (const specification of SPECIFICATIONS) {
 console.log(`primary zone-split round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
 console.log(`  specification ${((100 * specOk) / total).toFixed(1)}%  ·  perspective ${((100 * perspOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}): ${misses.join("  ")}`)
+
+gate("primary (zone-split)", ok, total, 90)

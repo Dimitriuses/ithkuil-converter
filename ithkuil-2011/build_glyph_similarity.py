@@ -28,8 +28,8 @@ from pathlib import Path
 
 try:
     import numpy as np
-    from PIL import Image, ImageFont, ImageDraw
-    from scipy.ndimage import distance_transform_edt, binary_dilation
+    from PIL import Image, ImageDraw, ImageFont
+    from scipy.ndimage import binary_dilation, distance_transform_edt
 except ImportError:
     sys.exit("Needs Pillow + numpy + scipy:  pip install Pillow numpy scipy")
 

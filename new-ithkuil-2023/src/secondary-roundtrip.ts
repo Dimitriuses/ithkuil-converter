@@ -16,6 +16,7 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeSecondary } from "./secondary.js"
+import { gate } from "./harness.js"
 
 const diacriticTemplates = partitionTemplates(loadTemplates("dataset", 64)).diacritic
 
@@ -61,3 +62,5 @@ for (const core of CORES) {
 console.log(`secondary round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
 console.log(`  core ${((100 * coreOk) / total).toFixed(1)}%  ·  bottom-ext ${((100 * extOk) / total).toFixed(1)}%  ·  vowel ${((100 * vowOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
+
+gate("secondary", ok, total, 95)

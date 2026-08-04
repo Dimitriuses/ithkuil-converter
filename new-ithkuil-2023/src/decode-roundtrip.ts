@@ -15,6 +15,7 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { classifyRegionsDetailed, loadTemplates } from "./classify.js"
 import { decodeGlyphs } from "./decode.js"
+import { gate } from "./harness.js"
 
 const CONSONANTS = ["k", "t", "s", "m", "p", "n", "r", "l", "č", "f", "x", "z"] as const
 const VOWELS = ["a", "e", "i", "o", "u"] as const
@@ -48,3 +49,5 @@ for (const position of ["underposed", "superposed"] as const) {
 
 console.log(`decode round-trip: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%`)
 if (misses.length) console.log(`misses (${misses.length}): ${misses.join("  ")}`)
+
+gate("decode (consonant+vowel)", ok, total, 98)

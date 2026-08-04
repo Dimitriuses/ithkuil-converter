@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>New Ithkuil script converter — live demo</title>
+    <meta
+      name="description"
+      content="Type romanized New Ithkuil, see the native block script rendered in your browser. Part of a bidirectional converter whose reverse direction reads the script back out of an image."
+    />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --bg: #f6f7f9;
+        --panel: #fff;
+        --ink: #1a1c1f;
+        --muted: #667085;
+        --line: #e3e6ea;
+        --accent: #3b5bdb;
+        --ok: #2b8a3e;
+        --bad: #c92a2a;
+        --code: #f1f3f5;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16181c;
+          --panel: #1e2126;
+          --ink: #e6e8eb;
+          --muted: #9aa2ad;
+          --line: #2c3138;
+          --accent: #91a7ff;
+          --ok: #51cf66;
+          --bad: #ff6b6b;
+          --code: #141619;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      }
+      a {
+        color: var(--accent);
+      }
+      header {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+      .wrap {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+      header .wrap {
+        padding-top: 26px;
+        padding-bottom: 22px;
+      }
+      h1 {
+        margin: 0 0 6px;
+        font-size: 26px;
+        letter-spacing: -0.01em;
+      }
+      .tagline {
+        margin: 0;
+        color: var(--muted);
+      }
+      .links {
+        margin-top: 14px;
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        font-size: 14px;
+      }
+      main {
+        padding: 26px 0 60px;
+      }
+      section {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 22px;
+      }
+      h2 {
+        margin: 0 0 4px;
+        font-size: 18px;
+      }
+      h2 + .sub {
+        margin: 0 0 16px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 66px;
+        resize: vertical;
+        background: var(--code);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 11px 13px;
+        font: 16px/1.5 ui-monospace, Menlo, Consolas, monospace;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 12px 0 4px;
+      }
+      .chips button,
+      .toggle {
+        background: transparent;
+        color: var(--accent);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 5px 13px;
+        font: inherit;
+        font-size: 14px;
+        cursor: pointer;
+      }
+      .chips button:hover {
+        border-color: var(--accent);
+      }
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        font-size: 14px;
+        color: var(--muted);
+      }
+      .controls label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+      }
+      #stage {
+        margin-top: 16px;
+        min-height: 190px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: repeating-conic-gradient(var(--code) 0% 25%, transparent 0% 50%) 50% / 22px 22px;
+      }
+      #stage svg {
+        width: 100%;
+        max-height: 260px;
+        fill: var(--ink);
+      }
+      .status {
+        margin: 10px 0 0;
+        font: 13px/1.5 ui-monospace, Menlo, Consolas, monospace;
+        color: var(--muted);
+      }
+      .status.bad {
+        color: var(--bad);
+      }
+      .hidden {
+        display: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14.5px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--line);
+      }
+      th {
+        color: var(--muted);
+        font-weight: 600;
+      }
+      td.num {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      figure {
+        margin: 18px 0 0;
+      }
+      figure img {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+      }
+      figcaption {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 13.5px;
+      }
+      code {
+        background: var(--code);
+        border-radius: 5px;
+        padding: 1px 5px;
+        font-size: 0.92em;
+      }
+      .note {
+        border-left: 3px solid var(--accent);
+        padding: 2px 0 2px 14px;
+        color: var(--muted);
+        font-size: 14.5px;
+      }
+      footer {
+        color: var(--muted);
+        font-size: 13.5px;
+        padding-bottom: 40px;
+      }
+      .scroll {
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <h1>New Ithkuil script converter</h1>
+        <p class="tagline">
+          Romanized text ⇄ the native block script of <a href="https://ithkuil.net/">Ithkuil</a>. This page runs the
+          <strong>forward</strong> direction live in your browser.
+        </p>
+        <div class="links">
+          <a href="https://github.com/Dimitriuses/ithkuil-converter">Source on GitHub</a>
+          <a href="https://github.com/Dimitriuses/ithkuil-converter#readme">README</a>
+          <a href="https://github.com/Dimitriuses/ithkuil-converter/blob/main/ROADMAP.md">Roadmap</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section>
+        <h2>Encode · text → script</h2>
+        <p class="sub">Renders as you type. No server, no round trip — the layout engine runs client-side.</p>
+        <textarea id="text" spellcheck="false" aria-label="Romanized New Ithkuil">Wattunkí ruyün</textarea>
+        <div class="chips">
+          <button data-sample="Wattunkí ruyün">Wattunkí ruyün</button>
+          <button data-sample="saläha">saläha</button>
+          <button data-sample="aktäläha">aktäläha</button>
+          <button data-sample="malëuţřait">malëuţřait</button>
+          <button data-sample="ušmal">ušmal</button>
+        </div>
+        <div class="controls">
+          <label><input type="checkbox" id="compact" /> compact layout (collision kerning)</label>
+          <a id="dl-svg" class="toggle hidden" href="#" download>Download SVG</a>
+        </div>
+        <div id="stage"></div>
+        <p class="status" id="status"></p>
+        <p class="note" style="margin-top: 16px">
+          Compact layout needs SVG hit-testing (<code>isPointInStroke</code>), which browsers have and Node does not —
+          the repo ships a geometric shim so the same code path works headlessly.
+        </p>
+      </section>
+
+      <section>
+        <h2>Decode · script image → text</h2>
+        <p class="sub">
+          The reverse direction is the part no other tool does — and the reason this page can't run it. It needs ~15 MB
+          of cached glyph templates and five TensorFlow CNNs, so it stays on the Node side. Here is what it produces.
+        </p>
+
+        <figure>
+          <img src="./03-pipeline.png" alt="Four panels: romanized text, rendered script, segmentation overlay, decoded text" />
+          <figcaption>
+            One full round trip: text → script → segmented characters (magenta = character, green = base, blue/orange =
+            super/underposed diacritics) → text recovered by the decoder.
+          </figcaption>
+        </figure>
+
+        <div class="scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Benchmark</th>
+                <th>What it measures</th>
+                <th class="num">Result</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Real-lexicon round trip</td>
+                <td>4,387 real roots, sampled by length and weighted by frequency</td>
+                <td class="num">92.6%</td>
+              </tr>
+              <tr>
+                <td>…the same, on template matching alone</td>
+                <td>a fresh clone, before the optional CNNs are trained</td>
+                <td class="num">42.6%</td>
+              </tr>
+              <tr>
+                <td>Alphabetic register</td>
+                <td>phonetically spelt words, character level</td>
+                <td class="num">100%</td>
+              </tr>
+              <tr>
+                <td>Printed &amp; re-scanned</td>
+                <td>paper sheets recaptured on a flatbed and two phones</td>
+                <td class="num">78.1%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="note" style="margin-top: 16px">
+          Numbers are reproducible from the repo: <code>npm run lexicon-test</code>, <code>npm run alphabetic</code>,
+          <code>npm run scan-test</code>.
+        </p>
+      </section>
+
+      <section>
+        <h2>How it works</h2>
+        <figure style="margin-top: 4px">
+          <img src="./05-glyph-dataset.png" alt="Contact sheet of synthetic glyph samples used to train the classifiers" />
+          <figcaption>
+            The forward renderer doubles as the labelling machine: every glyph class is rendered and augmented, which is
+            where the training and template data for the reverse pipeline comes from.
+          </figcaption>
+        </figure>
+        <p style="margin-top: 18px">
+          Forward is a solved problem and is reused from
+          <a href="https://github.com/zsakowitz/ithkuil">@zsnout/ithkuil</a> (MIT). Reverse — segmentation, character
+          typing, per-slot classification and reassembly into a valid word — is original work in this repository.
+        </p>
+      </section>
+
+      <footer class="wrap" style="padding: 0">
+        MIT licensed · built with <a href="https://github.com/zsakowitz/ithkuil">@zsnout/ithkuil</a> ·
+        <a href="https://github.com/Dimitriuses/ithkuil-converter">Dimitriuses/ithkuil-converter</a>
+      </footer>
+    </main>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

@@ -335,7 +335,11 @@ export function decodePhrase(
     if (classifyCharType(bmp, region).type === "primary" && formative.length) flushFormative()
     formative.push(region)
   }
-  if (alphabetic?.length) words.push({ text: decodeAlphabeticSpan(bmp, alphabetic), kind: "alphabetic" })
+  // An unterminated span (the image ends before the closing register) still gets the CNN —
+  // omitting it here would silently drop the last word back to template matching.
+  if (alphabetic?.length) {
+    words.push({ text: decodeAlphabeticSpan(bmp, alphabetic, alphaCnn ?? undefined), kind: "alphabetic" })
+  }
   flushFormative()
 
   return { text: words.map((w) => w.text).join(" "), words }

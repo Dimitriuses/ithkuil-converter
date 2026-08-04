@@ -13,6 +13,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
 import { decodePhrase, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn, enableAlphabeticCnn } from "./decode-word.js"
+import { gate } from "./harness.js"
 
 // Warm the same CNNs the server uses, so the phrase test reflects the deployed pipeline.
 await enableCoreCnn()
@@ -70,3 +71,6 @@ for (const formatives of phrases) {
 console.log(`phrase → text: ${ok}/${total} exact = ${total ? ((100 * ok) / total).toFixed(1) : "—"}%  (${skipped} un-renderable phrases skipped)`)
 console.log(`  per-word: ${wordOk}/${wordTotal} = ${wordTotal ? ((100 * wordOk) / wordTotal).toFixed(1) : "—"}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
+
+gate("phrase → text (exact)", ok, total, 95)
+gate("phrase per-word", wordOk, wordTotal, 95)

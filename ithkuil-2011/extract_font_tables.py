@@ -20,8 +20,8 @@ import sys
 from pathlib import Path
 
 try:
-    from fontTools.ttLib import TTFont
     from fontTools.pens.svgPathPen import SVGPathPen
+    from fontTools.ttLib import TTFont
 except ImportError:
     sys.exit("fonttools not found. Run: pip install fonttools")
 
@@ -292,7 +292,7 @@ def extract_gpos(font):
                 if ltype == 4:
                     mark_glyphs = subtable.MarkCoverage.glyphs
                     mark_records = subtable.MarkArray.MarkRecord
-                    for glyph, rec in zip(mark_glyphs, mark_records):
+                    for glyph, rec in zip(mark_glyphs, mark_records, strict=True):
                         entry["anchors"].append({
                             "role": "mark",
                             "glyph": glyph,
@@ -302,7 +302,7 @@ def extract_gpos(font):
 
                     base_glyphs = subtable.BaseCoverage.glyphs
                     base_records = subtable.BaseArray.BaseRecord
-                    for glyph, rec in zip(base_glyphs, base_records):
+                    for glyph, rec in zip(base_glyphs, base_records, strict=True):
                         for cls_idx, anchor in enumerate(rec.BaseAnchor):
                             if anchor is not None:
                                 entry["anchors"].append({
@@ -316,7 +316,7 @@ def extract_gpos(font):
                 elif ltype == 6:
                     mark_glyphs = subtable.MarkCoverage.glyphs
                     mark_records = subtable.MarkArray.MarkRecord
-                    for glyph, rec in zip(mark_glyphs, mark_records):
+                    for glyph, rec in zip(mark_glyphs, mark_records, strict=True):
                         entry["anchors"].append({
                             "role": "mark2",
                             "glyph": glyph,
@@ -326,7 +326,7 @@ def extract_gpos(font):
 
                     mark2_glyphs = subtable.Mark2Coverage.glyphs
                     mark2_records = subtable.Mark2Array.Mark2Record
-                    for glyph, rec in zip(mark2_glyphs, mark2_records):
+                    for glyph, rec in zip(mark2_glyphs, mark2_records, strict=True):
                         for cls_idx, anchor in enumerate(rec.Mark2Anchor):
                             if anchor is not None:
                                 entry["anchors"].append({
@@ -340,7 +340,7 @@ def extract_gpos(font):
                     entry["anchors"].append({
                         "role": "unparsed",
                         "lookupType": ltype,
-                        "note": f"Run `fonttools ttx -t GPOS` for full detail",
+                        "note": "Run `fonttools ttx -t GPOS` for full detail",
                     })
 
             except Exception as exc:

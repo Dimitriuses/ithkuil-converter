@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: new-ithkuil-2023
+
+jobs:
+  # Fast gate: types + the deterministic unit tests. Runs on both platforms because the
+  # project is developed on Windows and the pipeline touches paths, native addons and
+  # process trees — the places where "works on my machine" hides.
+  check:
+    name: typecheck + unit tests (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: new-ithkuil-2023/.nvmrc
+          cache: npm
+          cache-dependency-path: new-ithkuil-2023/package-lock.json
+      # The runner's npm major is decided by its Node, and is routinely behind a developer's
+      # global npm — which is how a lockfile that installs locally fails `npm ci` here.
+      - name: Toolchain versions
+        run: node --version && npm --version
+      - run: npm ci
+      - name: Native backend loads (tfjs-node)
+        run: node -e "import('@tensorflow/tfjs-node').then(()=>console.log('tfjs-node ok'),e=>{console.error(e);process.exit(1)})"
+      - run: npm run typecheck
+      - run: npm test
+
+  # The live demo, built and then actually driven in a browser under a project sub-path.
+  demo:
+    name: demo build + browser smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: new-ithkuil-2023/.nvmrc
+          cache: npm
+          cache-dependency-path: new-ithkuil-2023/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build with the deployed base path
+        run: npm run demo:build
+        env:
+          DEMO_BASE: /${{ github.event.repository.name }}/
+      - name: The emitted asset paths must match the repo name
+        run: |
+          grep -q 'src="/${{ github.event.repository.name }}/assets/' dist-demo/index.html \
+            || { grep -oE '(src|href)="[^"]*"' dist-demo/index.html; exit 1; }
+      - run: npm run demo:smoke
+
+  # The expensive one: the reverse pipeline end to end, on generated data.
+  #
+  # Every harness here is gated at its TEMPLATE-ONLY floor — no CNN is trained in CI (that
+  # is hours of CPU), and the decoder falls back to template matching without them. So a
+  # green run means "the pipeline still works without any model", which is exactly the
+  # state of a fresh clone.
+  roundtrip:
+    name: reverse-pipeline round trip
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: new-ithkuil-2023/.nvmrc
+          cache: npm
+          cache-dependency-path: new-ithkuil-2023/package-lock.json
+      - run: npm ci
+
+      # The glyph dataset is a pure function of the generator + the glyph taxonomy, so it is
+      # keyed on those exactly. No restore-keys: a stale dataset would fail confusingly.
+      - name: Cache the synthetic glyph dataset
+        id: dataset-cache
+        uses: actions/cache@v4
+        with:
+          path: new-ithkuil-2023/dataset
+          key: ithkuil-dataset-${{ hashFiles('new-ithkuil-2023/src/generate-dataset.ts', 'new-ithkuil-2023/src/glyph-classes.ts', 'new-ithkuil-2023/src/glyph-render.ts', 'new-ithkuil-2023/src/raster.ts', 'new-ithkuil-2023/package-lock.json') }}
+
+      # Template caches carry their own version stamp and rebuild themselves on a mismatch,
+      # so an out-of-date restore is safe — it just costs the rebuild it would have cost.
+      - name: Cache the rendered template sets
+        uses: actions/cache@v4
+        with:
+          path: new-ithkuil-2023/models
+          key: ithkuil-templates-${{ hashFiles('new-ithkuil-2023/src/*.ts') }}
+          restore-keys: ithkuil-templates-
+
+      - name: Generate the glyph dataset
+        if: steps.dataset-cache.outputs.cache-hit != 'true'
+        run: npm run dataset
+
+      - name: Readiness report
+        run: npm run doctor
+
+      # Cheapest first, so a structural break fails fast.
+      - run: npm run quaternary-test
+      - run: npm run tertiary-test
+      - run: npm run secondary-test
+      - run: npm run primary-align-test
+      - run: npm run case-test
+      - run: npm run word-test
+      - run: npm run phrase-test
+
+  # The 2011 sub-project is Python and has no test suite; this is a syntax + lint gate so it
+  # cannot rot silently while the active project moves.
+  python:
+    name: 2011 analysis scripts (lint)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ithkuil-2011
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      # Pinned: ruff's default rule set widens between releases, and `ruff.toml` selects
+      # explicitly for the same reason. Formatting is deliberately NOT gated — these files
+      # use aligned assignments, and reformatting completed analysis code buys nothing.
+      - run: pip install "ruff==0.16.*"
+      - run: ruff check .

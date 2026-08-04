@@ -13,6 +13,12 @@
     "encode": "tsx src/cli.ts",
     "serve": "tsx src/server.ts",
     "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test \"tests/*.test.ts\"",
+    "demo": "vite",
+    "demo:build": "vite build",
+    "demo:preview": "vite preview",
+    "demo:smoke": "node --import tsx tools/demo-smoke.mjs",
+    "screenshots": "node --import tsx tools/screenshots.mjs",
     "dataset": "tsx src/generate-dataset.ts",
     "segment": "tsx src/segment-demo.ts",
     "eval": "tsx src/eval-classifier.ts",
@@ -44,19 +50,20 @@
     "secondary-cnn": "tsx src/secondary-cnn-test.ts"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
+    "@tensorflow/tfjs-node": "^4.22.0",
     "@zsnout/ithkuil": "^0.1.122",
     "jpeg-js": "^0.4.4",
     "pngjs": "^7.0.0",
     "svgdom": "^0.1.23"
   },
   "devDependencies": {
-    "@resvg/resvg-js": "^2.6.2",
     "@tensorflow/tfjs": "^4.22.0",
-    "@tensorflow/tfjs-backend-wasm": "^4.22.0",
-    "@tensorflow/tfjs-node": "^4.22.0",
     "@types/node": "^26.1.1",
     "@types/pngjs": "^6.0.5",
+    "playwright": "^1.62.1",
     "tsx": "^4.23.0",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite": "^7.3.6"
   }
 }

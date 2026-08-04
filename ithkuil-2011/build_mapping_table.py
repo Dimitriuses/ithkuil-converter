@@ -31,9 +31,8 @@ Output files in <output_dir>:
 
 import json
 import sys
-from pathlib import Path
 from collections import defaultdict
-
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -300,7 +299,6 @@ def main():
 
     # Build lookup maps
     name_to_inv = {e["fontGlyphName"]: e for e in inventory}
-    id_to_inv   = {e["glyphId"]: e for e in inventory}
 
     # ── GPOS analysis ─────────────────────────────────────────────────────────
 

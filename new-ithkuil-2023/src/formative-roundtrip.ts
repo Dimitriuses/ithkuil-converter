@@ -24,6 +24,7 @@ import { classifyRegionsDetailed, loadTemplates, partitionTemplates } from "./cl
 import { decodeTertiary } from "./tertiary.js"
 import { decodePrimaryFixed, renderFixed } from "./primary.js"
 import { featuresToText } from "./assemble.js"
+import { gate } from "./harness.js"
 
 const templates = loadTemplates("dataset", 64)
 const diacriticTemplates = partitionTemplates(templates).diacritic
@@ -79,3 +80,5 @@ for (const root of ROOTS) {
 console.log(`formative decode→assemble→generate: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 10).join("\n    ")}`)
 else console.log("  every decoded formative regenerated the original romanization.")
+
+gate("formative → text", ok, total, 97)

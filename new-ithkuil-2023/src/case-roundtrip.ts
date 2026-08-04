@@ -14,6 +14,7 @@ import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
 import { decodeWordToText } from "./decode-word.js"
 import { formativeToIthkuil, ALL_CASES } from "@zsnout/ithkuil/generate"
+import { gate } from "./harness.js"
 
 function roundTrip(formative: Record<string, unknown>): { expected: string; got: string } {
   const expected = formativeToIthkuil(formative as never)
@@ -44,3 +45,5 @@ for (const f of samples) {
 
 console.log(`case round-trip: ${ok}/${total} = ${((100 * ok) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 15).join("\n    ")}`)
+
+gate("case (Vc)", ok, total, 98)

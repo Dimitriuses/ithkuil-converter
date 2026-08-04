@@ -22,6 +22,7 @@ import { loadTopCnn } from "./top-cnn.js"
 import { encode } from "./forward.js"
 import { decodeWordToText, enableCoreCnn, enablePrimaryCnn, enableTopCnn, enableSecondaryCnn } from "./decode-word.js"
 import { formativeToIthkuil } from "@zsnout/ithkuil/generate"
+import { gate } from "./harness.js"
 
 const diac = partitionTemplates(loadTemplates("dataset", 64)).diacritic
 const topCnn = await loadTopCnn().catch(() => null)
@@ -85,3 +86,5 @@ for (const root of ["str", "mlk", "ksp", "prt", "ndr", "skr"]) {
   else misses.push(`${exp}→${got}`)
 }
 console.log(`triconsonantal word round-trip: ${wr}/${wn}${misses.length ? "  misses: " + misses.join("  ") : ""}`)
+
+gate("3-consonant word round-trip", wr, wn, 30)

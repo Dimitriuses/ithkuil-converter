@@ -4,18 +4,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository layout — two separate sub-projects
 
-This repo holds **two independent projects** for converting Ithkuil script. They share
-no code; work in one folder does not affect the other. The root holds only `CLAUDE.md`
-and `.gitignore`.
+This repo holds **two independent projects** for converting Ithkuil script. They share no
+code and no assets; work in one folder does not affect the other. The root holds only the
+shared docs (`README.md`, `CLAUDE.md`, `ROADMAP.md`, `KNOWNISSUES.md`, `NOTICE.md`,
+`LICENSE`), `.github/workflows/`, `screenshots/` and `.gitignore`.
 
 - **[new-ithkuil-2023/](new-ithkuil-2023/) — the ACTIVE project.**
-  A bidirectional converter for **New Ithkuil** (the current 2020s script,
-  `ithkuil.net/newithkuil_12_script.htm`, ch. 12). Not built yet — see
-  [new-ithkuil-2023/roadmap.md](new-ithkuil-2023/roadmap.md).
+  A working bidirectional converter for **New Ithkuil** (the current 2020s script,
+  `ithkuil.net/newithkuil_12_script.htm`, ch. 12). ~8,000 lines of TypeScript. Forward
+  (text → script) reuses `@zsnout/ithkuil`; reverse (script image → text) is original work.
 - **[ithkuil-2011/](ithkuil-2011/) — COMPLETE, now a reference/harness.**
   Analysis + spec-validation of the `mklcp/ithkey` OpenType font, which encodes the
-  **older 2004–2011 script** (`ithkuil.net/11_script.htm`, ch. 11). Phase 0.5 is done;
-  a "2011 converter" may be built here in the future. Python + one TS extractor.
+  **older 2004–2011 script** (`ithkuil.net/11_script.htm`, ch. 11). Phase 0.5 is done.
+  Python + one TS extractor. **Read [NOTICE.md](NOTICE.md) before touching it** — the font
+  it analyses is under a non-commercial licence that forbids redistribution.
 
 The 2011 script and New Ithkuil are **different writing systems** (different character
 types, different phoneme inventory), so the 2011 glyphs/rules do NOT carry over to
@@ -26,23 +28,91 @@ New Ithkuil — the split is deliberate. Details in
 
 ## new-ithkuil-2023/ — active project
 
-**Goal:** bidirectional New Ithkuil converter (text ↔ script image). **Status:** roadmap
-only, nothing built. Full plan in [new-ithkuil-2023/roadmap.md](new-ithkuil-2023/roadmap.md);
-original vision in [new-ithkuil-2023/ithkuil-converter-plan.md](new-ithkuil-2023/ithkuil-converter-plan.md)
-(predates the decision below — treat as background, the roadmap supersedes it).
+**Status:** built and working end to end. Real-vocabulary round trip **92.6%**; see
+[README](README.md) for the full result table, [ROADMAP.md](ROADMAP.md) for what is next,
+[KNOWNISSUES.md](KNOWNISSUES.md) for measured limits, and
+[new-ithkuil-2023/roadmap.md](new-ithkuil-2023/roadmap.md) for the full engineering log
+(every milestone, measurement and dead end — read it before re-proposing anything).
 
-- **Forward (text → script SVG):** reuse [`@zsnout/ithkuil`](https://github.com/zsakowitz/ithkuil)
-  (MIT, TypeScript, npm `@zsnout/ithkuil`). Its `/script` module composes primary/secondary/
-  tertiary/quaternary characters + diacritics algorithmically. Caveat: SVG generation uses the
-  DOM (`document.createElementNS`), so Node use needs a shim like `linkedom`. **Do NOT
-  reverse-engineer a font for the forward path** — it is a solved problem.
-- **Synthetic data:** the forward pipeline renders labeled, augmented glyph images to
-  train/evaluate the reverse pipeline.
-- **Reverse (script image → text):** the novel, unsolved part — the project's actual
-  contribution. `@zsnout/ithkuil` is text→script ONLY (no OCR). Pipeline: preprocess →
-  segment → classify → reconstruct word JSON → `@zsnout/ithkuil` `/generate` → text.
-  The classifier baseline reuses the template-match harness from
-  `ithkuil-2011/build_glyph_similarity.py`.
+```
+FORWARD   text ─parse→ word JSON ─script→ SVG ─resvg→ PNG
+                                     │
+SYNTHETIC │ the same renderer labels its own training data
+                                     ▼
+REVERSE   image ─binarize→ segment → char-type → per-type decoders → features
+                                                     ─@zsnout/generate→ text
+```
+
+### Commands (run from `new-ithkuil-2023/`)
+
+```bash
+npm run setup            # provision everything, idempotent (~25 min cold); --with-models trains the CNNs
+npm run doctor           # readiness report; exit 1 if something required is missing
+npm run serve            # local web tool on :3939 (encode + decode + job panel)
+npm run encode -- "saläha" -o word.svg --png word.png
+
+npm run typecheck        # tsc --noEmit (TypeScript 7)
+npm test                 # node:test unit suite, ~4 s, no dataset needed
+npm run demo:build       # browser demo → dist-demo/ (DEMO_BASE sets the Pages base path)
+npm run demo:smoke       # drive the built demo in headless Chromium
+npm run screenshots      # regenerate screenshots/ by driving the real pipeline
+
+npm run lexicon-test -- 100   # THE accuracy number (real lexicon, frequency-weighted)
+npm run word-test             # feature regression gate — NOT an accuracy benchmark
+npm run scan-test             # printed-and-rephotographed sheets
+```
+
+The round-trip harnesses are listed in `package.json`; each prints its numbers and, through
+`gate()` in [src/harness.ts](new-ithkuil-2023/src/harness.ts), exits non-zero below a floor.
+
+### Invariants — break these and things fail quietly
+
+- **`dom-shim.js` must be imported before `@zsnout/ithkuil/script`.** ESM evaluates imports
+  in source order, so the shim's import goes first in any module that touches `/script`.
+- **The DOM shim is `svgdom`, not `linkedom`.** The library composes characters using a real
+  SVG `getBBox()` computed from path geometry; linkedom does no geometry. Use
+  `createHTMLWindow()` — the SVG-only window has no `body`, which `fitViewBox` needs.
+- **`decode-word.ts` loads `dataset/` templates at module scope**, so importing it without a
+  generated dataset throws. That is why the unit tests never import it, and why
+  `npm test` runs on a bare clone while the round-trip harnesses do not.
+- **Template caches are versioned.** Bump the caller's `version` in
+  [template-cache.ts](new-ithkuil-2023/src/template-cache.ts) whenever a render or value set
+  changes — a stale cache will silently hide the change. A version mismatch just rebuilds.
+- **All five CNNs are optional.** Every `enable*Cnn()` returns `false` and leaves the
+  template path in place when the model is absent. Nothing may assume a model exists.
+- **CI floors are the template-only numbers**, because CI trains nothing. Re-measure on a
+  clean checkout before raising one.
+- **`word-test` is a regression gate, never an accuracy claim.** Its roots are deliberately
+  easy. The honest number is `lexicon-test`. This distinction cost a 4× overstatement once
+  (100% claimed vs 23.5% real) and the harness header says so.
+- **A recognizer must not throw.** `assemble.ts` returns `""` when a decode yields no root
+  (`formativeToIthkuil` throws without one), and `server.ts` wraps `decodePhrase` as a
+  backstop. A failed decode is a reported outcome, not an exception.
+- **Spilled secondaries are routed by position, not by score.** A root longer than one
+  secondary packs the rest as extension-only placeholders (`forcePlaceholderCharacters`), so
+  the 2nd+ secondary in a consecutive run is matched against the placeholder set only. An
+  earlier score-based attempt regressed 3-consonant clusters.
+- **Sheet geometry lives in `scan-layout.ts` on purpose.** The ingester must read a
+  capture's sheet id *before* it knows which manifest to load, so the bit-strip layout
+  cannot come from a manifest — both sides import the constants.
+- **Do NOT reverse-engineer a font for the forward path.** It is solved by `@zsnout/ithkuil`.
+  Effort goes to the reverse direction, which nothing else does.
+
+### Gotchas
+
+- `@tensorflow/tfjs-node` is a **runtime** dependency (the decode pipeline imports the CNN
+  loaders statically), not a dev one. On Windows its native addon needs
+  `scripts/fix-tfjs-node.mjs`, which runs from `postinstall`.
+- `tsconfig` uses `moduleResolution: "Bundler"` — `@zsnout/ithkuil` ships no `exports` map,
+  so NodeNext cannot resolve its subpath types.
+- Compact (collision-kerned) layout needs SVG `isPointInStroke`/`isPointInFill`;
+  `dom-shim.ts` implements both from the path geometry. The parser handles M/L/H/V/Q/C/Z —
+  a test asserts the renderer emits nothing else, so a library update that introduces arcs
+  fails loudly instead of kerning subtly wrong.
+- The demo's Pages base path is derived from the repo name in the workflow, never written
+  down: a rename moves a project Pages site and GitHub does not redirect it.
+- Generated artifacts (`dataset/`, `cnn-dataset/`, `models/`, `out/`, `dist-demo/`,
+  `export/`) are all gitignored and rebuilt by setup.
 
 ---
 
@@ -55,6 +125,10 @@ Verdict: the font is faithful to the 2011 script wherever a reference figure exi
 (primary 24/24, tertiary 7/7, 11 consonants); only 2 genuine glyph discrepancies (`k'`,
 `y`); ~55 glyphs have no isolated reference (diacritics, numerals, font-only secondaries)
 and are *not* errors. All paths below are **relative to `ithkuil-2011/`**.
+
+⚠️ **Licensing:** the font is under a FontStruct Non-Commercial License that forbids
+redistribution and reverse-engineering, and it is committed here along with its extracted
+outlines. See [NOTICE.md](NOTICE.md) — resolve that before extending this sub-project.
 
 ### Core domain facts (read before touching 2011 encoding logic)
 
@@ -93,8 +167,12 @@ Two extractors produce two analysis dirs: [extract_font_tables.py](ithkuil-2011/
 
 ### Commands (run from `ithkuil-2011/`)
 
+The venv is **not** checked in (it is gitignored); create it once:
+
 ```bash
-# Python scripts use the checked-in venv (ithkuil-2011/.venv) with fonttools+PIL+numpy+scipy.
+python -m venv .venv
+.venv/Scripts/pip install fonttools pillow numpy scipy   # .venv/bin/pip on macOS/Linux
+
 .venv/Scripts/python.exe extract_font_tables.py ./ithkuil.ttf ./font_analysis/
 .venv/Scripts/python.exe build_glyph_inventory.py ./font_analysis ./inventory
 .venv/Scripts/python.exe build_mapping_table.py ./inventory ./font_analysis ./mapping
@@ -102,7 +180,13 @@ Two extractors produce two analysis dirs: [extract_font_tables.py](ithkuil-2011/
 .venv/Scripts/python.exe build_validator.py ./inventory ./validator.html
 .venv/Scripts/python.exe apply_validation.py ./validation_results.json ./inventory/glyph_inventory.json
 npx tsx extract_font_tables.ts ./ithkuil.ttf ./font_analysis_ts/   # TS extractor (node_modules here)
+
+ruff check .   # config in ruff.toml; CI gates this
 ```
+
+The pipeline is deterministic: regenerating `font_analysis/`, `inventory/` and `mapping/`
+into a scratch directory reproduces the committed artifacts byte for byte (verified on
+Python 3.13), so a diff against them is a valid regression check.
 
 ### Conventions
 
@@ -110,3 +194,5 @@ npx tsx extract_font_tables.ts ./ithkuil.ttf ./font_analysis_ts/   # TS extracto
 - SVG glyph exports need `transform="scale(1,-1)"` (font Y grows up, SVG Y grows down); `fix_svgs.py` retrofits it.
 - `apply_validation.py` writes `glyph_inventory.json` in place after backing up to `.bak`.
 - Reference images cached under `inventory/.ref_cache/` (gitignored, regenerable).
+- `ruff.toml` selects rules explicitly and ignores `E701`/`E702` — one-line guard clauses are
+  this codebase's house style. Formatting is not gated.

@@ -14,6 +14,7 @@ import { decodePng } from "./image-io.js"
 import { binarize, segment } from "./segment.js"
 import { loadTemplates, partitionTemplates } from "./classify.js"
 import { decodeQuaternary } from "./quaternary.js"
+import { gate } from "./harness.js"
 
 const ILLOCUTIONS = ["ASR", "DIR", "DEC", "IRG", "VRF", "ADM", "POT", "HOR", "CNJ"]
 const MOODS = ["FAC", "SUB", "ASM", "SPC", "COU", "HYP"] // FAC = no diacritic
@@ -59,3 +60,5 @@ for (const value of ILLOCUTIONS) {
 console.log(`quaternary round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
 console.log(`  value ${((100 * valOk) / total).toFixed(1)}%  ·  mood ${((100 * moodOk) / total).toFixed(1)}%  ·  case-scope ${((100 * csOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}):\n    ${misses.slice(0, 12).join("\n    ")}`)
+
+gate("quaternary", ok, total, 93)

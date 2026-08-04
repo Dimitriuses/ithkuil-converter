@@ -15,6 +15,7 @@ import { svgToPng } from "./raster.js"
 import { decodePng } from "./image-io.js"
 import { binarize } from "./segment.js"
 import { decodePrimaryAligned } from "./primary.js"
+import { gate } from "./harness.js"
 
 const SPECIFICATIONS = ["BSC", "CTE", "CSV", "OBJ"]
 const PERSPECTIVES = ["M", "G", "N", "A"]
@@ -51,3 +52,5 @@ for (const specification of SPECIFICATIONS) {
 console.log(`primary aligned round-trip: ${ok}/${total} full = ${((100 * ok) / total).toFixed(1)}%`)
 console.log(`  specification ${((100 * specOk) / total).toFixed(1)}%  ·  perspective ${((100 * perspOk) / total).toFixed(1)}%`)
 if (misses.length) console.log(`  misses (${misses.length}): ${misses.slice(0, 12).join("  ")}`)
+
+gate("primary (aligned)", ok, total, 97)

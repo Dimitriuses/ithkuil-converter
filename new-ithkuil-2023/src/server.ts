@@ -129,11 +129,19 @@ async function handleDecode(body: Record<string, unknown>, res: ServerResponse):
   const { decode, seg, img } = await warmDecode()
   let rgba
   try {
-    rgba = img.decodePng(decodeDataUrl(body.imageBase64))
+    // Sniffs PNG vs JPEG from the magic bytes and applies EXIF orientation, so a photo of a
+    // printed page works here exactly as it does in the scan harness.
+    rgba = img.decodeImage(decodeDataUrl(body.imageBase64))
   } catch {
-    return sendJson(res, 200, { ok: false, error: "could not decode PNG" })
+    return sendJson(res, 200, { ok: false, error: "could not decode image (expected PNG or JPEG)" })
   }
-  const bmp = seg.binarize(rgba.data, rgba.width, rgba.height)
+  // A photograph carries a lighting gradient that one global threshold cannot survive;
+  // flat-field levels the paper first. On evenly-lit renders it is effectively a no-op,
+  // so `photo` can default on for camera input without touching the synthetic path.
+  const bmp =
+    body.photo === true
+      ? seg.flatFieldBinarize(rgba.data, rgba.width, rgba.height)
+      : seg.binarize(rgba.data, rgba.width, rgba.height)
   const regions = seg.segment(bmp)
   // A recognizer must not 500 on a hard image: report the failure instead. (The known
   // cause — no root ⇒ formativeToIthkuil throws — is handled in assemble.ts; this is the

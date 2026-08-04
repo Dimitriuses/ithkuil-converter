@@ -27,7 +27,6 @@ The HTML tool:
 
 import json
 import sys
-import base64
 from pathlib import Path
 
 BASE_URL = "https://ithkuil.net/images/"

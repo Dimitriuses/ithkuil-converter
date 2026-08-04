@@ -1,0 +1,61 @@
+name: Deploy demo to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    working-directory: new-ithkuil-2023
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: new-ithkuil-2023/.nvmrc
+          cache: npm
+          cache-dependency-path: new-ithkuil-2023/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+
+      # A project Pages site is served from <owner>.github.io/<repo>/, and GitHub does NOT
+      # redirect that path if the repo is renamed. So the base path is derived from the repo
+      # name instead of written down anywhere.
+      - name: Build
+        run: npm run demo:build
+        env:
+          DEMO_BASE: /${{ github.event.repository.name }}/
+
+      # Without this a wrong base ships a page that answers 200 while every asset 404s —
+      # a blank demo behind a green deploy. Two lines turn that into a red build.
+      - name: The emitted asset paths must match the repo name
+        run: |
+          grep -q 'src="/${{ github.event.repository.name }}/assets/' dist-demo/index.html \
+            || { grep -oE '(src|href)="[^"]*"' dist-demo/index.html; exit 1; }
+
+      # Drive the built page in a real browser before publishing it.
+      - name: Smoke-test the build
+        run: npm run demo:smoke
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: new-ithkuil-2023/dist-demo
+      - id: deployment
+        uses: actions/deploy-pages@v4

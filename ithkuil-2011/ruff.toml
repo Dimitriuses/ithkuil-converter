@@ -1,0 +1,21 @@
+# Lint/format config for the 2011 font-analysis scripts.
+#
+# Pinned explicitly rather than left to ruff's defaults, which have widened over releases —
+# a CI run should fail because this code changed, not because the linter grew a rule.
+line-length = 110
+target-version = "py310"
+
+[lint]
+select = [
+  "E", # pycodestyle errors
+  "F", # pyflakes
+  "W", # pycodestyle warnings
+  "I", # import sorting
+  "UP", # pyupgrade
+  "B", # bugbear
+]
+ignore = [
+  "E501", # long lines: several are data tables and reference URLs that read worse wrapped
+  "E701", # `if x: return` one-liners are this codebase's house style for guard clauses
+  "E702",
+]
