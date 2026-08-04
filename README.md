@@ -5,23 +5,14 @@ of an image again.** The forward direction is reuse; the reverse direction — r
 script out of pixels — is the part nothing else does, and is what this repository is for.
 
 [![CI](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/ci.yml/badge.svg)](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/ci.yml)
+[![Pages](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/pages.yml/badge.svg)](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/pages.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-7-3178c6)](https://www.typescriptlang.org/)
 [![Node](https://img.shields.io/badge/Node-%E2%89%A518-5fa04e)](https://nodejs.org)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
 [![status: active](https://img.shields.io/badge/status-active-brightgreen)](ROADMAP.md)
 
-<!-- DEMO LINK — uncomment both lines below once the Pages deploy is green.
-     Order that makes it green on attempt 1: Settings → Pages → Source: "GitHub Actions"
-     FIRST, then push. The page is built and browser-tested in CI either way.
-
-[![Pages](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/pages.yml/badge.svg)](https://github.com/Dimitriuses/ithkuil-converter/actions/workflows/pages.yml)
-
 **[▶ Live demo](https://dimitriuses.github.io/ithkuil-converter/)** — type romanized New
 Ithkuil, watch the script assemble in your browser.
--->
-
-**Live demo:** a browser build of the forward path is deployed by
-[`pages.yml`](.github/workflows/pages.yml); the link goes here once its first deploy is green.
 
 ![One round trip: text → script → segmentation → text](screenshots/03-pipeline.png)
 
@@ -80,9 +71,10 @@ Two things that table is deliberately explicit about:
 
 ## Try it
 
-**In the browser:** the demo page runs the forward path with no install — it renders as you
-type, and gets compact collision kerning for free because a browser has the SVG hit-testing
-that Node needs a shim for. It cannot decode; that needs the local pipeline.
+**In the browser:** the [live demo](https://dimitriuses.github.io/ithkuil-converter/) runs
+the forward path with no install — it renders as you type, and gets compact collision kerning
+for free because a browser has the SVG hit-testing that Node needs a shim for. It cannot
+decode; that needs the local pipeline.
 
 ![The browser demo](screenshots/07-demo.png)
 

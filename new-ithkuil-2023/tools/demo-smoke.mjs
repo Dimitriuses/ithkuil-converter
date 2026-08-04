@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 /**
- * Smoke test for the built demo page (`dist-demo/`), driven in headless Chromium.
+ * Smoke test for the demo page, driven in headless Chromium.
  *
- *   npm run demo:build && npm run demo:smoke
+ *   npm run demo:build && npm run demo:smoke        # the local build in dist-demo/
+ *   npm run demo:smoke -- --url https://…/repo/     # the DEPLOYED site
+ *
+ * The `--url` form is the one that matters after a deploy: a green Pages workflow and a 200
+ * on index.html both say nothing about whether the assets resolve under the project
+ * sub-path. Running the identical assertions against the live URL does.
  *
  * It serves the build under the SUB-PATH the build actually emitted (read back out of
  * `dist-demo/index.html`) rather than at `/`, because that is how GitHub Pages serves a
@@ -25,16 +30,21 @@ import { encode as nodeEncode } from "../src/forward.js"
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 const DIST = join(ROOT, "dist-demo")
 
-if (!existsSync(join(DIST, "index.html"))) {
-  console.error(`✗ ${DIST}/index.html not found — run: npm run demo:build`)
-  process.exit(1)
-}
+const urlArg = process.argv.indexOf("--url")
+const LIVE_URL = urlArg >= 0 ? process.argv[urlArg + 1] : process.env.DEMO_URL
 
-// Serve under the base the build emitted, so the harness mirrors the deployed layout
-// whatever `base` was set to. (`/assets/…` ⇒ base `/`; `/repo/assets/…` ⇒ base `/repo/`.)
-const html = await readFile(join(DIST, "index.html"), "utf8")
-const emitted = html.match(/(?:src|href)="([^"]*)\/assets\//)
-const BASE = `${emitted ? emitted[1] : ""}/`
+let BASE = "/"
+if (!LIVE_URL) {
+  if (!existsSync(join(DIST, "index.html"))) {
+    console.error(`✗ ${DIST}/index.html not found — run: npm run demo:build`)
+    process.exit(1)
+  }
+  // Serve under the base the build emitted, so the harness mirrors the deployed layout
+  // whatever `base` was set to. (`/assets/…` ⇒ base `/`; `/repo/assets/…` ⇒ base `/repo/`.)
+  const html = await readFile(join(DIST, "index.html"), "utf8")
+  const emitted = html.match(/(?:src|href)="([^"]*)\/assets\//)
+  BASE = `${emitted ? emitted[1] : ""}/`
+}
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -67,8 +77,11 @@ const server = createServer(async (req, res) => {
   }
 })
 
-const port = await new Promise((r) => server.listen(0, "127.0.0.1", () => r(server.address().port)))
-const pageUrl = `http://127.0.0.1:${port}${BASE}`
+let pageUrl = LIVE_URL
+if (!LIVE_URL) {
+  const port = await new Promise((r) => server.listen(0, "127.0.0.1", () => r(server.address().port)))
+  pageUrl = `http://127.0.0.1:${port}${BASE}`
+}
 
 let pass = 0
 let fail = 0
@@ -82,7 +95,7 @@ const check = (label, condition, detail = "") => {
   }
 }
 
-console.log(`\ndemo smoke — ${pageUrl}\n`)
+console.log(`\ndemo smoke — ${pageUrl}${LIVE_URL ? "  (deployed site)" : "  (local build)"}\n`)
 
 const browser = await chromium.launch()
 const page = await browser.newPage({ viewport: { width: 1100, height: 900 } })
@@ -173,7 +186,7 @@ for (const img of images) {
 }
 
 await browser.close()
-server.close()
+if (!LIVE_URL) server.close()
 
 console.log(`\n${pass}/${pass + fail} checks passed`)
 process.exit(fail === 0 ? 0 : 1)

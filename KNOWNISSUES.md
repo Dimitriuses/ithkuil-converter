@@ -96,7 +96,7 @@ pure preprocessing and needs no retraining — see [`ROADMAP.md`](ROADMAP.md).
 
 ### The live demo is forward-only
 
-The GitHub Pages page renders text → script in the browser, where the real DOM supplies the
+<https://dimitriuses.github.io/ithkuil-converter/> renders text → script in the browser, where the real DOM supplies the
 geometry the layout engine needs (and gets compact kerning for free, which Node needs a shim
 for). It cannot decode: that needs ~15 MB of cached templates plus the tfjs-node models, so
 the reverse direction stays a local/Node story. The page shows the reverse pipeline's
