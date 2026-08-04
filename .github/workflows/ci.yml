@@ -36,9 +36,12 @@ jobs:
       # global npm — which is how a lockfile that installs locally fails `npm ci` here.
       - name: Toolchain versions
         run: node --version && npm --version
-      - run: npm ci
-      - name: Native backend loads (tfjs-node)
-        run: node -e "import('@tensorflow/tfjs-node').then(()=>console.log('tfjs-node ok'),e=>{console.error(e);process.exit(1)})"
+      # --ignore-scripts on purpose: this job runs `tsc` and the unit tests, neither of which
+      # touches the tfjs-node native addon — only its type declarations, which are just files
+      # in the package. Skipping install scripts avoids downloading a ~200 MB ML runtime to
+      # not use it (43 s → 22 s), and keeps the fast gate free of the one step here that
+      # reaches the network at install time. The addon IS exercised, in `roundtrip` below.
+      - run: npm ci --ignore-scripts
       - run: npm run typecheck
       - run: npm test
 
@@ -53,7 +56,7 @@ jobs:
           node-version-file: new-ithkuil-2023/.nvmrc
           cache: npm
           cache-dependency-path: new-ithkuil-2023/package-lock.json
-      - run: npm ci
+      - run: npm ci --foreground-scripts
       - run: npx playwright install --with-deps chromium
       - name: Build with the deployed base path
         run: npm run demo:build
@@ -82,7 +85,12 @@ jobs:
           node-version-file: new-ithkuil-2023/.nvmrc
           cache: npm
           cache-dependency-path: new-ithkuil-2023/package-lock.json
-      - run: npm ci
+      # Full install here, scripts and all: this job needs the native tfjs-node addon and the
+      # resvg rasterizer for real. --foreground-scripts so a failing install script says why
+      # in the log instead of collapsing to a bare non-zero exit.
+      - run: npm ci --foreground-scripts
+      - name: Native backend loads (tfjs-node)
+        run: node -e "import('@tensorflow/tfjs-node').then(()=>console.log('tfjs-node ok'),e=>{console.error(e);process.exit(1)})"
 
       # The glyph dataset is a pure function of the generator + the glyph taxonomy, so it is
       # keyed on those exactly. No restore-keys: a stale dataset would fail confusingly.
