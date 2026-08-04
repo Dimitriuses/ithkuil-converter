@@ -1,0 +1,19 @@
+# The font is third-party and NOT redistributable — its FontStruct Non-Commercial License
+# forbids it (../NOTICE.md). Supply your own copy here; everything below regenerates from it.
+*.ttf
+*.otf
+
+# Regenerated from the font, and consisting of its glyph outlines — i.e. the design itself,
+# which is the part the licence covers. `python strip_outlines.py --check` enforces this.
+inventory/svg/
+validator.html
+
+# in-place backups written by apply_validation.py
+*.json.bak
+
+# cached reference figures from ithkuil.net (regenerable by build_glyph_similarity.py)
+inventory/.ref_cache/
+
+# tooling
+.venv/
+.ruff_cache/

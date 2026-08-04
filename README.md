@@ -247,8 +247,8 @@ not retried.
 [**KNOWNISSUES.md**](KNOWNISSUES.md) — measured limits. In brief: one line of script at a
 time; the demo is forward-only; the web tool is localhost-only with no auth; a fresh clone
 needs ~25 minutes of provisioning; `npm audit` reports four unfixable install-time
-advisories inside `@tensorflow/tfjs-node`; and `ithkuil-2011/`'s font is redistributed
-against its licence — see [NOTICE.md](NOTICE.md).
+advisories inside `@tensorflow/tfjs-node`; and the 2011 analysis needs a font you supply
+yourself — see [NOTICE.md](NOTICE.md).
 
 ## The 2011 sub-project
 
@@ -261,8 +261,15 @@ discrepancies, ~55 glyphs with no isolated reference. Written up in
 
 It shares **no code and no assets** with the active project — the 2011 script and New
 Ithkuil are different writing systems with different character types and different phoneme
-inventories. It is kept as a reference and as the origin of the Chamfer matching harness
-the reverse pipeline still uses. **Read [NOTICE.md](NOTICE.md) before extending it.**
+inventories. It is kept as a reference, as the origin of the Chamfer matching harness the
+reverse pipeline still uses, and as the prior art for [building a New Ithkuil font](ROADMAP.md).
+
+**The font itself is not in this repository.** It is third-party and its licence forbids
+redistribution, which covers the glyph outlines extracted from it — so the outlines are gone
+too, and the analysis scripts exit with an explanatory error until you supply your own copy.
+The findings are unaffected: the report, the encoding audit, the 114 validation verdicts and
+every mapping table are measurements, not artwork. [NOTICE.md](NOTICE.md) records exactly
+what was removed and what stayed.
 
 ## Contributing
 

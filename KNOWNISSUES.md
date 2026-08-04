@@ -124,17 +124,17 @@ addon, not code the converter calls. tfjs-node 4.22.0 is the current release; th
 remediation npm offers is `--force` down to tfjs-node **0.1.11**, which would remove the
 CNN pipeline entirely. Recorded rather than chased.
 
-### `ithkuil-2011/ithkuil.ttf` is redistributed against its licence
+### The 2011 analysis cannot be re-run without supplying your own font
 
-The font carries a **FontStruct Non-Commercial License**, which forbids redistributing the
-font file and forbids reverse-engineering it — and the 2011 sub-project does both, along
-with committing its extracted glyph outlines. This is documented in full, with the licence
-text and the options, in [`NOTICE.md`](NOTICE.md). It affects only `ithkuil-2011/`; the
-active project shares no assets with it.
+The font it analyses carries a **FontStruct Non-Commercial License** forbidding
+redistribution, so neither it nor its extracted glyph outlines are committed — see
+[`NOTICE.md`](NOTICE.md) for what was removed, what stayed and why. Consequences:
 
-### The committed 2011 glyph SVGs are one comment line stale
+- `build_glyph_inventory.py` and `build_validator.py` **exit with an explanatory error**
+  rather than silently producing blank glyphs, until a font is supplied.
+- The visual review tool (`validator.html`) is no longer shipped; it regenerates.
+- The findings themselves are unaffected — the report, the encoding audit, the 114
+  validation verdicts and every mapping table contain no outline data.
 
-`inventory/svg/*.svg` were exported before `build_glyph_inventory.py` learned to emit an
-explanatory comment above the y-flip transform. Regenerating them changes 114 files by one
-comment line each and nothing else — verified by regenerating the whole 2011 pipeline into
-a scratch directory, where every other artifact came back byte-identical.
+The font also remains in git history, in the one commit that added it. Removing it there
+needs a history rewrite, which has not been done.

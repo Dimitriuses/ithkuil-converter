@@ -126,9 +126,11 @@ Verdict: the font is faithful to the 2011 script wherever a reference figure exi
 `y`); ~55 glyphs have no isolated reference (diacritics, numerals, font-only secondaries)
 and are *not* errors. All paths below are **relative to `ithkuil-2011/`**.
 
-⚠️ **Licensing:** the font is under a FontStruct Non-Commercial License that forbids
-redistribution and reverse-engineering, and it is committed here along with its extracted
-outlines. See [NOTICE.md](NOTICE.md) — resolve that before extending this sub-project.
+⚠️ **The font is not in this repository, and must not be added back.** It is under a
+FontStruct Non-Commercial License forbidding redistribution, which covers its extracted
+glyph outlines too. Supply your own copy locally (it is gitignored) and regenerate.
+`python strip_outlines.py` removes outlines from regenerated artifacts;
+`--check` runs in CI. Full record in [NOTICE.md](NOTICE.md).
 
 ### Core domain facts (read before touching 2011 encoding logic)
 
@@ -151,6 +153,7 @@ outlines. See [NOTICE.md](NOTICE.md) — resolve that before extending this sub-
 ### Phase 0 pipeline (run from `ithkuil-2011/`)
 
 ```
+(supply your own ithkuil.ttf — gitignored, see NOTICE.md)
 extract_font_tables.py / .ts   →  font_analysis/  or  font_analysis_ts/
 build_glyph_inventory.py        →  inventory/  (glyph_inventory.json, svg/*.svg, class_*.json)
 build_mapping_table.py          →  mapping/  (forward_index, reverse_index, anchors)
@@ -158,7 +161,12 @@ build_glyph_similarity.py       →  inventory/glyph_similarity.json  (optional 
 build_validator.py              →  validator.html  (review tool; refs 2011 ch11 images + cross-match panel)
      ↓ human reviews in browser, exports validation_results.json ↓
 apply_validation.py             →  updates inventory/glyph_inventory.json in place
+strip_outlines.py               →  removes svgPath from the artifacts BEFORE committing them
 ```
+
+`inventory/svg/` and `validator.html` are gitignored: they are pure glyph outlines. The two
+scripts that need outlines exit with an explanatory error when they are absent, rather than
+emitting blank glyphs.
 
 Two extractors produce two analysis dirs: [extract_font_tables.py](ithkuil-2011/extract_font_tables.py)
 (fonttools) → `font_analysis/` (better `cmap.json`/`glyphs.json`);
@@ -173,6 +181,7 @@ The venv is **not** checked in (it is gitignored); create it once:
 python -m venv .venv
 .venv/Scripts/pip install fonttools pillow numpy scipy   # .venv/bin/pip on macOS/Linux
 
+# ithkuil.ttf is NOT in the repo — put your own copy here first (NOTICE.md explains why)
 .venv/Scripts/python.exe extract_font_tables.py ./ithkuil.ttf ./font_analysis/
 .venv/Scripts/python.exe build_glyph_inventory.py ./font_analysis ./inventory
 .venv/Scripts/python.exe build_mapping_table.py ./inventory ./font_analysis ./mapping
@@ -181,12 +190,14 @@ python -m venv .venv
 .venv/Scripts/python.exe apply_validation.py ./validation_results.json ./inventory/glyph_inventory.json
 npx tsx extract_font_tables.ts ./ithkuil.ttf ./font_analysis_ts/   # TS extractor (node_modules here)
 
-ruff check .   # config in ruff.toml; CI gates this
+.venv/Scripts/python.exe strip_outlines.py           # BEFORE committing regenerated output
+.venv/Scripts/python.exe strip_outlines.py --check   # what CI runs
+ruff check .                                         # config in ruff.toml; CI gates this
 ```
 
 The pipeline is deterministic: regenerating `font_analysis/`, `inventory/` and `mapping/`
-into a scratch directory reproduces the committed artifacts byte for byte (verified on
-Python 3.13), so a diff against them is a valid regression check.
+into a scratch directory and running `strip_outlines.py` reproduces the committed artifacts
+byte for byte (verified on Python 3.13), so a diff against them is a valid regression check.
 
 ### Conventions
 

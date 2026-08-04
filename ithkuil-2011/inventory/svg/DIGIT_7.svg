@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-     width="4196.0" height="4196.0"
-     viewBox="-50.0 -4146.0 4196.0 4196.0">
-  <!-- Font bbox: no bbox data | UPM: 4096 -->
-  <path transform="scale(1,-1)" fill="black" d="M0 0V1920L384 2304H768L1151 1920V1151H1536L1920 1536V2304L1536 2688H768V3071H1727L2304 2496V1343L1727 768H768V1727L575 1920L384 1727V0Z"/>
-</svg>

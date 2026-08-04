@@ -119,9 +119,9 @@ jobs:
       - run: npm run phrase-test
 
   # The 2011 sub-project is Python and has no test suite; this is a syntax + lint gate so it
-  # cannot rot silently while the active project moves.
+  # cannot rot silently while the active project moves — plus the licence guard.
   python:
-    name: 2011 analysis scripts (lint)
+    name: 2011 analysis scripts (lint + licence guard)
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -136,3 +136,8 @@ jobs:
       # use aligned assignments, and reformatting completed analysis code buys nothing.
       - run: pip install "ruff==0.16.*"
       - run: ruff check .
+      # The analysed font may not be redistributed (see NOTICE.md), and neither may its
+      # glyph outlines. Regenerating the analysis locally reproduces them, so committing the
+      # result would quietly reintroduce the problem — this turns that into a red build.
+      - name: No font outlines in committed artifacts
+        run: python strip_outlines.py --check

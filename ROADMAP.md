@@ -95,6 +95,53 @@ version-specialized head — not more resolution, which has already been tried.
 
 ## Later
 
+### A New Ithkuil OpenType font — and a UI written in it
+
+Two milestones that share a dependency. The end goal is a **language switch on the demo
+page**: pick "Ithkuil" and every label, button and heading renders in the native script.
+
+**F1 — the font.** `@zsnout/ithkuil` exposes the glyph geometry under MIT, and it is already
+shaped for this: 33 cores, 41 extensions, 25 diacritics, and each core carries its own
+attachment metadata —
+
+```js
+CORES["…"] = { shape: "M -13.15 -35 l -10 10 …", top: ["horiz", 36.85], bottom: ["diag", -10.5] }
+```
+
+— which is exactly what OpenType GPOS mark-to-base anchors need. So ~99 glyphs into a PUA
+block plus anchors built from that metadata, emitted with `fontTools`. This is a few days of
+work, not research, and it is licence-clean end to end.
+
+The 2004–2011 font analysed in [`ithkuil-2011/`](ithkuil-2011/) is the **prior art**, and the
+reason that sub-project earns its keep: it establishes that this script family wants a
+mark-positioning (GPOS) font rather than a ligature (GSUB) one, and its
+[encoding audit](ithkuil-2011/ithkuil-encoding-audit.md) is a worked example of a PUA block
+layout and class partition for exactly this problem. The difference in framing matters —
+reading how someone else's font was built, then building your own from openly-licensed
+geometry, is a better position than depending on theirs.
+
+**What a font cannot do, and where the line is.** A primary character encodes ~8 grammatical
+categories at once through rotation and quadrant placement, which `@zsnout` handles with
+arbitrary programmatic transforms. That combinatorial space does not fit in a glyph
+inventory, so full romanized-text → script shaping is out of scope. Realistically:
+
+| Coverage | Feasible in-font? |
+| --- | --- |
+| Alphabetic register (phonetic spelling) | **yes, fully** — a bounded inventory, and it is how the language writes foreign words |
+| Secondaries with top/bottom extensions | **yes** — cores + extensions + GPOS anchors |
+| Primaries | a fixed subset of common combinations, not the full space |
+| Arbitrary formatives | no — that is what the renderer is for |
+
+**F2 — the multilingual UI.** With F1 in place, `lang="izm"` plus the font makes the script
+behave like text: it wraps, scales, is selectable, and needs no per-label SVG. The first
+version spells UI labels in the **alphabetic register** — which is linguistically correct
+usage, not a cheat, since that register exists precisely for words the language has not
+lexicalised. Hand-written formatives for a few real terms can follow, and full translation
+is the [`translation-plan.md`](new-ithkuil-2023/translation-plan.md) track below.
+
+Worth building because it exercises the forward path in a way nothing else does: if a button
+label renders wrong at 14px, the layout engine is wrong.
+
 ### English → Ithkuil, AI-assisted
 
 A semantic layer in front of the converter, planned in
@@ -126,11 +173,15 @@ job timers and downloadable logs; persisted UI state.
 
 ### The 2011 sub-project
 
-[`ithkuil-2011/`](ithkuil-2011/) is complete and is not planned to grow. A converter for
-the 2004–2011 script could be built on the same harness, but it is a different writing
-system with a different phoneme inventory, so it would share the *method* and none of the
-data. Before anything is added there, the font-licence question in
-[`NOTICE.md`](NOTICE.md) needs resolving.
+[`ithkuil-2011/`](ithkuil-2011/) is complete and is not planned to grow as a converter — a
+2004–2011 converter would share the *method* and none of the data, being a different writing
+system with a different phoneme inventory. Its ongoing value is as the reference for **F1
+above**: it is the worked example of how a font for this script family is encoded.
+
+Its font-licence problem is resolved in-tree (the font and its outlines are gone; see
+[`NOTICE.md`](NOTICE.md)), with two loose ends that are the repository owner's call: the
+binary is still in git history, and the cleanest outcome would be permission from the font's
+author, which would also settle the reverse-engineering clause.
 
 ---
 

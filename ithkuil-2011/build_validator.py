@@ -866,6 +866,18 @@ def main():
     present    = sum(1 for g in glyph_data if g["svgContent"])
     print(f"SVGs embedded: {present} / {len(glyph_data)}")
 
+    # A validator with no glyphs in it is worse than no validator: the whole point is the
+    # side-by-side against the reference figures. The committed inventory is outline-free
+    # by licence (see ../NOTICE.md), so this is the expected state until the font is supplied.
+    if present == 0:
+        sys.exit(
+            "  No glyph outlines found — every panel would be blank.\n"
+            f"  {svg_dir}/ is generated from the font and is not committed (see ../NOTICE.md).\n"
+            "  Supply your own copy of the font and rebuild the inventory first:\n"
+            "      python extract_font_tables.py ./ithkuil.ttf ./font_analysis/\n"
+            "      python build_glyph_inventory.py ./font_analysis ./inventory"
+        )
+
     glyph_json = json.dumps(glyph_data, ensure_ascii=False, indent=None)
     html = HTML_TEMPLATE.replace("__GLYPH_DATA__", glyph_json)
     out_html.write_text(html, "utf-8")

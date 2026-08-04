@@ -298,6 +298,17 @@ def main():
     cmap_raw   = json.loads(cmap_path.read_text("utf-8"))
     glyphs_raw = json.loads(glyphs_path.read_text("utf-8"))
 
+    # The committed glyphs.json has its outlines stripped, because the font's licence
+    # forbids redistributing them (see ../NOTICE.md). Running against that copy would
+    # silently produce an inventory of empty shapes and 128 blank SVGs, so say so instead.
+    if not any(g.get("svgPath") for g in (glyphs_raw if isinstance(glyphs_raw, list) else [])):
+        sys.exit(
+            f"{glyphs_path} carries no glyph outlines.\n"
+            "  The committed analysis artifacts are outline-free on purpose (see ../NOTICE.md).\n"
+            "  Supply your own copy of the font and regenerate first:\n"
+            "      python extract_font_tables.py ./ithkuil.ttf ./font_analysis/"
+        )
+
     cp_to_name    = load_cmap(cmap_raw)
     name_to_glyph = load_glyphs(glyphs_raw)
 

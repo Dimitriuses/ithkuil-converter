@@ -5,21 +5,26 @@ not cover the third-party material listed here, which keeps its own terms.
 
 ---
 
-## ⚠️ `ithkuil-2011/ithkuil.ttf` — non-commercial font, redistribution not permitted
+## The 2011 font — analysed, not redistributed
 
-**This is an unresolved licensing problem, recorded here rather than papered over.**
+**The font is no longer in this repository.** It is third-party, its licence forbids
+redistribution, and so does it forbid redistributing the glyph outlines extracted from it.
+What remains is the analysis: measurements *about* the font, which are this project's own
+work. The full record is below, because "we removed a file" is not a useful answer to
+anyone who wants to reproduce the results.
 
 | | |
 | --- | --- |
-| File | `ithkuil-2011/ithkuil.ttf` (176,336 bytes, SHA-256 `eef702e3…a6966`) |
+| File | `ithkuil.ttf` — 176,336 bytes, SHA-256 `eef702e358a6f87b7401b356d2b7b1c2dc81f6f6f89ed2e55d97fcf20e2a6966` |
 | Name | *ithkuil Regular*, version 1.0 |
 | Author | **Ykulvaarlck** — `Copyright Ykulvaarlck 2016` (font `name` table, ID 0) |
 | Built with | FontStruct — <https://fontstruct.com/fontstructions/show/1337265/ithkuil-3> |
 | Licence | **FontStruct Non-Commercial License** (font `name` table, ID 13) |
 | Obtained via | the `mklcp/ithkey` keyboard-layout project — <https://github.com/mklcp/ithkey> |
 
-The licence is stated inside the font file itself and on its FontStruct page. Its relevant
-clauses are:
+The licence is stated inside the font file itself and on its FontStruct page — the upstream
+project carries no `LICENSE` at all, so the font's own `name` table is the authority. Its
+relevant clauses are:
 
 > You may not sell, rent, license, sublicense, distribute, redistribute, give-away or make
 > available (in any other way) the Font Software alone or as part of any collection.
@@ -27,28 +32,55 @@ clauses are:
 > You may not modify, adapt, rename, translate, reverse engineer, decompile, disassemble,
 > alter, or attempt to discover the source code of the Font Software.
 
-**So, plainly:** committing this font to a public repository is redistribution, which that
-licence forbids, and the `ithkuil-2011/` analysis reads the font's internal tables, which is
-what its second clause is about. The same applies to the artifacts derived from it that are
-committed here — `ithkuil-2011/inventory/svg/*.svg` and the `svgPath` fields inside
-`font_analysis/glyphs.json`, `inventory/glyph_inventory.json` and `validator.html` all carry
-the font's glyph outlines verbatim.
+A `svgPath` is a glyph's drawing — the design itself — so committing the *extracted outlines*
+redistributes the artwork without the container. Both were removed.
 
-Nothing in `new-ithkuil-2023/` — the active project — touches this font or anything derived
-from it. New Ithkuil script is composed algorithmically by `@zsnout/ithkuil` (MIT); the two
-sub-projects share no code and no assets.
+### What was removed, and what stayed
 
-**Context, not an excuse:** the analysis was interoperability research into an undocumented
-encoding, the writing system itself is © 2004–2011 John Quijada, and the font is a free
-hobby FontStruction. But "why" does not change what the licence says.
+| Removed | Why |
+| --- | --- |
+| `ithkuil.ttf` | the font |
+| `inventory/svg/*.svg` (114 files) | one outline export per glyph |
+| the `svgPath` field in `font_analysis/glyphs.json`, `font_analysis_ts/glyphs.json`, `inventory/glyph_inventory.json` | 370 outlines in total |
+| `validator.html` | the review tool, with the outline-bearing inventory inlined |
 
-**If this is resolved by removing the font**, the analysis scripts already take the font path
-as an argument, so nothing breaks except convenience — a reader supplies their own copy from
-the FontStruct page above and re-runs the pipeline documented in
-[`CLAUDE.md`](CLAUDE.md#phase-0-pipeline-run-from-ithkuil-2011) to regenerate the derived
-files (verified: it reproduces them byte for byte). Note that deleting the files from the
-working tree does **not** remove them from git history; only a history rewrite would, and
-that is a repository-owner decision.
+| Kept | Why |
+| --- | --- |
+| `ithkuil-validation-report.md`, `ithkuil-encoding-audit.md` (652 lines) | the findings — prose and tables, zero outline data |
+| `validation_results.json` | 114 human verdicts (43 confirmed / 56 discrepancy / 15 absent) |
+| `mapping/*.json`, `inventory/class_*.json`, the stripped inventory | codepoint → class partition, GPOS anchor structure, advance widths — measurements, not artwork |
+| all seven analysis scripts | this project's own code |
+
+Facts measured about a file are not that file. The class partition, the anchor structure and
+the validation verdicts are the research; the outlines were the only part that was ever
+someone else's to license.
+
+### Reproducing the analysis
+
+The scripts take the font path as an argument, so nothing is lost but convenience: obtain
+your own copy from the FontStruct page above and run the pipeline in
+[`CLAUDE.md`](CLAUDE.md#phase-0-pipeline-run-from-ithkuil-2011). **Verified:** doing exactly
+that regenerates `cmap.json`, `class_audit.json`, `gsub_rules.json`, `gpos_rules.json`,
+`summary.txt`, the class files and `glyph_inventory.md` **byte-identically** to what is
+committed, and `glyphs.json` / `glyph_inventory.json` byte-identically once
+`python strip_outlines.py` has run. `strip_outlines.py --check` runs in CI, so a
+regenerated, outline-bearing artifact cannot be committed back by accident.
+
+### Two things this does not do
+
+- **It does not remove the font from git history.** The binary was added in a single commit
+  and is still reachable by `git clone`. Only a history rewrite removes it
+  (`git filter-repo --path ithkuil-2011/ithkuil.ttf --invert-paths`), which rewrites every
+  commit hash and is a repository-owner decision.
+- **It does not retroactively license the analysis.** The licence also forbids reverse
+  engineering, and the analysis was that. The work was interoperability research into an
+  undocumented encoding, the writing system itself is © 2004–2011 John Quijada, and the font
+  is a free hobby FontStruction — but "why" does not change what the licence says, and the
+  clean resolution is the author's permission.
+
+Nothing in `new-ithkuil-2023/` — the active project — ever touched this font or anything
+derived from it. New Ithkuil script is composed algorithmically by `@zsnout/ithkuil` (MIT);
+the two sub-projects share no code and no assets.
 
 ---
 
